@@ -15,15 +15,32 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief (TODO) Brief description
+     * @brief Constructs a TimeStretch object associated with an AudioProcessor
      *
-     * (TODO) Detailed description
+     * Creates a TimeStretch object with a handle to a SoundTouch instance
      *
      * @param [in] processor    Pointer to main processor
+     *
+     * @throws std::runtime_error
      */
     TimeStretch::TimeStretch(juce::AudioProcessor * processor)
-        : Task(processor)
+        : Task(processor), origIRSampleRate(0)
     {
+        this->soundtouchHandle = soundtouch_createInstance();
+        
+        if (!this->soundtouchHandle)
+        {
+            throw std::runtime_error("Failed to create SoundTouch handle");
+        }
+    }
+
+    //==============================================================================
+    /**
+    * @brief Destroys a TimeStretch object with its internal SoundTouch handle
+    */
+    TimeStretch::~TimeStretch()
+    {
+        soundtouch_destroyInstance(this->soundtouchHandle);
     }
 
     //==============================================================================
