@@ -18,3 +18,7 @@ An open-source convolution reverb audio plugin developed for Quantum Music by 4t
   * To build plugin in VST3 format: build and execute QuantumReverb_VST3 project
 * Unit tests are located under the Tests project
   * To run unit tests: build and execute Tests project
+
+# Style guide
+
+See the [*Style Guide* page](StyleGuide.md)
