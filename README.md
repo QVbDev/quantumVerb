@@ -2,13 +2,13 @@
 
 An open-source convolution reverb audio plugin developed for Quantum Music by 4th-year engineering students at Polytechnique Montréal.
 
-# Getting started
+# Getting started using Visual Studio 2017
 
 ## Getting the code
 
 1. Clone repository
 2. Download [VST3 SDK](https://www.steinberg.net/en/company/developers.html)
-2. Unzip SDK files to C:\SDKs\* (or modify build solution to point to chosen SDK location)
+2. Unzip SDK files to C:\SDKs\ (or modify build solution to point to chosen SDK location)
 3. Open Builds\VisualStudio2017\QuantumReverb.sln
 
 ## Working with the project
