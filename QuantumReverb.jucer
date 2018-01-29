@@ -45,7 +45,7 @@
     </GROUP>
     <GROUP id="{DA48C4C5-5055-C375-3A12-3834943C33C6}" name="tests">
       <FILE id="n62xMN" name="catch.hpp" compile="0" resource="0" file="Source/catch.hpp"/>
-      <FILE id="riSDH9" name="Test_Main.cpp" compile="1" resource="0" file="Source/Test_Main.cpp"/>
+      <FILE id="riSDH9" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="ldoH9F" name="Test_Convolution.cpp" compile="1" resource="0"
             file="Source/Test_Convolution.cpp"/>
       <FILE id="xQuyLU" name="Test_Filter.cpp" compile="1" resource="0" file="Source/Test_Filter.cpp"/>
