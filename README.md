@@ -21,4 +21,4 @@ An open-source convolution reverb audio plugin developed for Quantum Music by 4t
 
 # Style guide
 
-See the [*Style Guide* page](StyleGuide.md)
+See the [**Style Guide** page](StyleGuide.md)
