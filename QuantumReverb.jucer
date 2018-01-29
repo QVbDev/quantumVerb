@@ -4,7 +4,7 @@
               splashScreenColour="Dark" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.yourcompany.QuantumReverb" includeBinaryInAppConfig="1"
               cppLanguageStandard="latest" companyCopyright="Quantum-Music &#169; 2018, an Audio Mastering Company based in Montreal, QC, Canada."
-              buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildVST="1" buildVST3="1" buildAU="0" buildAUv3="0" buildRTAS="0"
               buildAAX="0" buildStandalone="1" enableIAA="0" pluginName="QuantumReverb"
               pluginDesc="Convolution reverb audio plugin" pluginManufacturer="Quantum Music"
               pluginManufacturerCode="Qntm" pluginCode="QRvb" pluginChannelConfigs="{2,2}"
@@ -13,7 +13,7 @@
               pluginRTASCategory="" aaxIdentifier="com.yourcompany.QuantumReverb"
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.2.0"
               companyName="Quantum-Music" companyWebsite="http://quantum-music.ca/"
-              companyEmail="mlafleur@quantum-music.ca" headerPath="&quot;../include/&quot;"
+              companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\SoundTouch"
               defines="DONT_SET_USING_JUCE_NAMESPACE=1">
   <MAINGROUP id="wAf2hM" name="QuantumReverb">
     <GROUP id="{16E68198-2536-31A4-D4D0-776A279C4A7E}" name="include">
@@ -65,14 +65,16 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
-            vst3Folder="">
+            vst3Folder="" externalLibraries="SoundTouchDll_x64.lib">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
-                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"/>
+                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
+                       libraryPath="..\..\SoundTouch\" prebuildCommand="copy &quot;..\..\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
-                       linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"/>
+                       linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
+                       libraryPath="..\..\SoundTouch\" prebuildCommand="copy &quot;..\..\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../../../../JUCE/modules"/>
