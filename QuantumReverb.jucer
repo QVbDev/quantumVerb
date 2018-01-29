@@ -3,7 +3,7 @@
 <JUCERPROJECT id="i8Ip2P" name="QuantumReverb" displaySplashScreen="0" reportAppUsage="0"
               splashScreenColour="Dark" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.yourcompany.QuantumReverb" includeBinaryInAppConfig="1"
-              cppLanguageStandard="latest" companyCopyright="Quantum-Music &#169; 2018, an Audio Mastering Company based in Montreal, QC, Canada."
+              cppLanguageStandard="14" companyCopyright="Quantum-Music &#169; 2018, an Audio Mastering Company based in Montreal, QC, Canada."
               buildVST="1" buildVST3="1" buildAU="0" buildAUv3="0" buildRTAS="0"
               buildAAX="0" buildStandalone="1" enableIAA="0" pluginName="QuantumReverb"
               pluginDesc="Convolution reverb audio plugin" pluginManufacturer="Quantum Music"
