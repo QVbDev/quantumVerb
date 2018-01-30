@@ -22,8 +22,11 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
-    */
+     * A pipeline implementing various transformation steps that are applied to impulse responses.
+     * This pipeline is executed only as needed (i.e. when a new IR is requested or when one of
+     * its parameters is changed). Therefore, it is not part of the critical path (its speed
+     * does not have a huge impact on plugin performance).
+     */
     class IRPipeline : public Task
     {
     public:

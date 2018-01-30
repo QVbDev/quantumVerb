@@ -12,24 +12,21 @@
 
 #include <chrono>
 
-#define MEASURE_PERFORMANCE 1
-
 /**
  * How to write tests with Catch:
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
 TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
-    // Test config
-    constexpr auto SAMPLE_RATE = 88200;     // Hz
-    constexpr auto NUM_CHANNELS = 2;
-    constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);   // seconds
-    constexpr auto NUM_SAMPLES_PER_BLOCK = BLOCK_DURATION_MS.count() * SAMPLE_RATE;
+    constexpr int SAMPLE_RATE = 88200; // Hz
+    constexpr int NUM_CHANNELS = 2;
+    constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20); // ms
+    constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE;
 
     // Create AudioProcessor
     reverb::AudioProcessor processor;
     processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
-                                   SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
+                                   SAMPLE_RATE, std::ceil(NUM_SAMPLES_PER_BLOCK));
 
     REQUIRE(processor.irPipeline != nullptr);
     REQUIRE(processor.mainPipeline != nullptr);
@@ -58,31 +55,37 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
 
     REQUIRE(emptyMidi.isEmpty());
 
+
     SECTION("IRPipeline should be disabled after execution") {
         REQUIRE(processor.irPipeline->mustExec);
 
+        // First exec (with IR pipeline)
         processor.processBlock(audio, emptyMidi);
 
         REQUIRE(!processor.irPipeline->mustExec);
 
+        // Second exec (no IR pipeline)
         processor.processBlock(audio, emptyMidi);
 
         REQUIRE(!processor.irPipeline->mustExec);
     }
 
-#ifdef MEASURE_PERFORMANCE
-    SECTION("Processing should be real-time (less than audio block time)") {
-        // Disable IRPipeline
+
+    SECTION("Regular processing should be real-time") {
+        // TODO: What should our max exec time be? Currently minimum real-time value
+        //       (i.e. actual block time)
+        constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
+
+        // Prepare impulse response
         processor.processBlock(audio, emptyMidi);
 
-        // Measure processing time
+        // Measure total processing time for one block
         auto start = std::chrono::high_resolution_clock::now();
         processor.processBlock(audio, emptyMidi);
         auto end = std::chrono::high_resolution_clock::now();
 
         auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         
-        REQUIRE(execTime.count() < BLOCK_DURATION_MS.count());
+        REQUIRE(execTime.count() < MAX_EXEC_TIME_MS.count());
     }
-#endif
 }

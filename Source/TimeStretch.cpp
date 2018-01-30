@@ -64,6 +64,11 @@ namespace reverb
         juce::AudioSampleBuffer irIn = std::move(ir);
 
         // Calculate tempo change & expected number of samples in output buffer
+        if (!origIRSampleRate)
+        {
+            throw std::invalid_argument("Unknown sample rate for given IR, cannot apply time stretching");
+        }
+
         float tempoChange = (float)(origIRSampleRate / processor->getSampleRate()) - 1.0f;
         unsigned newNumSamples = (unsigned)std::ceil(irIn.getNumSamples() / (1.0 + tempoChange));
 

@@ -22,8 +22,9 @@ namespace reverb
 
 	//==============================================================================
 	/**
-    * TODO: Description
-	*/
+     * Main reverb audio processor class. Contains all processing steps and provides a user-
+     * facing editor for parameter adjustment.
+	 */
 	class AudioProcessor : public juce::AudioProcessor
 	{
 	public:

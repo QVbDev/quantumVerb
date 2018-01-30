@@ -17,8 +17,8 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TimeStretch class: implements a time stretching algorithm to manage IR buffer length
-    */
+     * Implements a time stretching algorithm to manage IR buffer length and sample rate.
+     */
     class TimeStretch : public Task
     {
     public:

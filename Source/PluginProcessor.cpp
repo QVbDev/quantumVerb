@@ -15,6 +15,9 @@ namespace reverb
 {
 
 	//==============================================================================
+    /**
+     * @brief Constructs a reverb audio processor & initialises its inner pipelines
+     */
 	AudioProcessor::AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
 		: AudioProcessor(BusesProperties()

@@ -15,9 +15,10 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief (TODO) Brief description
+     * @brief Constructs an IRPipeline object associated with an AudioProcessor
      *
-     * (TODO) Detailed description
+     * Creates an IRPipeline and each of its steps. Also sets the default IR file path
+     * and ensures it can be found.
      *
      * @param [in] processor    Pointer to main processor
      */
@@ -34,29 +35,30 @@ namespace reverb
         gain = std::make_shared<Gain>(processor);
 
         // Look for IR bank
+        // TODO: Choose impulse responses to provide in bank and select default one (current IR is temporary)
         irFilePath = juce::File::getCurrentWorkingDirectory().getFullPathName().toStdString() +
                      "/../../ImpulseResponses/chiesa_di_san_lorenzo.wav";
 
-        juce::File irBank(irFilePath);
-        if (!irBank.existsAsFile())
+        juce::File irFile(irFilePath);
+        if (!irFile.existsAsFile())
         {
-            throw std::invalid_argument("Failed to locate IR bank");
+            throw std::invalid_argument("Failed to locate default impulse response: " + irFilePath);
         }
-
-        // TODO: Initialise IR file path to some default value
     }
 
     //==============================================================================
     /**
-     * @brief (TODO) Brief description
+     * @brief Manipulate the input IR file and place it in the given buffer
      *
-     * (TODO) Detailed description
+     * Loads the selected impulse response (IR) from disk and places it in the given
+     * output buffer. Applies filtering (EQ), time stretching (sample rate conversion)
+     * and gain to buffer to prepare it for main audio processing.
      *
-     * @param [in,out] ir   (TODO) Parameter description
+     * @param [out] ir  Processed impulse response
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& ir)
     {
-        // Load IR file
+        // Load impulse response file
         juce::File irFile(irFilePath);
         juce::FileInputStream irFileStream(irFile);
 
@@ -73,7 +75,7 @@ namespace reverb
             throw std::invalid_argument("Failed to create reader for IR file: " + irFilePath);
         }
 
-        // Create AudioBuffer with max 5s of samples
+        // Create AudioBuffer with max. 5s of samples
         juce::int64 numSamples = std::min(reader->lengthInSamples,
                                          (juce::int64)std::ceil(reader->sampleRate * 5));
 
@@ -84,6 +86,9 @@ namespace reverb
         ir.setSize((int)useLeftChannel + (int)useRightChannel, numSamples, false, true, false);
 
         reader->read(&ir, 0, numSamples, 0, useLeftChannel, useRightChannel);
+
+        // Set parameters based on current impulse response
+        timeStretch->origIRSampleRate = reader->sampleRate;
         
         // Execute pipeline
         for (auto& filter : filters)
@@ -91,9 +96,7 @@ namespace reverb
             filter->exec(ir);
         }
 
-        // FIXME: time stretch seems to cause an infinite loop in AudioProcessor unit tests,
-        //        investigate this ASAP
-        //timeStretch->exec(ir);
+        timeStretch->exec(ir);
         gain->exec(ir);
     }
 
