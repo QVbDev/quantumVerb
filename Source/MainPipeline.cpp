@@ -24,6 +24,10 @@ namespace reverb
     MainPipeline::MainPipeline(juce::AudioProcessor * processor)
         : Task(processor)
     {
+        // Initialise pipeline steps
+        convolution = std::make_shared<Convolution>(processor);
+        gain = std::make_shared<Gain>(processor);
+        dryWetMixer = std::make_shared<Mixer>(processor);
     }
 
     //==============================================================================

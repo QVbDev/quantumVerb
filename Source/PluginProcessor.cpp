@@ -27,6 +27,8 @@ namespace reverb
 		)
 #endif
 	{
+        irPipeline = std::make_shared<IRPipeline>(this);
+        mainPipeline = std::make_shared<MainPipeline>(this);
 	}
 
 	AudioProcessor::~AudioProcessor()
@@ -132,29 +134,44 @@ namespace reverb
 	}
 #endif
 
-	void AudioProcessor::processBlock(juce::AudioSampleBuffer& buffer, juce::MidiBuffer& midiMessages)
+    /**
+     * @brief Applies reverb effect on audio buffer using parameters given through the editor
+     *
+     * @param [in] buffer   Audio buffer containing samples to process
+     * @param midiMessages  Unused
+     */
+	void AudioProcessor::processBlock(juce::AudioSampleBuffer& buffer, juce::MidiBuffer&)
 	{
+        // Lock processor during use
+        std::lock_guard<std::mutex> guard(lock);
+
+        // Disable denormals for performance
 		juce::ScopedNoDenormals noDenormals;
-		const int totalNumInputChannels = getTotalNumInputChannels();
-		const int totalNumOutputChannels = getTotalNumOutputChannels();
 
-		// In case we have more outputs than inputs, this code clears any output
-		// channels that didn't contain input data, (because these aren't
-		// guaranteed to be empty - they may contain garbage).
-		// This is here to avoid people getting screaming feedback
-		// when they first compile a plugin, but obviously you don't need to keep
-		// this code if your algorithm always overwrites all the output channels.
-		for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-			buffer.clear(i, 0, buffer.getNumSamples());
+        // In case we have more outputs than inputs, this code clears any output
+        // channels that didn't contain input data, (because these aren't
+        // guaranteed to be empty - they may contain garbage).
+        const int totalNumInputChannels = getTotalNumInputChannels();
+        const int totalNumOutputChannels = getTotalNumOutputChannels();
 
-		// This is the place where you'd normally do the guts of your plugin's
-		// audio processing...
-		for (int channel = 0; channel < totalNumInputChannels; ++channel)
-		{
-			float* channelData = buffer.getWritePointer(channel);
+        for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        {
+            buffer.clear(i, 0, buffer.getNumSamples());
+        }
 
-			// ..do something to the data...
-		}
+        // Execute IR pipeline if necessary (i.e. first run or one of its parameters
+        // was changed by the editor)
+        if (irPipeline->mustExec)
+        {
+            juce::AudioSampleBuffer ir;
+            irPipeline->exec(ir);
+
+            mainPipeline->loadIR(ir);
+            irPipeline->mustExec = false;
+        }
+
+        // Execute main pipeline
+        mainPipeline->exec(buffer);
 	}
 
 	//==============================================================================
@@ -171,6 +188,8 @@ namespace reverb
 	//==============================================================================
 	void AudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 	{
+        // TODO
+
 		// You should use this method to store your parameters in the memory block.
 		// You could do that either as raw data, or use the XML or ValueTree classes
 		// as intermediaries to make it easy to save and load complex data.
@@ -178,6 +197,8 @@ namespace reverb
 
 	void AudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 	{
+        // TODO
+
 		// You should use this method to restore your parameters from this memory block,
 		// whose contents will have been created by the getStateInformation() call.
 	}
