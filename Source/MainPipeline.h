@@ -34,7 +34,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& audio) override;
 
         //==============================================================================
-        void loadIR(juce::AudioSampleBuffer& ir);
+        void loadIR(juce::AudioSampleBuffer&& ir);
 
         //==============================================================================
         Convolution::Ptr convolution;

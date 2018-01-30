@@ -166,7 +166,7 @@ namespace reverb
             juce::AudioSampleBuffer ir;
             irPipeline->exec(ir);
 
-            mainPipeline->loadIR(ir);
+            mainPipeline->loadIR(std::move(ir));
             irPipeline->mustExec = false;
         }
 

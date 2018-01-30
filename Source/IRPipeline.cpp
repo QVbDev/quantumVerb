@@ -8,6 +8,8 @@
 
 #include "IRPipeline.h"
 
+#include <algorithm>
+
 namespace reverb
 {
 
@@ -44,6 +46,42 @@ namespace reverb
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& ir)
     {
+        // Load IR file
+        juce::File irFile(irFilePath);
+        juce::FileInputStream irFileStream(irFile);
+
+        if (irFileStream.failedToOpen())
+        {
+            throw std::invalid_argument("Failed to open IR file: " + irFilePath);
+        }
+
+        juce::WavAudioFormat wavFormat;
+        juce::AudioFormatReader * reader = wavFormat.createReaderFor(&irFileStream, true);
+
+        if (!reader)
+        {
+            throw std::invalid_argument("Failed to create reader for IR file: " + irFilePath);
+        }
+
+        // Create AudioBuffer with max 5s of samples
+        ir.clear();
+
+        juce::int64 nbSamples = std::min(reader->lengthInSamples,
+                                         (juce::int64)std::ceil(reader->sampleRate * 5));
+
+        bool useLeftChannel = true;
+        bool useRightChannel = true;
+
+        reader->read(&ir, 0, nbSamples, 0, useLeftChannel, useRightChannel);
+        
+        // Execute pipeline
+        for (auto& filter : filters)
+        {
+            filter->exec(ir);
+        }
+
+        timeStretch->exec(ir);
+        gain->exec(ir);
     }
 
 }
