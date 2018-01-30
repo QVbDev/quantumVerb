@@ -167,16 +167,6 @@
     <ClCompile Include="..\..\Source\PluginEditor.cpp" />
     <ClCompile Include="..\..\Source\PluginProcessor.cpp" />
     <ClCompile Include="..\..\Source\TimeStretch.cpp" />
-    <ClCompile Include="..\..\Source\Main.cpp" />
-    <ClCompile Include="..\..\Source\Test_Convolution.cpp" />
-    <ClCompile Include="..\..\Source\Test_Filter.cpp" />
-    <ClCompile Include="..\..\Source\Test_Gain.cpp" />
-    <ClCompile Include="..\..\Source\Test_IRPipeline.cpp" />
-    <ClCompile Include="..\..\Source\Test_MainPipeline.cpp" />
-    <ClCompile Include="..\..\Source\Test_Mixer.cpp" />
-    <ClCompile Include="..\..\Source\Test_AudioProcessorEditor.cpp" />
-    <ClCompile Include="..\..\Source\Test_AudioProcessor.cpp" />
-    <ClCompile Include="..\..\Source\Test_TimeStretch.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\JUCE\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1936,7 +1926,6 @@
     <ClInclude Include="..\..\Source\PluginProcessor.h" />
     <ClInclude Include="..\..\Source\Task.h" />
     <ClInclude Include="..\..\Source\TimeStretch.h" />
-    <ClInclude Include="..\..\Source\catch.hpp" />
     <ClInclude Include="..\..\..\..\..\..\..\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h" />
     <ClInclude Include="..\..\..\..\..\..\..\JUCE\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h" />
     <ClInclude Include="..\..\..\..\..\..\..\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h" />
