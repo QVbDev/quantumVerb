@@ -14,6 +14,8 @@
 
 #include "PluginProcessor.h"
 
+using namespace juce;
+
 namespace reverb
 {
 
@@ -21,7 +23,7 @@ namespace reverb
 	/**
     * TODO: Description
 	*/
-	class AudioProcessorEditor : public juce::AudioProcessorEditor
+	class AudioProcessorEditor : public juce::AudioProcessorEditor 
 	{
 	public:
 		AudioProcessorEditor(AudioProcessor&);
@@ -35,6 +37,18 @@ namespace reverb
 		// This reference is provided as a quick way for your editor to
 		// access the processor object that created it.
 		AudioProcessor& processor;
+
+        TextButton activateButton;
+        TextButton infoGene;
+        TextButton sampleRate;
+        TextButton graphBox;
+        TextButton eqBox;
+        TextButton gainMixTimeBox;
+        //Rectangle<int> graphBox;
+        Rectangle<int> rightControlBox;
+        Rectangle<int> equalizerBox;
+        
+        Slider item2;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};
