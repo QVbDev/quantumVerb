@@ -13,8 +13,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "PluginProcessor.h"
-
-using namespace juce;
+#include "GUI_filter_box.h"
+#include "GUI_reverb_box.h"
 
 namespace reverb
 {
@@ -38,17 +38,34 @@ namespace reverb
 		// access the processor object that created it.
 		AudioProcessor& processor;
 
-        TextButton activateButton;
-        TextButton infoGene;
-        TextButton sampleRate;
-        TextButton graphBox;
-        TextButton eqBox;
-        TextButton gainMixTimeBox;
-        //Rectangle<int> graphBox;
-        Rectangle<int> rightControlBox;
-        Rectangle<int> equalizerBox;
+        /*// boxed sections buttons
+        juce::TextButton activateButton;
+        juce::TextButton infoGene;
+        juce::TextButton sampleRate;
+        juce::TextButton graphBox;
+        juce::TextButton eqBox;
+        juce::TextButton gainMixTimeBox;*/
+
         
-        Slider item2;
+        /*// slider comparison
+        juce::Slider qfilter;
+        juce::Slider qfilter1;
+        juce::Slider qfilter2;
+        juce::Slider qfilter3;
+        juce::Slider qfilter4;
+        juce::Slider qfilter5;*/
+
+        GUI_filter_box lowShelf;
+        GUI_filter_box peakingLow;
+        GUI_filter_box peakingHigh;
+        GUI_filter_box highShelf;
+
+        GUI_reverb_box reverbParam;
+
+        juce::ToggleButton isOn;
+
+        juce::TextEditor genInfo;
+        juce::TextEditor sampleRate;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};
