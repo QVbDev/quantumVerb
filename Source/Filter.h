@@ -36,7 +36,7 @@ namespace reverb
         virtual void buildFilter() = 0;
 
         //==============================================================================
-        double freq;
+        double frequency;
         double Q;
         double gainFactor;
     };

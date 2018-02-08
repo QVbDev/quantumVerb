@@ -34,6 +34,9 @@ namespace reverb
      */
     void Filter::exec(juce::AudioSampleBuffer& ir)
     {
+		buildFilter();
+		juce::dsp::AudioBlock<float> block(ir);
+		//this.processSamples(ir.getWritePointer(0), ir.getNumSamples());
     }
 
     //==============================================================================
@@ -44,6 +47,7 @@ namespace reverb
     */
     void LowShelfFilter::buildFilter()
     {
+		coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(processor->getSampleRate(), frequency, Q, gainFactor);
     }
 
     //==============================================================================
@@ -54,6 +58,7 @@ namespace reverb
     */
     void HighShelfFilter::buildFilter()
     {
+		coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), frequency, Q, gainFactor);
     }
 
     //==============================================================================
@@ -64,6 +69,7 @@ namespace reverb
     */
     void PeakFilter::buildFilter()
     {
+		coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(processor->getSampleRate(), frequency, Q, gainFactor);
     }
 
 }
