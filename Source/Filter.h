@@ -15,6 +15,10 @@
 namespace reverb
 {
 
+	float invdB(float dB) {
+		return pow(10, dB / 10);
+	}
+
     //==============================================================================
     /**
     * TODO: Description
