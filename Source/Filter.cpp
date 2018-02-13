@@ -36,7 +36,10 @@ namespace reverb
     {
 		buildFilter();
 		juce::dsp::AudioBlock<float> block(ir);
-		//this.processSamples(ir.getWritePointer(0), ir.getNumSamples());
+
+		juce::dsp::ProcessContextReplacing<float> context(block);
+		juce::dsp::IIR::Filter<float>::process(context);
+		
     }
 
     //==============================================================================
@@ -58,6 +61,9 @@ namespace reverb
     */
     void HighShelfFilter::buildFilter()
     {
+		jassert(frequency > 0);
+		jassert(frequency > 0);
+		jassert(gainFactor > 0 && gainFactor < invdB(15));
 		coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), frequency, Q, gainFactor);
     }
 

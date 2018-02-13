@@ -9,6 +9,7 @@
 #include "catch.hpp"
 
 #include "Filter.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 
 /**
  * How to write tests with Catch:
@@ -17,3 +18,15 @@
 
 //TEST_CASE("(TODO) Test case description", "[Filter]") {
 //}
+
+TEST_CASE("Filters are tested", "[filters]") {
+	reverb::LowShelfFilter lowShelf();
+	reverb::HighShelfFilter highShelf();
+	reverb::PeakFilter peakFilter();
+
+	
+
+
+
+
+}
