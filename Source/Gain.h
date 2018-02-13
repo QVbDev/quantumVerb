@@ -15,7 +15,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
+    * Apply a gain to audio signal
     */
     class Gain : public Task
     {
