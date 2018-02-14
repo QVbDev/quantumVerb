@@ -93,7 +93,11 @@ namespace reverb
         // Execute pipeline
         for (auto& filter : filters)
         {
-            filter->exec(ir);
+			/*NOTE: We need to figure out how to use ProcessorDuplicator to apply a filter to a multi-channel buffer
+			Filter objects cannot process more than one channel
+			*/
+
+            //filter->exec(ir);
         }
 
         timeStretch->exec(ir);
