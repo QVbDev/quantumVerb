@@ -28,7 +28,7 @@ namespace reverb
     {
     public:
         //==============================================================================
-        Filter(juce::AudioProcessor * processor, float freq = 1000.0f, float q = 0.5f, float gain = 1.0f);
+        Filter(juce::AudioProcessor * processor, float freq = 1000.0f, float q = 0.71f, float gain = 1.0f);
 
         //==============================================================================
         using Ptr = std::shared_ptr<Filter>;

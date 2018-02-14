@@ -43,12 +43,12 @@ namespace reverb
     }
 
 	void Filter::setFrequency(float freq) {
-		jassert(freq < 0 && freq <= 20000);
+		jassert(freq > 0 && freq <= 20000);
 		frequency = freq;
 	}
 
 	void Filter::setQ(float q) {
-		jassert(q > 0);
+		jassert(q > 0.7);
 		Q = q;
 	}
 
@@ -58,7 +58,7 @@ namespace reverb
 	}
 
 	bool Filter::assertValues() {
-		if (frequency > 0 && frequency < 20000 && Q > 0 && gainFactor >= 0 && gainFactor < invdB(15))
+		if (frequency > 0 && frequency < 20000 && Q > 0.7 && gainFactor >= 0 && gainFactor < invdB(15))
 			return true;
 		else
 			return false;

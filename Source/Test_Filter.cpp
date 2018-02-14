@@ -24,8 +24,7 @@
 //TEST_CASE("(TODO) Test case description", "[Filter]") {
 //}
 
-TEST_CASE("Filters are tested", "[filters]") {
-
+TEST_CASE("Filter class is tested", "[filters]") {
 	constexpr int sampleRate = 44100;
 	constexpr int channelNumber = 1;
 	constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
@@ -37,28 +36,40 @@ TEST_CASE("Filters are tested", "[filters]") {
 
 	REQUIRE(processor.getSampleRate() == sampleRate);
 
-	 
+	//Test invdB function
+	REQUIRE((int)reverb::invdB(0) == 1);
+	REQUIRE((int)reverb::invdB(10) == 10);
+	REQUIRE((int)reverb::invdB(20) == 100);
 
-	SECTION("Using filters on unit impulse") {
-		//Unit impulse construction
-		juce::AudioBuffer<float> bufferToFill(channelNumber, sampleRate * 2);
+    //Unit impulse construction
+	juce::AudioBuffer<float> sampleBuffer(channelNumber, sampleRate * 2);
 
-		float * const buffer = bufferToFill.getWritePointer(0);
+	float * const buffer = sampleBuffer.getWritePointer(0);
 
-		for (int i = 0; i < bufferToFill.getNumSamples(); i++) {
+	for (int i = 0; i < sampleBuffer.getNumSamples(); i++) {
 
-			if (i == 22050)
+		if (i == 22050) {
 				buffer[i] = 1.0f;
-			else
+		}
+		else {
 				buffer[i] = 0;
 		}
-
-		reverb::LowShelfFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
-		reverb::HighShelfFilter highShelf(&processor, 100, 0.71, reverb::invdB(-24));
-		reverb::PeakFilter peakFilter(&processor, 100, 0.71, reverb::invdB(-24));
-
 	}
 
+	SECTION("Testing low-shelf filter") {
+		reverb::LowShelfFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
+		lowShelf.exec(sampleBuffer);
+	}
+
+	SECTION("Testing high-shelf filter") {
+		reverb::HighShelfFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
+		lowShelf.exec(sampleBuffer);
+	}
+
+	SECTION("Testing peaking filter") {
+		reverb::PeakFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
+		lowShelf.exec(sampleBuffer);
+	}
 	
 
 
