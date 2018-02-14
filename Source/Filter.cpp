@@ -34,7 +34,7 @@ namespace reverb
      */
     void Filter::exec(juce::AudioSampleBuffer& ir)
     {
-		if (ir.getNumChannels != 1)
+		if (ir.getNumChannels() != 1)
 			throw ChannelNumberException();
 
 		buildFilter();
