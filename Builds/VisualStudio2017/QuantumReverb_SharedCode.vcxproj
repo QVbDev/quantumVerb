@@ -95,6 +95,9 @@
       <OutputFile>$(IntDir)\QuantumReverb.bsc</OutputFile>
     </Bscmake>
     <Lib />
+    <Lib>
+      <AdditionalDependencies>..\..\SoundTouch\SoundTouchDll_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
