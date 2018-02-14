@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="i8Ip2P" name="QuantumReverb" displaySplashScreen="0" reportAppUsage="0"
+<JUCERPROJECT id="i8Ip2P" name="QuantumReverb" displaySplashScreen="1" reportAppUsage="1"
               splashScreenColour="Dark" projectType="audioplug" version="1.0.0"
-              bundleIdentifier="ca.quantum-music.QuantumReverb" includeBinaryInAppConfig="1"
-              cppLanguageStandard="14" companyCopyright="Quantum-Music &#169; 2018, an Audio Mastering Company based in Montreal, QC, Canada."
-              buildVST="1" buildVST3="1" buildAU="0" buildAUv3="0" buildRTAS="0"
+              bundleIdentifier="com.yourcompany.QuantumReverb" includeBinaryInAppConfig="1"
+              cppLanguageStandard="latest" companyCopyright="Quantum-Music &#169; 2018, an Audio Mastering Company based in Montreal, QC, Canada."
+              buildVST="1" buildVST3="1" buildAU="1" buildAUv3="0" buildRTAS="0"
               buildAAX="0" buildStandalone="1" enableIAA="0" pluginName="QuantumReverb"
               pluginDesc="Convolution reverb audio plugin" pluginManufacturer="Quantum Music"
               pluginManufacturerCode="Qntm" pluginCode="QRvb" pluginChannelConfigs="{2,2}"
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="QuantumReverbAU"
-              pluginRTASCategory="" aaxIdentifier="ca.quantum-music.QuantumReverb"
-              pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.2.0"
+              pluginRTASCategory="" aaxIdentifier="com.yourcompany.QuantumReverb"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.2.0"
               companyName="Quantum-Music" companyWebsite="http://quantum-music.ca/"
-              companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\SoundTouch"
+              companyEmail="mlafleur@quantum-music.ca" headerPath="&quot;../include/&quot;"
               defines="DONT_SET_USING_JUCE_NAMESPACE=1">
   <MAINGROUP id="wAf2hM" name="QuantumReverb">
     <GROUP id="{16E68198-2536-31A4-D4D0-776A279C4A7E}" name="include">
@@ -45,36 +45,34 @@
     </GROUP>
     <GROUP id="{DA48C4C5-5055-C375-3A12-3834943C33C6}" name="tests">
       <FILE id="n62xMN" name="catch.hpp" compile="0" resource="0" file="Source/catch.hpp"/>
-      <FILE id="riSDH9" name="Main.cpp" compile="0" resource="0" file="Source/Main.cpp"/>
-      <FILE id="ldoH9F" name="Test_Convolution.cpp" compile="0" resource="0"
+      <FILE id="riSDH9" name="Test_Main.cpp" compile="1" resource="0" file="Source/Test_Main.cpp"/>
+      <FILE id="ldoH9F" name="Test_Convolution.cpp" compile="1" resource="0"
             file="Source/Test_Convolution.cpp"/>
-      <FILE id="xQuyLU" name="Test_Filter.cpp" compile="0" resource="0" file="Source/Test_Filter.cpp"/>
-      <FILE id="EEZzcb" name="Test_Gain.cpp" compile="0" resource="0" file="Source/Test_Gain.cpp"/>
-      <FILE id="GmRN9e" name="Test_IRPipeline.cpp" compile="0" resource="0"
+      <FILE id="xQuyLU" name="Test_Filter.cpp" compile="1" resource="0" file="Source/Test_Filter.cpp"/>
+      <FILE id="EEZzcb" name="Test_Gain.cpp" compile="1" resource="0" file="Source/Test_Gain.cpp"/>
+      <FILE id="GmRN9e" name="Test_IRPipeline.cpp" compile="1" resource="0"
             file="Source/Test_IRPipeline.cpp"/>
-      <FILE id="Kh2Ffs" name="Test_MainPipeline.cpp" compile="0" resource="0"
+      <FILE id="Kh2Ffs" name="Test_MainPipeline.cpp" compile="1" resource="0"
             file="Source/Test_MainPipeline.cpp"/>
-      <FILE id="MapGXW" name="Test_Mixer.cpp" compile="0" resource="0" file="Source/Test_Mixer.cpp"/>
-      <FILE id="yYjyHZ" name="Test_AudioProcessorEditor.cpp" compile="0"
+      <FILE id="MapGXW" name="Test_Mixer.cpp" compile="1" resource="0" file="Source/Test_Mixer.cpp"/>
+      <FILE id="yYjyHZ" name="Test_AudioProcessorEditor.cpp" compile="1"
             resource="0" file="Source/Test_AudioProcessorEditor.cpp"/>
-      <FILE id="hSI9E3" name="Test_AudioProcessor.cpp" compile="0" resource="0"
+      <FILE id="hSI9E3" name="Test_AudioProcessor.cpp" compile="1" resource="0"
             file="Source/Test_AudioProcessor.cpp"/>
-      <FILE id="iBDQum" name="Test_TimeStretch.cpp" compile="0" resource="0"
+      <FILE id="iBDQum" name="Test_TimeStretch.cpp" compile="1" resource="0"
             file="Source/Test_TimeStretch.cpp"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
-            vst3Folder="" externalLibraries="SoundTouchDll_x64.lib">
+            vst3Folder="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
-                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
-                       libraryPath="..\..\SoundTouch\" prebuildCommand="copy &quot;..\..\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
+                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
-                       linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
-                       libraryPath="..\..\SoundTouch\" prebuildCommand="copy &quot;..\..\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
+                       linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../../../../JUCE/modules"/>
@@ -83,6 +81,8 @@
         <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_opengl" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_basics" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../../../../../JUCE/modules"/>
@@ -91,29 +91,27 @@
         <MODULEPATH id="juce_audio_plugin_client" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_utils" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_dsp" path="../../../../../JUCE/modules"/>
-        <MODULEPATH id="juce_video" path="C:/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="C:/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>
   <MODULES>
-    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="1"
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
             useGlobalPath="1"/>
-    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_core" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_events" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
-    <MODULE id="juce_video" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
 </JUCERPROJECT>
