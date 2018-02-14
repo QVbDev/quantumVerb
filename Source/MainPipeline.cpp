@@ -24,6 +24,10 @@ namespace reverb
     MainPipeline::MainPipeline(juce::AudioProcessor * processor)
         : Task(processor)
     {
+        // Initialise pipeline steps
+        convolution = std::make_shared<Convolution>(processor);
+        gain = std::make_shared<Gain>(processor);
+        dryWetMixer = std::make_shared<Mixer>(processor);
     }
 
     //==============================================================================
@@ -36,18 +40,21 @@ namespace reverb
      */
     void MainPipeline::exec(juce::AudioSampleBuffer& audio)
     {
+        dryWetMixer->loadDry(audio);
+        convolution->exec(audio);
+        dryWetMixer->exec(audio);
+        gain->exec(audio);
     }
 
     //==============================================================================
     /**
-     * @brief Brief description
+     * @brief Move IR buffer into MainPipeline object
      *
-     * Detailed description
-     *
-     * @param [in] ir   Parameter description
+     * @param [in] irIn Input IR buffer, empty after this method is called
      */
-    void MainPipeline::loadIR(juce::AudioSampleBuffer& ir)
+    void MainPipeline::loadIR(juce::AudioSampleBuffer&& irIn)
     {
+        ir = std::move(irIn);
     }
 
 }

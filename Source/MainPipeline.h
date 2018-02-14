@@ -2,8 +2,6 @@
   ==============================================================================
 
     MainPipeline.h
-    Created: 20 Jan 2018 4:57:18pm
-    Author:  Eric Seguin
 
   ==============================================================================
 */
@@ -21,8 +19,11 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
-    */
+     * Main audio processing pipeline. Contains various steps applied on every processing cycle,
+     * in particular convolution with the associated impulse response and some cleanup steps
+     * afterwards. This pipeline constitutes the critical path (i.e. it limits plugin
+     * performance) and thus is more heavily optimised than its IR counterpart.
+     */
     class MainPipeline : public Task
     {
     public:
@@ -36,7 +37,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& audio) override;
 
         //==============================================================================
-        void loadIR(juce::AudioSampleBuffer& ir);
+        void loadIR(juce::AudioSampleBuffer&& ir);
 
         //==============================================================================
         Convolution::Ptr convolution;

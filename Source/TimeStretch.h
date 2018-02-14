@@ -2,13 +2,13 @@
   ==============================================================================
 
     TimeStretch.h
-    Created: 20 Jan 2018 5:00:14pm
-    Author:  Eric Seguin
 
   ==============================================================================
 */
 
 #pragma once
+
+#include "SoundTouchDLL.h"
 
 #include "Task.h"
 
@@ -17,13 +17,14 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
-    */
+     * Implements a time stretching algorithm to manage IR buffer length and sample rate.
+     */
     class TimeStretch : public Task
     {
     public:
         //==============================================================================
         TimeStretch(juce::AudioProcessor * processor);
+        ~TimeStretch() noexcept;
 
         //==============================================================================
         using Ptr = std::shared_ptr<TimeStretch>;
@@ -33,6 +34,9 @@ namespace reverb
 
         //==============================================================================
         double origIRSampleRate;
+
+    private:
+        HANDLE soundtouchHandle = nullptr;
     };
 
 }
