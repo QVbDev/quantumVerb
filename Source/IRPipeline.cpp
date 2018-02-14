@@ -61,15 +61,11 @@ namespace reverb
     {
         // Load impulse response file
         juce::File irFile(irFilePath);
-        juce::FileInputStream irFileStream(irFile);
 
-        if (irFileStream.failedToOpen())
-        {
-            throw std::invalid_argument("Failed to open IR file: " + irFilePath);
-        }
+        juce::AudioFormatManager formatMgr;
+        formatMgr.registerBasicFormats();
 
-        juce::WavAudioFormat wavFormat;
-        juce::AudioFormatReader * reader = wavFormat.createReaderFor(&irFileStream, true);
+        std::unique_ptr<juce::AudioFormatReader> reader(formatMgr.createReaderFor(irFile));
 
         if (!reader)
         {
