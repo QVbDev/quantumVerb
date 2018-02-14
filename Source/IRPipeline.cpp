@@ -33,6 +33,7 @@ namespace reverb
 
         timeStretch = std::make_shared<TimeStretch>(processor);
         gain = std::make_shared<Gain>(processor);
+        preDelay = std::make_shared<PreDelay>(processor);
 
         // Look for IR bank
         // TODO: Choose impulse responses to provide in bank and select default one (current IR is temporary)
@@ -98,6 +99,7 @@ namespace reverb
 
         timeStretch->exec(ir);
         gain->exec(ir);
+        preDelay->exec(ir);
     }
 
 }

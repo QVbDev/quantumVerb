@@ -12,6 +12,7 @@
 
 #include "Filter.h"
 #include "Gain.h"
+#include "PreDelay.h"
 #include "TimeStretch.h"
 
 #include <array>
@@ -43,6 +44,7 @@ namespace reverb
         std::array<Filter::Ptr, 4> filters;
         TimeStretch::Ptr timeStretch;
         Gain::Ptr gain;
+        PreDelay::Ptr preDelay;
 
         //==============================================================================
         bool mustExec = true;
