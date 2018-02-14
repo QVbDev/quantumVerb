@@ -26,6 +26,7 @@
       <FILE id="rhRhM8" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="uWAVTY" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="UiHVxO" name="PreDelay.h" compile="0" resource="0" file="Source/PreDelay.h"/>
       <FILE id="Ml2EHl" name="Task.h" compile="0" resource="0" file="Source/Task.h"/>
       <FILE id="ZbZKE4" name="TimeStretch.h" compile="0" resource="0" file="Source/TimeStretch.h"/>
     </GROUP>
@@ -41,11 +42,16 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="gfAIxI" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
+      <FILE id="FZ4wVp" name="PreDelay.cpp" compile="1" resource="0" file="Source/PreDelay.cpp"/>
       <FILE id="t35Mb5" name="TimeStretch.cpp" compile="1" resource="0" file="Source/TimeStretch.cpp"/>
     </GROUP>
     <GROUP id="{DA48C4C5-5055-C375-3A12-3834943C33C6}" name="tests">
       <FILE id="n62xMN" name="catch.hpp" compile="0" resource="0" file="Source/catch.hpp"/>
       <FILE id="riSDH9" name="Main.cpp" compile="0" resource="0" file="Source/Main.cpp"/>
+      <FILE id="hSI9E3" name="Test_AudioProcessor.cpp" compile="0" resource="0"
+            file="Source/Test_AudioProcessor.cpp"/>
+      <FILE id="yYjyHZ" name="Test_AudioProcessorEditor.cpp" compile="0"
+            resource="0" file="Source/Test_AudioProcessorEditor.cpp"/>
       <FILE id="ldoH9F" name="Test_Convolution.cpp" compile="0" resource="0"
             file="Source/Test_Convolution.cpp"/>
       <FILE id="xQuyLU" name="Test_Filter.cpp" compile="0" resource="0" file="Source/Test_Filter.cpp"/>
@@ -55,10 +61,8 @@
       <FILE id="Kh2Ffs" name="Test_MainPipeline.cpp" compile="0" resource="0"
             file="Source/Test_MainPipeline.cpp"/>
       <FILE id="MapGXW" name="Test_Mixer.cpp" compile="0" resource="0" file="Source/Test_Mixer.cpp"/>
-      <FILE id="yYjyHZ" name="Test_AudioProcessorEditor.cpp" compile="0"
-            resource="0" file="Source/Test_AudioProcessorEditor.cpp"/>
-      <FILE id="hSI9E3" name="Test_AudioProcessor.cpp" compile="0" resource="0"
-            file="Source/Test_AudioProcessor.cpp"/>
+      <FILE id="cswkeR" name="Test_PreDelay.cpp" compile="0" resource="0"
+            file="Source/Test_PreDelay.cpp"/>
       <FILE id="iBDQum" name="Test_TimeStretch.cpp" compile="0" resource="0"
             file="Source/Test_TimeStretch.cpp"/>
     </GROUP>
