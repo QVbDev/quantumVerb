@@ -17,7 +17,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
+    * Implements a method to apply a pre-delay factor to a given impulse response.
     */
     class PreDelay : public Task
     {
@@ -32,8 +32,9 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        double delayMs;
-        double sampleRate;
+        static constexpr double MAX_DELAY_MS = 1000;
+
+        double delayMs = 0;
     };
 
 }

@@ -108,6 +108,7 @@
     <ClCompile Include="..\..\Source\Main.cpp" />
     <ClCompile Include="..\..\Source\Test_MainPipeline.cpp" />
     <ClCompile Include="..\..\Source\Test_Mixer.cpp" />
+    <ClCompile Include="..\..\Source\Test_PreDelay.cpp" />
     <ClCompile Include="..\..\Source\Test_TimeStretch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
