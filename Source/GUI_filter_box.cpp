@@ -6,9 +6,9 @@ namespace reverb {
     {
         
 
-        paramQ.setSliderStyle(juce::Slider::Rotary);
-        paramf.setSliderStyle(juce::Slider::Rotary);
-        paramA.setSliderStyle(juce::Slider::Rotary);
+        paramQ.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        paramf.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        paramA.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
         // text display pos, readonly, width, height
         paramQ.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 40, 20);

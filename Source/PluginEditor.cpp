@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <string.h>
 
 using namespace juce;
 
@@ -99,14 +100,17 @@ namespace reverb
         isOn.setColour(isOn.tickDisabledColourId, juce::Colour(204, 204, 204));
         isOn.setButtonText("On");
         isOn.setSize(getWidth()*0.15,getHeight()*0.1);
+        isOn.addListener(this);
         
         addAndMakeVisible(isOn);
 
-        sampleRate.setText("Sample Rate");
+        //sampleRate.setText("Sample Rate");
+        sampleRate.setJustification(Justification::centred);
         sampleRate.setReadOnly(true);
         addAndMakeVisible(sampleRate);
 
         genInfo.setText("Example text");
+        genInfo.setJustification(Justification::centred);
         genInfo.setReadOnly(true);
         addAndMakeVisible(genInfo);
 
@@ -115,8 +119,15 @@ namespace reverb
         addAndMakeVisible(lowShelf);
         addAndMakeVisible(peakingLow);
         addAndMakeVisible(peakingHigh);
-        addAndMakeVisible(highShelf);
-               
+        addAndMakeVisible(highShelf);       
+
+        std::string mixerGain = "gain is: "  + std::to_string(p.mainPipeline->gain->gainFactor);
+        sampleRate.setText(mixerGain);
+
+
+        File knobPath = "C:/Github/QuantumReverb/Source/sample_knob.jpg";
+        knobPic = juce::ImageCache::getFromFile(knobPath);
+        
 
 	}
 
@@ -137,6 +148,13 @@ namespace reverb
         //headerBox.drawAt(g, 0, 0, 100);
 		//g.drawRoundedRectangle(0, 15, 300, 175, 2, 1);
 
+        // get graph box relative position
+        juce::Rectangle<float> pluginWindowBox(getLocalBounds().toFloat());
+        auto header = pluginWindowBox.removeFromTop(pluginWindowBox.getHeight()*0.1);
+        juce::Rectangle<float> EQareaBox(pluginWindowBox.removeFromBottom(pluginWindowBox.getHeight()*0.35));
+
+
+        g.drawImage(knobPic,pluginWindowBox);
         
 	}    
 
@@ -190,5 +208,29 @@ namespace reverb
         highShelf.setBounds(EQareaBox);
                
 	}
+    void AudioProcessorEditor::buttonClicked (juce::Button* button) 
+    {
+        if (button == &isOn)
+        {
+            if (isOn.getToggleState()) {
+                genInfo.setText("bro it's on");
+                processor.mainPipeline->gain->gainFactor = 0.5;
+                sampleRate.setText("gain is: " + std::to_string(processor.mainPipeline->gain->gainFactor));
+            }
+            else {
+                genInfo.setText("Example text");
+                processor.mainPipeline->gain->gainFactor = 0.01;
+                sampleRate.setText("gain is: " + std::to_string(processor.mainPipeline->gain->gainFactor));
+            }
 
+        }
+    }
+    void AudioProcessorEditor::sliderValueChanged(juce::Slider * slider)
+    {
+        if (slider == &rotationKnob) {
+        }
+        else {
+
+        }
+    }
 }

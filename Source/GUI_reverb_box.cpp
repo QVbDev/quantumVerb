@@ -6,10 +6,10 @@ namespace reverb {
     {
         
 
-        lenIR.setSliderStyle(juce::Slider::Rotary);
-        volIR.setSliderStyle(juce::Slider::Rotary);
-        gainOut.setSliderStyle(juce::Slider::Rotary);
-        dryWet.setSliderStyle(juce::Slider::Rotary);
+        lenIR.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        volIR.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        gainOut.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        dryWet.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
         // text display pos, readonly, width, height
         lenIR.setTextBoxStyle(juce::Slider::TextBoxRight, false, 40, 20);

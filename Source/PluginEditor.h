@@ -23,7 +23,9 @@ namespace reverb
 	/**
     * TODO: Description
 	*/
-	class AudioProcessorEditor : public juce::AudioProcessorEditor 
+	class AudioProcessorEditor : public juce::AudioProcessorEditor
+                               , public juce::Button::Listener 
+                               , public juce::Slider::Listener
 	{
 	public:
 		AudioProcessorEditor(AudioProcessor&);
@@ -32,6 +34,9 @@ namespace reverb
 		//==============================================================================
 		void paint(juce::Graphics&) override;
 		void resized() override;
+
+        void buttonClicked(juce::Button * button) override;
+        void sliderValueChanged(juce::Slider *slider) override;
 
 	private:
 		// This reference is provided as a quick way for your editor to
@@ -66,6 +71,10 @@ namespace reverb
 
         juce::TextEditor genInfo;
         juce::TextEditor sampleRate;
+
+        juce::Slider rotationKnob;
+        juce::Image knobPic;
+        
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};
