@@ -38,7 +38,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        virtual void buildFilter() = 0;
+	
 
         //==============================================================================
 
@@ -48,6 +48,8 @@ namespace reverb
 
 	protected:
 		bool assertValues();
+		virtual void buildFilter() = 0;
+		
 
 		double frequency;
 		double Q;

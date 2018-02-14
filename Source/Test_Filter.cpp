@@ -50,6 +50,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	/**
 	* Unit impulse construction
 	*/
+
 	juce::AudioBuffer<float> sampleBuffer(channelNumber, sampleRate);
 
 	float * const buffer = sampleBuffer.getWritePointer(0);
@@ -69,7 +70,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	* FFT Preparation
 	*/
 
-	//Prepare a FFT buffer of proper size
+	//Prepare a buffer of proper size for FFT
 
 	unsigned int v = sampleBuffer.getNumSamples(); // compute the next highest power of 2 of sample number
 
