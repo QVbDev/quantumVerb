@@ -48,7 +48,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 	for (int i = 0; i < sampleBuffer.getNumSamples(); i++) {
 
-		if (i == 22050) {
+		if (i == 0) {
 				buffer[i] = 1.0f;
 		}
 		else {
@@ -70,9 +70,4 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		reverb::PeakFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
 		lowShelf.exec(sampleBuffer);
 	}
-	
-
-
-
-
 }
