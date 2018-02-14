@@ -76,30 +76,50 @@ namespace reverb
             throw std::invalid_argument("Failed to create reader for IR file: " + irFilePath);
         }
 
-        // Create AudioBuffer with max. 5s of samples
+        // Read samples (limit to max. 5s) into separate buffers for each channel
         juce::int64 numSamples = std::min(reader->lengthInSamples,
                                          (juce::int64)std::ceil(reader->sampleRate * 5));
 
-        bool useLeftChannel = true;
-        bool useRightChannel = true;
+        std::vector<juce::AudioSampleBuffer> irChannels(2, juce::AudioSampleBuffer(1, numSamples));
 
-        ir.clear();
-        ir.setSize((int)useLeftChannel + (int)useRightChannel, numSamples, false, true, false);
-
-        reader->read(&ir, 0, numSamples, 0, useLeftChannel, useRightChannel);
+        reader->read(&irChannels[0], 0, numSamples, 0, true, false);
+        reader->read(&irChannels[1], 0, numSamples, 0, false, true);
 
         // Set parameters based on current impulse response
         timeStretch->origIRSampleRate = reader->sampleRate;
         
-        // Execute pipeline
-        for (auto& filter : filters)
+        // Execute pipeline on both channels
+        for (auto& irChannel : irChannels)
         {
-            filter->exec(ir);
+            for (auto& filter : filters)
+            {
+                filter->exec(irChannel);
+            }
+
+            timeStretch->exec(irChannel);
+            gain->exec(irChannel);
+            preDelay->exec(irChannel);
         }
 
-        timeStretch->exec(ir);
-        gain->exec(ir);
-        preDelay->exec(ir);
+        if (irChannels[0].getNumSamples() != irChannels[1].getNumSamples())
+        {
+            throw std::runtime_error( "Obtained non-identical number of samples in both channels (L = " +
+                                      std::to_string(irChannels[0].getNumSamples()) +
+                                      ", R = " +
+                                      std::to_string(irChannels[1].getNumSamples()) +
+                                      ")" );
+        }
+
+        // Merge channels into single IR buffer
+        ir.clear();
+        ir.setSize(irChannels.size(), irChannels[0].getNumSamples(), false, true, false);
+
+        for (int i = 0; i < irChannels.size(); ++i)
+        {
+            std::copy(irChannels[i].getReadPointer(0),
+                      irChannels[i].getReadPointer(0) + irChannels[i].getNumSamples(),
+                      ir.getWritePointer(i));
+        }
     }
 
 }
