@@ -11,6 +11,7 @@
 #include "Task.h"
 
 #include <memory>
+#include <exception>
 
 namespace reverb
 {
@@ -98,5 +99,22 @@ namespace reverb
         //==============================================================================
         virtual void buildFilter() override;
     };
+
+	//==============================================================================
+	/**
+	* Exceptions for Filter class
+	*/
+
+	struct ChannelNumberException : public std::exception {
+		const char * what() const throw () {
+			return "Filter: AudioBuffer channel number is not 1";
+		}
+	};
+
+	struct WrongParameter : public std::exception {
+		const char * what() const throw () {
+			return "Filter: Parameter(s) is out of bounds";
+		}
+	};
 
 }
