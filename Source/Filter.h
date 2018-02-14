@@ -15,7 +15,7 @@
 namespace reverb
 {
 
-	float invdB(float dB) {
+	static float invdB(float dB) {
 		return pow(10, dB / 10);
 	}
 
@@ -28,7 +28,7 @@ namespace reverb
     {
     public:
         //==============================================================================
-        Filter(juce::AudioProcessor * processor);
+        Filter(juce::AudioProcessor * processor, float freq = 1000.0f, float q = 0.5f, float gain = 1.0f);
 
         //==============================================================================
         using Ptr = std::shared_ptr<Filter>;
@@ -40,9 +40,18 @@ namespace reverb
         virtual void buildFilter() = 0;
 
         //==============================================================================
-        double frequency;
-        double Q;
-        double gainFactor;
+
+		void setFrequency(float);
+		void setQ(float);
+		void setGain(float);
+
+	protected:
+		bool assertValues();
+
+		double frequency;
+		double Q;
+		double gainFactor;
+
     };
 
     

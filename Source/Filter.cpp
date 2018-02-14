@@ -19,8 +19,8 @@ namespace reverb
      *
      * @param [in] processor    Pointer to main processor
      */
-    Filter::Filter(juce::AudioProcessor * processor)
-        : Task(processor)
+	Filter::Filter(juce::AudioProcessor * processor, float freq, float q, float gain)
+		: Task(processor), frequency(freq), Q(q), gainFactor(gain)
     {
     }
 
@@ -42,6 +42,28 @@ namespace reverb
 		
     }
 
+	void Filter::setFrequency(float freq) {
+		jassert(freq < 0 && freq <= 20000);
+		frequency = freq;
+	}
+
+	void Filter::setQ(float q) {
+		jassert(q > 0);
+		Q = q;
+	}
+
+	void Filter::setGain(float gain) {
+		jassert(gain >= 0 && gain < invdB(15));
+		gainFactor = gain;
+	}
+
+	bool Filter::assertValues() {
+		if (frequency > 0 && frequency < 20000 && Q > 0 && gainFactor >= 0 && gainFactor < invdB(15))
+			return true;
+		else
+			return false;
+	}
+
     //==============================================================================
     /**
     * @brief Brief description
@@ -50,7 +72,8 @@ namespace reverb
     */
     void LowShelfFilter::buildFilter()
     {
-		coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(processor->getSampleRate(), frequency, Q, gainFactor);
+		jassert(assertValues());
+		coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(processor->getSampleRate(), LowShelfFilter::frequency, Q, gainFactor);
     }
 
     //==============================================================================
@@ -61,10 +84,8 @@ namespace reverb
     */
     void HighShelfFilter::buildFilter()
     {
-		jassert(frequency > 0);
-		jassert(frequency > 0);
-		jassert(gainFactor > 0 && gainFactor < invdB(15));
-		coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), frequency, Q, gainFactor);
+		jassert(assertValues());
+		coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), HighShelfFilter::frequency, Q, gainFactor);
     }
 
     //==============================================================================
@@ -75,7 +96,8 @@ namespace reverb
     */
     void PeakFilter::buildFilter()
     {
-		coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(processor->getSampleRate(), frequency, Q, gainFactor);
+		jassert(assertValues());
+		coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(processor->getSampleRate(), PeakFilter::frequency, Q, gainFactor);
     }
 
 }
