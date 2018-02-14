@@ -25,6 +25,11 @@
 //}
 
 TEST_CASE("Filter class is tested", "[filters]") {
+
+	//==============================================================================
+	/**
+	* Processor preparation
+	*/
 	constexpr int sampleRate = 44100;
 	constexpr int channelNumber = 1;
 	constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
@@ -41,8 +46,11 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	REQUIRE((int)reverb::invdB(10) == 10);
 	REQUIRE((int)reverb::invdB(20) == 100);
 
-    //Unit impulse construction
-	juce::AudioBuffer<float> sampleBuffer(channelNumber, sampleRate * 2);
+	//==============================================================================
+	/**
+	* Unit impulse construction
+	*/
+	juce::AudioBuffer<float> sampleBuffer(channelNumber, sampleRate);
 
 	float * const buffer = sampleBuffer.getWritePointer(0);
 
@@ -56,18 +64,55 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		}
 	}
 
+	//==============================================================================
+	/**
+	* FFT Preparation
+	*/
+
+	//Prepare a FFT buffer of proper size
+
+	unsigned int v = sampleBuffer.getNumSamples(); // compute the next highest power of 2 of sample number
+
+	v--;
+	v |= v >> 1;
+	v |= v >> 2;
+	v |= v >> 4;
+	v |= v >> 8;
+	v |= v >> 16;
+	v++;
+
+	juce::dsp::FFT forwardFFT(v);
+
+	const int fftSize = 1 << v;
+	float * fftBuffer = new float[2 * fftSize];
+
+	memset(fftBuffer, 0, sizeof(*fftBuffer));
+
 	SECTION("Testing low-shelf filter") {
 		reverb::LowShelfFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
 		lowShelf.exec(sampleBuffer);
+
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 	}
 
 	SECTION("Testing high-shelf filter") {
 		reverb::HighShelfFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
 		lowShelf.exec(sampleBuffer);
+
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 	}
 
 	SECTION("Testing peaking filter") {
 		reverb::PeakFilter lowShelf(&processor, 100, 0.71, reverb::invdB(-24));
 		lowShelf.exec(sampleBuffer);
+
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 	}
+	
+	delete [] fftBuffer;
+
+
 }
