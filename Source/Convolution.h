@@ -18,7 +18,7 @@ namespace reverb
      * TODO: Description
      */
     class Convolution : public Task,
-                        public juce::dsp::Convolution
+                        protected juce::dsp::Convolution
     {
     public:
         //==============================================================================

@@ -25,7 +25,7 @@ namespace reverb
     * TODO: Description
     */
     class Filter : public Task,
-                   public juce::dsp::IIR::Filter<float>
+                   protected juce::dsp::IIR::Filter<float>
     {
     public:
         //==============================================================================
@@ -106,7 +106,6 @@ namespace reverb
 	/**
 	* Exceptions for Filter class
 	*/
-
 	struct ChannelNumberException : public std::exception {
 		const char * what() const throw () {
 			return "Filter: AudioBuffer channel number is not 1";
