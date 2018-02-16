@@ -11,9 +11,14 @@
 #include "Task.h"
 
 #include <memory>
+#include <exception>
 
 namespace reverb
 {
+
+	static float invdB(float dB) {
+		return pow(10, dB / 10);
+	}
 
     //==============================================================================
     /**
@@ -24,7 +29,7 @@ namespace reverb
     {
     public:
         //==============================================================================
-        Filter(juce::AudioProcessor * processor);
+        Filter(juce::AudioProcessor * processor, float freq = 1000.0f, float q = 0.71f, float gain = 1.0f);
 
         //==============================================================================
         using Ptr = std::shared_ptr<Filter>;
@@ -33,12 +38,23 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        virtual void buildFilter() = 0;
+	
 
         //==============================================================================
-        double freq;
-        double Q;
-        double gainFactor;
+
+		void setFrequency(float);
+		void setQ(float);
+		void setGain(float);
+
+	protected:
+		bool assertValues();
+		virtual void buildFilter() = 0;
+		
+
+		double frequency;
+		double Q;
+		double gainFactor;
+
     };
 
     
@@ -85,5 +101,22 @@ namespace reverb
         //==============================================================================
         virtual void buildFilter() override;
     };
+
+	//==============================================================================
+	/**
+	* Exceptions for Filter class
+	*/
+
+	struct ChannelNumberException : public std::exception {
+		const char * what() const throw () {
+			return "Filter: AudioBuffer channel number is not 1";
+		}
+	};
+
+	struct WrongParameter : public std::exception {
+		const char * what() const throw () {
+			return "Filter: Parameter(s) is out of bounds";
+		}
+	};
 
 }
