@@ -20,7 +20,7 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
-TEST_CASE("(TODO) Test case description", "[PreDelay]") {
+TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]") {
     constexpr int SAMPLE_RATE = 88200;
     constexpr int NUM_CHANNELS = 1;
     constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
