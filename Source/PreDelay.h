@@ -32,7 +32,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        static constexpr double MAX_DELAY_MS = 1000;
+        static constexpr int MAX_DELAY_MS = 1000;
 
         double delayMs = 0;
     };

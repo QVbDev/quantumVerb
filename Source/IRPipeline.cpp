@@ -37,14 +37,16 @@ namespace reverb
 
         // Look for IR bank
         // TODO: Choose impulse responses to provide in bank and select default one (current IR is temporary)
-        irFilePath = juce::File::getCurrentWorkingDirectory().getFullPathName().toStdString() +
-                     "/../../ImpulseResponses/chiesa_di_san_lorenzo.wav";
+        std::string defaultIRFilePath = juce::File::getCurrentWorkingDirectory().getFullPathName().toStdString() +
+                                        "/../../ImpulseResponses/chiesa_di_san_lorenzo.wav";
 
-        juce::File irFile(irFilePath);
+        juce::File irFile(defaultIRFilePath);
         if (!irFile.existsAsFile())
         {
-            throw std::invalid_argument("Failed to locate default impulse response: " + irFilePath);
+            throw std::invalid_argument("Failed to locate default impulse response: " + defaultIRFilePath);
         }
+
+        loadIR(defaultIRFilePath);
     }
 
     //==============================================================================
@@ -59,31 +61,6 @@ namespace reverb
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& ir)
     {
-        // Load impulse response file
-        juce::File irFile(irFilePath);
-
-        juce::AudioFormatManager formatMgr;
-        formatMgr.registerBasicFormats();
-
-        std::unique_ptr<juce::AudioFormatReader> reader(formatMgr.createReaderFor(irFile));
-
-        if (!reader)
-        {
-            throw std::invalid_argument("Failed to create reader for IR file: " + irFilePath);
-        }
-
-        // Read samples (limit to max. 5s) into separate buffers for each channel
-        juce::int64 numSamples = std::min(reader->lengthInSamples,
-                                         (juce::int64)std::ceil(reader->sampleRate * 5));
-
-        std::vector<juce::AudioSampleBuffer> irChannels(2, juce::AudioSampleBuffer(1, numSamples));
-
-        reader->read(&irChannels[0], 0, numSamples, 0, true, false);
-        reader->read(&irChannels[1], 0, numSamples, 0, false, true);
-
-        // Set parameters based on current impulse response
-        timeStretch->origIRSampleRate = reader->sampleRate;
-        
         // Execute pipeline on both channels
         for (auto& irChannel : irChannels)
         {
@@ -97,7 +74,8 @@ namespace reverb
             preDelay->exec(irChannel);
         }
 
-        if (irChannels[0].getNumSamples() != irChannels[1].getNumSamples())
+        if (irChannels.size() == 2 &&
+            irChannels[0].getNumSamples() != irChannels[1].getNumSamples())
         {
             throw std::runtime_error( "Obtained non-identical number of samples in both channels (L = " +
                                       std::to_string(irChannels[0].getNumSamples()) +
@@ -118,4 +96,44 @@ namespace reverb
         }
     }
 
+    //==============================================================================
+    /**
+     * @brief Loads an impulse response from a file (.WAV or .AIFF) to internal representation
+     *
+     * Loads the selected impulse response (IR) from disk and splits it into individual buffers
+     * for each channel.
+     *
+     * @param [in] irFilePath   Path to impulse response file
+     */
+    void IRPipeline::loadIR(const std::string& irFilePath)
+    {
+        // Load impulse response file
+        juce::File irFile(irFilePath);
+
+        juce::AudioFormatManager formatMgr;
+        formatMgr.registerBasicFormats();
+
+        std::unique_ptr<juce::AudioFormatReader> reader(formatMgr.createReaderFor(irFile));
+
+        if (!reader)
+        {
+            throw std::invalid_argument("Failed to create reader for IR file: " + irFilePath);
+        }
+
+        // Read samples (limit to max. MAX_IR_LENGTH_S) into separate buffers for each channel
+        juce::int64 numSamples = std::min(reader->lengthInSamples,
+                                          (juce::int64)std::ceil(reader->sampleRate * MAX_IR_LENGTH_S));
+
+        irChannels.clear();
+
+        for (int i = 0; i < 2; ++i)
+        {
+            // Read left and right channels
+            irChannels.emplace_back(juce::AudioSampleBuffer(1, numSamples));
+            reader->read(&irChannels[i], 0, numSamples, 0, (i==0), (i==1));
+        }
+
+        // Set parameters based on current impulse response
+        timeStretch->origIRSampleRate = reader->sampleRate;
+    }
 }

@@ -41,14 +41,21 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
+        void loadIR(const std::string& irFilePath);
+
+        //==============================================================================
         std::array<Filter::Ptr, 4> filters;
         TimeStretch::Ptr timeStretch;
         Gain::Ptr gain;
         PreDelay::Ptr preDelay;
 
         //==============================================================================
+        static constexpr int MAX_IR_LENGTH_S = 5;
+
         bool mustExec = true;
-        std::string irFilePath;
+
+    protected:
+        std::vector<juce::AudioSampleBuffer> irChannels;
     };
 
 }

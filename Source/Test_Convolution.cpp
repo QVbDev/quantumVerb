@@ -96,6 +96,8 @@ TEST_CASE("Use a Convolution object to convolve two buffers", "[Convolution]") {
         }
 
         // Compute expected output signal
+        // TODO: Verify these values once convolution block is implemented (values may be
+        //       off by one since a MATLAB simulation was used to obtain them)
         const int AUDIO_STEP_START = std::ceil(NUM_SAMPLES_PER_BLOCK) / 2;
         const int AUDIO_STEP_END = std::ceil(NUM_SAMPLES_PER_BLOCK);
 
