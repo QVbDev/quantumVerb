@@ -4,4 +4,3 @@
 [submodule "vendor/soundtouch"]
 	path = vendor/soundtouch
 	url = https://github.com/segwin/soundtouch-mirror.git
-	branch = master
