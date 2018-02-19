@@ -9,7 +9,7 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// $Id: SoundTouchDLL.h 248 2017-03-05 16:36:35Z oparviai $
+// $Id$
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -37,23 +37,36 @@
 #ifndef _SoundTouchDLL_h_
 #define _SoundTouchDLL_h_
 
-#ifdef __cplusplus
+#if defined(_WIN32) || defined(WIN32)
+    // Windows
+    #ifndef __cplusplus
+        #error "Expected g++"
+    #endif
 
-#ifdef DLL_EXPORTS
-    #define SOUNDTOUCHDLL_API extern "C" __declspec(dllexport)
+    #ifdef DLL_EXPORTS
+        #define SOUNDTOUCHDLL_API extern "C" __declspec(dllexport)
+    #else
+        #define SOUNDTOUCHDLL_API extern "C" __declspec(dllimport)
+    #endif
+
 #else
-    #define SOUNDTOUCHDLL_API extern "C" __declspec(dllimport)
+    // GNU version
+
+    #ifdef DLL_EXPORTS
+        // GCC declaration for exporting functions
+        #define SOUNDTOUCHDLL_API extern "C" __attribute__((__visibility__("default")))
+    #else
+        // GCC doesn't require DLL imports
+        #define SOUNDTOUCHDLL_API
+    #endif
+
+    // Linux-replacements for Windows declarations:
+    #define __cdecl
+    typedef unsigned int DWORD;
+    #define FALSE    0
+    #define TRUE    1
+
 #endif
-
-#else
-
-#ifdef DLL_EXPORTS
-    #define SOUNDTOUCHDLL_API __declspec(dllexport)
-#else
-    #define SOUNDTOUCHDLL_API __declspec(dllimport)
-#endif
-
-#endif // __cplusplus
 
 typedef void * HANDLE;
 
@@ -185,6 +198,36 @@ SOUNDTOUCHDLL_API unsigned int __cdecl soundtouch_numSamples(HANDLE h);
 
 /// Returns nonzero if there aren't any samples available for outputting.
 SOUNDTOUCHDLL_API int __cdecl soundtouch_isEmpty(HANDLE h);
+
+/// Create a new instance of BPM detector
+SOUNDTOUCHDLL_API HANDLE __cdecl bpm_createInstance(int numChannels, int sampleRate);
+
+/// Destroys a BPM detector instance.
+SOUNDTOUCHDLL_API void __cdecl bpm_destroyInstance(HANDLE h);
+
+/// Feed 'numSamples' sample frames from 'samples' into the BPM detector.
+SOUNDTOUCHDLL_API void __cdecl bpm_putSamples(HANDLE h, 
+        const float *samples,           ///< Pointer to sample buffer.
+        unsigned int numSamples         ///< Number of samples in buffer. Notice
+                                        ///< that in case of stereo-sound a single sample
+                                        ///< contains data for both channels.
+        );
+
+/// Feed 'numSamples' sample frames from 'samples' into the BPM detector.
+/// 16bit int sample format verson.
+SOUNDTOUCHDLL_API void __cdecl bpm_putSamples_i16(HANDLE h, 
+        const short *samples,           ///< Pointer to sample buffer.
+        unsigned int numSamples         ///< Number of samples in buffer. Notice
+                                        ///< that in case of stereo-sound a single sample
+                                        ///< contains data for both channels.
+        );
+
+/// Analyzes the results and returns the BPM rate. Use this function to read result
+/// after whole song data has been input to the class by consecutive calls of
+/// 'inputSamples' function.
+///
+/// \return Beats-per-minute rate, or zero if detection failed.
+SOUNDTOUCHDLL_API float __cdecl bpm_getBpm(HANDLE h);
 
 #endif  // _SoundTouchDLL_h_
 

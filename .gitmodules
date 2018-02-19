@@ -1,3 +1,7 @@
 [submodule "vendor/vst3sdk"]
 	path = vendor/vst3sdk
 	url = https://github.com/steinbergmedia/vst3sdk.git
+[submodule "vendor/soundtouch"]
+	path = vendor/soundtouch
+	url = https://github.com/segwin/soundtouch-mirror.git
+	branch = master
