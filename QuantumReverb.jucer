@@ -69,19 +69,17 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
-            vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouch_x64.lib"
+            vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouch.lib"
             IPPLibrary="true">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
-                       libraryPath="..\..\vendor\soundtouch\source\SoundTouch\Debug"
-                       prebuildCommand=""/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\" prebuildCommand=""/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
-                       libraryPath="..\..\vendor\soundtouch\source\SoundTouch\Release"
-                       prebuildCommand=""/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\" prebuildCommand=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>
