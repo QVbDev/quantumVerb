@@ -10,6 +10,7 @@
 
 #include "IRPipeline.h"
 #include "PluginProcessor.h"
+#include "Util.h"
 
 #include <chrono>
 
@@ -82,12 +83,12 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
     constexpr int IR_SAMPLE_RATE = 96000;
     constexpr int IR_NUM_CHANNELS = 2;
     constexpr std::chrono::milliseconds IR_DURATION_MS(5000);
-    constexpr double IR_NUM_SAMPLES = (IR_DURATION_MS.count() / 1000.0) * IR_SAMPLE_RATE;
+    const int IR_NUM_SAMPLES = (int)std::ceil((IR_DURATION_MS.count() / 1000.0) * IR_SAMPLE_RATE);
 
     // Create IRPipeline object
     reverb::AudioProcessor processor;
     processor.setPlayConfigDetails(IR_NUM_CHANNELS, IR_NUM_CHANNELS,
-                                   IR_SAMPLE_RATE, std::ceil(IR_NUM_SAMPLES));
+                                   IR_SAMPLE_RATE, IR_NUM_SAMPLES);
 
     REQUIRE(processor.getSampleRate() == IR_SAMPLE_RATE);
 

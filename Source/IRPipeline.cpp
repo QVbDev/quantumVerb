@@ -104,13 +104,13 @@ namespace reverb
 
         // Merge channels into single IR buffer
         ir.clear();
-        ir.setSize(irChannels.size(), irChannels[0].getNumSamples(), false, true, false);
+        ir.setSize((int)irChannels.size(), irChannels[0].getNumSamples(), false, true, false);
 
         for (int i = 0; i < irChannels.size(); ++i)
         {
-            std::copy(irChannels[i].getReadPointer(0),
-                      irChannels[i].getReadPointer(0) + irChannels[i].getNumSamples(),
-                      ir.getWritePointer(i));
+            memcpy(ir.getWritePointer(i),
+                   irChannels[i].getReadPointer(0),
+                   irChannels[i].getNumSamples());
         }
     }
 
@@ -141,8 +141,8 @@ namespace reverb
         }
 
         // Read samples (limit to max. MAX_IR_LENGTH_S) into separate buffers for each channel
-        juce::int64 numSamples = std::min(reader->lengthInSamples,
-                                          (juce::int64)std::ceil(reader->sampleRate * MAX_IR_LENGTH_S));
+        int numSamples = (int)std::min(reader->lengthInSamples,
+                                       (juce::int64)std::ceil(reader->sampleRate * MAX_IR_LENGTH_S));
 
         irChannels.clear();
 

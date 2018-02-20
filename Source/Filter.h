@@ -16,10 +16,6 @@
 namespace reverb
 {
 
-	static float invdB(float dB) {
-		return pow(10, dB / 10);
-	}
-
     //==============================================================================
     /**
     * TODO: Description
@@ -38,7 +34,9 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-	
+        static double invdB(double dB) {
+            return pow(10, dB / 10);
+        }
 
         //==============================================================================
 
@@ -51,9 +49,9 @@ namespace reverb
 		virtual void buildFilter() = 0;
 		
 
-		double frequency;
-		double Q;
-		double gainFactor;
+		float frequency;
+        float Q;
+        float gainFactor;
 
     };
 

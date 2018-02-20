@@ -56,6 +56,7 @@ namespace reverb
 
     protected:
         std::vector<juce::AudioSampleBuffer> irChannels;
+        juce::File irBank;
     };
 
 }
