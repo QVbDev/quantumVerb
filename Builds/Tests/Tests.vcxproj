@@ -80,6 +80,13 @@
     <PreBuildEvent>
       <Command>copy "..\..\vendor\SoundTouch\SoundTouch_x64.dll" "$(OutDir)"</Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /s /i "..\..\ImpulseResponses" "$(OutDir)\ImpulseResponses"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

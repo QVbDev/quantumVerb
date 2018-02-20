@@ -55,11 +55,13 @@
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
-                       libraryPath="..\..\vendor\SoundTouch\" prebuildCommand="copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
+                       libraryPath="..\..\vendor\SoundTouch\" prebuildCommand="copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"
+                       postbuildCommand="xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
-                       libraryPath="..\..\vendor\SoundTouch\" prebuildCommand="copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
+                       libraryPath="..\..\vendor\SoundTouch\" prebuildCommand="copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"
+                       postbuildCommand="xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>

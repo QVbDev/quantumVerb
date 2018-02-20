@@ -40,8 +40,10 @@ namespace reverb
 
         // Look for IR bank
         // TODO: Choose impulse responses to provide in bank and select default one (current IR is temporary)
-        std::string defaultIRFilePath = juce::File::getCurrentWorkingDirectory().getFullPathName().toStdString() +
-                                        "/../../ImpulseResponses/chiesa_di_san_lorenzo.wav";
+        irBank = juce::File::getSpecialLocation(juce::File::currentApplicationFile).getParentDirectory();
+
+        std::string defaultIRFilePath = irBank.getFullPathName().toStdString() +
+                                        "/ImpulseResponses/chiesa_di_san_lorenzo.wav";
 
         juce::File irFile(defaultIRFilePath);
         if (!irFile.existsAsFile())

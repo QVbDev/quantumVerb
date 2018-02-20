@@ -112,6 +112,9 @@
     <PreBuildEvent>
       <Command>copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -163,6 +166,9 @@
     <PreBuildEvent>
       <Command>copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_plugin_client_VST2.cpp"/>
