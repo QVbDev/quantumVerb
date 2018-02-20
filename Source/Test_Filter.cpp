@@ -16,13 +16,35 @@ Test_Filter.cpp
 #define M_PI 3.14159265358979323846f
 #endif
 
+enum {LOW, HIGH, PEAK};
+
 /**
 * How to write tests with Catch:
 * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
 */
 
-//TEST_CASE("(TODO) Test case description", "[Filter]") {
-//}
+float measureGain(float * const fft, float freq, float freqRes, int filter) {
+
+	switch (filter) {
+	case LOW:
+		
+		break;
+
+	case HIGH:
+
+		break;
+
+	case PEAK:
+
+		break;
+
+	default:
+		return 0;
+		break;
+	}
+}
+
+
 
 TEST_CASE("Filter class is tested", "[filters]") {
 
@@ -51,19 +73,17 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	* Unit impulse construction
 	*/
 
-	juce::AudioBuffer<float> sampleBuffer(channelNumber, 40000);
+	int numSamples = 44100;
+
+	juce::AudioBuffer<float> sampleBuffer(channelNumber, numSamples);
 
 	float * const buffer = sampleBuffer.getWritePointer(0);
 
-	for (int i = 0; i < sampleBuffer.getNumSamples(); i++) {
+	memset(buffer, 0, sampleBuffer.getNumSamples() * sizeof(*buffer));
 
-		if (i == 0) {
-			buffer[i] = 0.125f;
-		}
-		else {
-			buffer[i] = 0;
-		}
-	}
+	buffer[0] = 1.0f;
+
+
 
 	//==============================================================================
 	/**
@@ -73,18 +93,22 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	//Prepare a buffer of proper size for FFT
 
 	// compute the next highest power of 2 of sample number
-	int order = ceil((log(sampleBuffer.getNumSamples()) / log(2)));
+	int order = std::ceil((log(sampleBuffer.getNumSamples()) / log(2)));
 
 	juce::dsp::FFT forwardFFT(order);
 
 	const int fftSize = pow(2, order);
 	float * fftBuffer = new float[2 * fftSize];
 
-	memset(fftBuffer, 0, sizeof(*fftBuffer));
+	memset(fftBuffer, 0, 2*fftSize*sizeof(*fftBuffer));
+
+	//Compute frequency resolution
+	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
+
 
 	SECTION("Testing low-shelf filter") {
-		reverb::LowShelfFilter lowShelf(&processor, 1000, 0.71, (float)reverb::Filter::invdB(10));
-		lowShelf.exec(sampleBuffer);
+		reverb::LowShelfFilter filter(&processor, 5000, 0.5, (float)reverb::Filter::invdB(14));
+		filter.exec(sampleBuffer);
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
@@ -92,18 +116,18 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	}
 
 	SECTION("Testing high-shelf filter") {
-		reverb::HighShelfFilter lowShelf(&processor, 100, 0.71, (float)reverb::Filter::invdB(-24));
-		lowShelf.exec(sampleBuffer);
+		reverb::HighShelfFilter filter(&processor, 2000, 0.71, (float)reverb::Filter::invdB(10));
+		filter.exec(sampleBuffer);
 
-		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 	}
 
 	SECTION("Testing peaking filter") {
-		reverb::PeakFilter lowShelf(&processor, 100, 0.71, (float)reverb::Filter::invdB(-24));
-		lowShelf.exec(sampleBuffer);
+		reverb::PeakFilter filter(&processor, 5000, 1, (float)reverb::Filter::invdB(10));
+		filter.exec(sampleBuffer);
 
-		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 	}
 

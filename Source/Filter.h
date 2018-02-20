@@ -35,7 +35,7 @@ namespace reverb
 
         //==============================================================================
         static double invdB(double dB) {
-            return pow(10, dB / 10);
+			return pow(10, dB / 10);
         }
 
         //==============================================================================
@@ -110,7 +110,7 @@ namespace reverb
 		}
 	};
 
-	struct WrongParameter : public std::exception {
+	struct WrongParameterException : public std::exception {
 		const char * what() const throw () {
 			return "Filter: Parameter(s) is out of bounds";
 		}

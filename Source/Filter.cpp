@@ -38,7 +38,7 @@ namespace reverb
 			throw ChannelNumberException();
 
 		if (!assertValues())
-			throw WrongParameter();
+			throw WrongParameterException();
 
 
 		buildFilter();
@@ -52,15 +52,15 @@ namespace reverb
 	void Filter::setFrequency(float freq) {
 
 		if (freq < 0 || freq > 20000)
-		    throw WrongParameter();
+		    throw WrongParameterException();
 
 		frequency = freq;
 	}
 
 	void Filter::setQ(float q) {
 
-		if(q < 0.7)
-		    throw WrongParameter();
+		if(q < 0.099)
+		    throw WrongParameterException();
 
 		Q = q;
 	}
@@ -68,13 +68,13 @@ namespace reverb
 	void Filter::setGain(float gain) {
 
 		if(gain < 0 || gain > invdB(15))
-		    throw WrongParameter();
+		    throw WrongParameterException();
 
 		gainFactor = gain;
 	}
 
 	bool Filter::assertValues() {
-		if (frequency > 0 && frequency < 20000 && Q > 0.7 && gainFactor >= 0 && gainFactor < invdB(15))
+		if (frequency > 0 && frequency < 20000 && Q > 0.099 && gainFactor >= 0 && gainFactor < invdB(15))
 			return true;
 		else
 			return false;
@@ -89,7 +89,7 @@ namespace reverb
     void LowShelfFilter::buildFilter()
     {
 		if (!assertValues())
-			throw WrongParameter();
+			throw WrongParameterException();
 
 		coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(processor->getSampleRate(), frequency, Q, gainFactor);
     }
@@ -103,7 +103,7 @@ namespace reverb
     void HighShelfFilter::buildFilter()
     {
 		if (!assertValues())
-			throw WrongParameter();
+			throw WrongParameterException();
 
 		coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), frequency, Q, gainFactor);
     }
@@ -117,7 +117,7 @@ namespace reverb
     void PeakFilter::buildFilter()
     {
 		if (!assertValues())
-			throw WrongParameter();
+			throw WrongParameterException();
 
 		coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(processor->getSampleRate(), frequency, Q, gainFactor);
     }
