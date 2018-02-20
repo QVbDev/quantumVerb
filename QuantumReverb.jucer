@@ -45,27 +45,6 @@
       <FILE id="FZ4wVp" name="PreDelay.cpp" compile="1" resource="0" file="Source/PreDelay.cpp"/>
       <FILE id="t35Mb5" name="TimeStretch.cpp" compile="1" resource="0" file="Source/TimeStretch.cpp"/>
     </GROUP>
-    <GROUP id="{DA48C4C5-5055-C375-3A12-3834943C33C6}" name="tests">
-      <FILE id="n62xMN" name="catch.hpp" compile="0" resource="0" file="Source/catch.hpp"/>
-      <FILE id="riSDH9" name="Main.cpp" compile="0" resource="0" file="Source/Main.cpp"/>
-      <FILE id="hSI9E3" name="Test_AudioProcessor.cpp" compile="0" resource="0"
-            file="Source/Test_AudioProcessor.cpp"/>
-      <FILE id="yYjyHZ" name="Test_AudioProcessorEditor.cpp" compile="0"
-            resource="0" file="Source/Test_AudioProcessorEditor.cpp"/>
-      <FILE id="ldoH9F" name="Test_Convolution.cpp" compile="0" resource="0"
-            file="Source/Test_Convolution.cpp"/>
-      <FILE id="xQuyLU" name="Test_Filter.cpp" compile="0" resource="0" file="Source/Test_Filter.cpp"/>
-      <FILE id="EEZzcb" name="Test_Gain.cpp" compile="0" resource="0" file="Source/Test_Gain.cpp"/>
-      <FILE id="GmRN9e" name="Test_IRPipeline.cpp" compile="0" resource="0"
-            file="Source/Test_IRPipeline.cpp"/>
-      <FILE id="Kh2Ffs" name="Test_MainPipeline.cpp" compile="0" resource="0"
-            file="Source/Test_MainPipeline.cpp"/>
-      <FILE id="MapGXW" name="Test_Mixer.cpp" compile="0" resource="0" file="Source/Test_Mixer.cpp"/>
-      <FILE id="cswkeR" name="Test_PreDelay.cpp" compile="0" resource="0"
-            file="Source/Test_PreDelay.cpp"/>
-      <FILE id="iBDQum" name="Test_TimeStretch.cpp" compile="0" resource="0"
-            file="Source/Test_TimeStretch.cpp"/>
-    </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
@@ -75,11 +54,13 @@
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
-                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\" prebuildCommand=""/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
+                       prebuildCommand=""/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
-                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\" prebuildCommand=""/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
+                       prebuildCommand=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>

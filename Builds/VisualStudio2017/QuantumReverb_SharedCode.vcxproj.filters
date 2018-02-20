@@ -8,9 +8,6 @@
     <Filter Include="QuantumReverb\source">
       <UniqueIdentifier>{909A8113-9A99-748B-9CC5-58AA29566100}</UniqueIdentifier>
     </Filter>
-    <Filter Include="QuantumReverb\tests">
-      <UniqueIdentifier>{45273CCD-A230-312C-A296-49E92D9B97C6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="QuantumReverb">
       <UniqueIdentifier>{9B642734-9698-93AC-E479-2FC2D4640AA9}</UniqueIdentifier>
     </Filter>
@@ -447,39 +444,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\TimeStretch.cpp">
       <Filter>QuantumReverb\source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Main.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_AudioProcessor.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_AudioProcessorEditor.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_Convolution.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_Filter.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_Gain.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_IRPipeline.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_MainPipeline.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_Mixer.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_PreDelay.cpp">
-      <Filter>QuantumReverb\tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Test_TimeStretch.cpp">
-      <Filter>QuantumReverb\tests</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <Filter>Juce Modules\juce_audio_basics\buffers</Filter>
@@ -2420,9 +2384,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\TimeStretch.h">
       <Filter>QuantumReverb\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\catch.hpp">
-      <Filter>QuantumReverb\tests</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
       <Filter>Juce Modules\juce_audio_basics\audio_play_head</Filter>

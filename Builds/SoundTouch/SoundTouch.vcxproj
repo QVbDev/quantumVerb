@@ -140,8 +140,8 @@
     <IntDir>$(Platform)\$(Configuration)\Debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\SoundTouch\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseX64|x64'">
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
