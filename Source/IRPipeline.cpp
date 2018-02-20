@@ -108,9 +108,11 @@ namespace reverb
 
         for (int i = 0; i < irChannels.size(); ++i)
         {
+            auto irChannelReadPtr = irChannels[i].getReadPointer(0);
+
             memcpy(ir.getWritePointer(i),
-                   irChannels[i].getReadPointer(0),
-                   irChannels[i].getNumSamples());
+                   irChannelReadPtr,
+                   irChannels[i].getNumSamples() * sizeof(irChannelReadPtr[0]));
         }
     }
 

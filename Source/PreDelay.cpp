@@ -64,9 +64,10 @@ namespace reverb
 
         // Copy IR values to end of intermediate buffer
         auto irReadPtr = ir.getReadPointer(0);
+
         memcpy(irCopyWritePtr + numSamplesToAdd,
                irReadPtr,
-               ir.getNumSamples());
+               ir.getNumSamples() * sizeof(irReadPtr[0]));
 
         // Use move semantics to replace IR buffer with created buffer
         ir = std::move(irCopy);
