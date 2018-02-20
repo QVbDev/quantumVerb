@@ -44,11 +44,15 @@ namespace reverb
 		void setQ(float);
 		void setGain(float);
 
+		bool isEnabled();
+		void enable();
+		void disable();
+
 	protected:
 		bool assertValues();
 		virtual void buildFilter() = 0;
 		
-
+		bool isOn;
 		float frequency;
         float Q;
         float gainFactor;

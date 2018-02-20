@@ -20,7 +20,7 @@ namespace reverb
      * @param [in] processor    Pointer to main processor
      */
 	Filter::Filter(juce::AudioProcessor * processor, float freq, float q, float gain)
-		: Task(processor), frequency(freq), Q(q), gainFactor(gain)
+		: Task(processor),isOn(true), frequency(freq), Q(q), gainFactor(gain)
     {
     }
 
@@ -39,13 +39,15 @@ namespace reverb
 
 		if (!assertValues())
 			throw WrongParameterException();
+		
+		if (isOn) {
 
+			buildFilter();
+			juce::dsp::AudioBlock<float> block(ir);
 
-		buildFilter();
-		juce::dsp::AudioBlock<float> block(ir);
-
-		juce::dsp::ProcessContextReplacing<float> context(block);
-		juce::dsp::IIR::Filter<float>::process(context);
+			juce::dsp::ProcessContextReplacing<float> context(block);
+			juce::dsp::IIR::Filter<float>::process(context);
+		}
 		
     }
 
@@ -71,6 +73,19 @@ namespace reverb
 		    throw WrongParameterException();
 
 		gainFactor = gain;
+	}
+
+	bool Filter::isEnabled() {
+		return isOn;
+	}
+
+	void Filter::enable() {
+		isOn = true;
+	}
+
+	void Filter::disable() {
+		isOn = false;
+
 	}
 
 	bool Filter::assertValues() {

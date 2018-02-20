@@ -131,6 +131,13 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 	}
 
+	SECTION("Testing filter toggle") {
+		reverb::LowShelfFilter filter(&processor, 5000, 0.5, (float)reverb::Filter::invdB(14));
+		filter.disable();
+		filter.exec(sampleBuffer);
+
+	}
+
 	delete[] fftBuffer;
 
 
