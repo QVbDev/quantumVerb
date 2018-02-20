@@ -15,9 +15,9 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief (TODO) Brief description
+     * @brief Constructs a MainPipeline object associated with an AudioProcessor
      *
-     * (TODO) Detailed description
+     * Creates a MainPipeline and each of its steps.
      *
      * @param [in] processor    Pointer to main processor
      */
@@ -32,15 +32,18 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief (TODO) Brief description
+     * @brief Apply reverb effect to given audio buffer
      *
-     * (TODO) Detailed description
+     * Load original audio buffer into dryWetMixer object, then apply reverb pipeline
+     * steps in series (convolution w/ IR, dry/wet mixing and output attenuation). Output
+     * replaces samples in given audio buffer.
      *
-     * @param [in,out] audio    (TODO) Parameter description
+     * @param [in,out] audio    Audio sample buffer
      */
     void MainPipeline::exec(juce::AudioSampleBuffer& audio)
     {
         dryWetMixer->loadDry(audio);
+
         convolution->exec(audio);
         dryWetMixer->exec(audio);
         gain->exec(audio);

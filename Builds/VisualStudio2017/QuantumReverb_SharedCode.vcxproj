@@ -1915,6 +1915,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_gui_extra.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_opengl.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_video.cpp" />
+    <ClCompile Include="..\..\Source\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Convolution.h" />
@@ -1928,6 +1929,7 @@
     <ClInclude Include="..\..\Source\PreDelay.h" />
     <ClInclude Include="..\..\Source\Task.h" />
     <ClInclude Include="..\..\Source\TimeStretch.h" />
+    <ClInclude Include="..\..\Source\Util.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h" />

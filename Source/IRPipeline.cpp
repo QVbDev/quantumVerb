@@ -7,6 +7,7 @@
 */
 
 #include "IRPipeline.h"
+#include "Util.h"
 
 #include <algorithm>
 
@@ -21,6 +22,8 @@ namespace reverb
      * and ensures it can be found.
      *
      * @param [in] processor    Pointer to main processor
+     *
+     * @throws std::invalid_argument
      */
     IRPipeline::IRPipeline(juce::AudioProcessor * processor)
         : Task(processor)
@@ -53,11 +56,13 @@ namespace reverb
     /**
      * @brief Manipulate the input IR file and place it in the given buffer
      *
-     * Loads the selected impulse response (IR) from disk and places it in the given
-     * output buffer. Applies filtering (EQ), time stretching (sample rate conversion)
-     * and gain to buffer to prepare it for main audio processing.
+     * Applies filtering (EQ), time stretching (sample rate conversion) and gain to
+     * internal IR channel buffers to prepare it for main audio processing, then write
+     * channels to given output buffer.
      *
      * @param [out] ir  Processed impulse response
+     *
+     * @throws std::runtime_error
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& ir)
     {
@@ -71,7 +76,20 @@ namespace reverb
 
             timeStretch->exec(irChannel);
             gain->exec(irChannel);
-            preDelay->exec(irChannel);
+
+            try
+            {
+                preDelay->exec(irChannel);
+            }
+            catch (const std::exception& e)
+            {
+                std::string errMsg = "Skipping pre-delay step due to exception: ";
+                            errMsg += e.what();
+                
+                logger.dualPrint(Logger::Level::Error, errMsg);
+
+                // TODO: Let user know about error through UI (?)
+            }
         }
 
         if (irChannels.size() == 2 &&
@@ -104,6 +122,8 @@ namespace reverb
      * for each channel.
      *
      * @param [in] irFilePath   Path to impulse response file
+     *
+     * @throws std::invalid_argument
      */
     void IRPipeline::loadIR(const std::string& irFilePath)
     {
