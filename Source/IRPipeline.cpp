@@ -7,6 +7,7 @@
 */
 
 #include "IRPipeline.h"
+#include "Util.h"
 
 #include <algorithm>
 
@@ -21,6 +22,8 @@ namespace reverb
      * and ensures it can be found.
      *
      * @param [in] processor    Pointer to main processor
+     *
+     * @throws std::invalid_argument
      */
     IRPipeline::IRPipeline(juce::AudioProcessor * processor)
         : Task(processor)
@@ -37,8 +40,10 @@ namespace reverb
 
         // Look for IR bank
         // TODO: Choose impulse responses to provide in bank and select default one (current IR is temporary)
-        std::string defaultIRFilePath = juce::File::getCurrentWorkingDirectory().getFullPathName().toStdString() +
-                                        "/../../ImpulseResponses/chiesa_di_san_lorenzo.wav";
+        irBank = juce::File::getSpecialLocation(juce::File::currentApplicationFile).getParentDirectory();
+
+        std::string defaultIRFilePath = irBank.getFullPathName().toStdString() +
+                                        "/ImpulseResponses/chiesa_di_san_lorenzo.wav";
 
         juce::File irFile(defaultIRFilePath);
         if (!irFile.existsAsFile())
@@ -53,11 +58,13 @@ namespace reverb
     /**
      * @brief Manipulate the input IR file and place it in the given buffer
      *
-     * Loads the selected impulse response (IR) from disk and places it in the given
-     * output buffer. Applies filtering (EQ), time stretching (sample rate conversion)
-     * and gain to buffer to prepare it for main audio processing.
+     * Applies filtering (EQ), time stretching (sample rate conversion) and gain to
+     * internal IR channel buffers to prepare it for main audio processing, then write
+     * channels to given output buffer.
      *
      * @param [out] ir  Processed impulse response
+     *
+     * @throws std::runtime_error
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& ir)
     {
@@ -71,7 +78,20 @@ namespace reverb
 
             timeStretch->exec(irChannel);
             gain->exec(irChannel);
-            preDelay->exec(irChannel);
+
+            try
+            {
+                preDelay->exec(irChannel);
+            }
+            catch (const std::exception& e)
+            {
+                std::string errMsg = "Skipping pre-delay step due to exception: ";
+                            errMsg += e.what();
+                
+                logger.dualPrint(Logger::Level::Error, errMsg);
+
+                // TODO: Let user know about error through UI (?)
+            }
         }
 
         if (irChannels.size() == 2 &&
@@ -86,13 +106,15 @@ namespace reverb
 
         // Merge channels into single IR buffer
         ir.clear();
-        ir.setSize(irChannels.size(), irChannels[0].getNumSamples(), false, true, false);
+        ir.setSize((int)irChannels.size(), irChannels[0].getNumSamples(), false, true, false);
 
         for (int i = 0; i < irChannels.size(); ++i)
         {
-            std::copy(irChannels[i].getReadPointer(0),
-                      irChannels[i].getReadPointer(0) + irChannels[i].getNumSamples(),
-                      ir.getWritePointer(i));
+            auto irChannelReadPtr = irChannels[i].getReadPointer(0);
+
+            memcpy(ir.getWritePointer(i),
+                   irChannelReadPtr,
+                   irChannels[i].getNumSamples() * sizeof(irChannelReadPtr[0]));
         }
     }
 
@@ -104,6 +126,8 @@ namespace reverb
      * for each channel.
      *
      * @param [in] irFilePath   Path to impulse response file
+     *
+     * @throws std::invalid_argument
      */
     void IRPipeline::loadIR(const std::string& irFilePath)
     {
@@ -121,8 +145,8 @@ namespace reverb
         }
 
         // Read samples (limit to max. MAX_IR_LENGTH_S) into separate buffers for each channel
-        juce::int64 numSamples = std::min(reader->lengthInSamples,
-                                          (juce::int64)std::ceil(reader->sampleRate * MAX_IR_LENGTH_S));
+        int numSamples = (int)std::min(reader->lengthInSamples,
+                                       (juce::int64)std::ceil(reader->sampleRate * MAX_IR_LENGTH_S));
 
         irChannels.clear();
 

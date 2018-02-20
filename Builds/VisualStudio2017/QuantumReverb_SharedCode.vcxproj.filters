@@ -445,6 +445,9 @@
     <ClCompile Include="..\..\Source\TimeStretch.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Util.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <Filter>Juce Modules\juce_audio_basics\buffers</Filter>
     </ClCompile>
@@ -2383,6 +2386,9 @@
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TimeStretch.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Util.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">

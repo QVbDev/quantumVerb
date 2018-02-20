@@ -114,6 +114,9 @@
       <AdditionalDependencies>SoundTouch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -162,6 +165,9 @@
       <AdditionalDependencies>SoundTouch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Convolution.cpp"/>
@@ -174,6 +180,7 @@
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PreDelay.cpp"/>
     <ClCompile Include="..\..\Source\TimeStretch.cpp"/>
+    <ClCompile Include="..\..\Source\Util.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1934,6 +1941,7 @@
     <ClInclude Include="..\..\Source\PreDelay.h"/>
     <ClInclude Include="..\..\Source\Task.h"/>
     <ClInclude Include="..\..\Source\TimeStretch.h"/>
+    <ClInclude Include="..\..\Source\Util.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>

@@ -22,12 +22,12 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
     constexpr int SAMPLE_RATE = 88200;
     constexpr int NUM_CHANNELS = 1;
     constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
-    constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE;
+    const int NUM_SAMPLES_PER_BLOCK = (int)std::ceil((BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE);
 
     // Create PreDelay object
     reverb::AudioProcessor processor;
     processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
-                                   SAMPLE_RATE, std::ceil(NUM_SAMPLES_PER_BLOCK));
+                                   SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
 
     REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
@@ -35,7 +35,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
     // Prepare dummy IR
     constexpr int IR_SIZE = 2048;
-    constexpr double IR_VAL_OFFSET = 1000000.0;
+    constexpr float IR_VAL_OFFSET = 1000000.0f;
 
     juce::AudioSampleBuffer ir(1, IR_SIZE);
 
@@ -64,7 +64,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
     SECTION("Add 1ms pre-delay to IR => prepend 89 empty samples to buffer") {
         static constexpr double DELAY_S = 0.001;
-        const double EXPECTED_NUM_SAMPLES = std::ceil(SAMPLE_RATE * DELAY_S);
+        const int EXPECTED_NUM_SAMPLES = (int)std::ceil(SAMPLE_RATE * DELAY_S);
 
         preDelay.delayMs = DELAY_S * 1000;
 
