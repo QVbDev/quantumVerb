@@ -7,6 +7,7 @@
 */
 
 #include "IRPipeline.h"
+#include "PluginParameters.h"
 #include "Util.h"
 
 #include <algorithm>
@@ -25,8 +26,9 @@ namespace reverb
      *
      * @throws std::invalid_argument
      */
-    IRPipeline::IRPipeline(juce::AudioProcessor * processor)
-        : Task(processor)
+    IRPipeline::IRPipeline(juce::AudioProcessor * processor, int channelIdx)
+        : Task(processor),
+          channelIdx(channelIdx)
     {
         // Initialise pipeline steps
         filters[0] = std::make_shared<LowShelfFilter>(processor);
@@ -38,12 +40,15 @@ namespace reverb
         gain = std::make_shared<Gain>(processor);
         preDelay = std::make_shared<PreDelay>(processor);
 
+        // Update parameters
+        updateParams();
+
         // Look for IR bank
         // TODO: Choose impulse responses to provide in bank and select default one (current IR is temporary)
         irBank = juce::File::getSpecialLocation(juce::File::currentApplicationFile).getParentDirectory();
 
         std::string defaultIRFilePath = irBank.getFullPathName().toStdString() +
-                                        "/ImpulseResponses/chiesa_di_san_lorenzo.wav";
+                                        "/ImpulseResponses/Resources/" + currentIR.toStdString();
 
         juce::File irFile(defaultIRFilePath);
         if (!irFile.existsAsFile())
@@ -56,66 +61,91 @@ namespace reverb
 
     //==============================================================================
     /**
+     * @brief Read processor parameters and update child parameters as necessary
+     * 
+     * Update parameters based on current processor configuration. Set mustExec flag
+     * if any parameters are changed in this process.
+     *
+     * @returns True if any parameters were changed, false otherwise.
+     */
+    bool IRPipeline::updateParams(const std::string&)
+    {
+        auto& params = getMapOfParams();
+
+        bool changedConfig = false;
+
+        // Update pipeline parameters
+        auto paramIRChoices = dynamic_cast<juce::AudioParameterChoice*>(params.at("ir_choices"));
+
+        if (!paramIRChoices)
+        {
+            throw std::invalid_argument("Received non-choice parameter for IR choice in IRPipeline block");
+        }
+
+        if (*paramIRChoices != currentIR)
+        {
+            currentIR = *paramIRChoices;
+            changedConfig = true;
+        }
+
+        // Update child parameters
+        for (int i = 0; i < filters.size(); ++i)
+        {
+            std::string filterId = "filter0" + std::to_string(i);
+            changedConfig |= filters[i]->updateParams(filterId);
+        }
+
+        changedConfig |= gain->updateParams("ir_gain");
+        changedConfig |= preDelay->updateParams("predelay");
+
+        // Update mustExec flag
+        mustExec |= changedConfig;
+
+        return changedConfig;
+    }
+
+    //==============================================================================
+    /**
      * @brief Manipulate the input IR file and place it in the given buffer
      *
      * Applies filtering (EQ), time stretching (sample rate conversion) and gain to
      * internal IR channel buffers to prepare it for main audio processing, then write
      * channels to given output buffer.
      *
-     * @param [out] ir  Processed impulse response
+     * @param [out] irChannelOut    Processed impulse response channel
      *
      * @throws std::runtime_error
      */
-    void IRPipeline::exec(juce::AudioSampleBuffer& ir)
+    void IRPipeline::exec(juce::AudioSampleBuffer& irChannelOut)
     {
-        // Execute pipeline on both channels
-        for (auto& irChannel : irChannels)
+        // Execute pipeline on IR channel
+        for (auto& filter : filters)
         {
-            for (auto& filter : filters)
-            {
-                filter->exec(irChannel);
-            }
+            filter->exec(irChannel);
+        }
 
-            timeStretch->exec(irChannel);
-            gain->exec(irChannel);
+        timeStretch->exec(irChannel);
+        gain->exec(irChannel);
 
-            try
-            {
-                preDelay->exec(irChannel);
-            }
-            catch (const std::exception& e)
-            {
-                std::string errMsg = "Skipping pre-delay step due to exception: ";
-                            errMsg += e.what();
+        try
+        {
+            preDelay->exec(irChannel);
+        }
+        catch (const std::exception& e)
+        {
+            std::string errMsg = "Skipping pre-delay step due to exception: ";
+                        errMsg += e.what();
                 
-                logger.dualPrint(Logger::Level::Error, errMsg);
+            logger.dualPrint(Logger::Level::Error, errMsg);
 
-                // TODO: Let user know about error through UI (?)
-            }
+            // TODO: Let user know about error through UI (?)
         }
 
-        if (irChannels.size() == 2 &&
-            irChannels[0].getNumSamples() != irChannels[1].getNumSamples())
-        {
-            throw std::runtime_error( "Obtained non-identical number of samples in both channels (L = " +
-                                      std::to_string(irChannels[0].getNumSamples()) +
-                                      ", R = " +
-                                      std::to_string(irChannels[1].getNumSamples()) +
-                                      ")" );
-        }
+        // Use move semantics to write to output IR channel
+        irChannelOut = std::move(irChannel);
 
-        // Merge channels into single IR buffer
-        ir.clear();
-        ir.setSize((int)irChannels.size(), irChannels[0].getNumSamples(), false, true, false);
-
-        for (int i = 0; i < irChannels.size(); ++i)
-        {
-            auto irChannelReadPtr = irChannels[i].getReadPointer(0);
-
-            memcpy(ir.getWritePointer(i),
-                   irChannelReadPtr,
-                   irChannels[i].getNumSamples() * sizeof(irChannelReadPtr[0]));
-        }
+        // Disable mustExec flag
+        mustExec = false;
     }
 
     //==============================================================================
@@ -148,14 +178,13 @@ namespace reverb
         int numSamples = (int)std::min(reader->lengthInSamples,
                                        (juce::int64)std::ceil(reader->sampleRate * MAX_IR_LENGTH_S));
 
-        irChannels.clear();
+        irChannel.clear();
 
-        for (int i = 0; i < 2; ++i)
-        {
-            // Read left and right channels
-            irChannels.emplace_back(juce::AudioSampleBuffer(1, numSamples));
-            reader->read(&irChannels[i], 0, numSamples, 0, (i==0), (i==1));
-        }
+        // Read channel corresponding to pipeline channel index
+        // TODO: (maybe if we finish earlier than expected) Currently only handles mono/stereo,
+        //       should we duplicate left/right channels when # channels is higher?
+        irChannel.setSize(1, numSamples);
+        reader->read(&irChannel, 0, numSamples, 0, channelIdx == 0, channelIdx == 1);
 
         // Set parameters based on current impulse response
         timeStretch->origIRSampleRate = reader->sampleRate;

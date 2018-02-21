@@ -34,17 +34,19 @@ namespace reverb
         using Ptr = std::shared_ptr<MainPipeline>;
 
         //==============================================================================
+        virtual bool updateParams(const std::string& = "") override;
         virtual void exec(juce::AudioSampleBuffer& audio) override;
 
         //==============================================================================
         void loadIR(juce::AudioSampleBuffer&& ir);
 
+    protected:
         //==============================================================================
         Convolution::Ptr convolution;
         Gain::Ptr gain;
         Mixer::Ptr dryWetMixer;
 
-    protected:
+        //==============================================================================
         juce::AudioSampleBuffer ir;
     };
 

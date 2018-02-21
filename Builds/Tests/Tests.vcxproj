@@ -64,7 +64,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\vendor\vst3sdk;..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;..\..\vendor\soundtouch\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <LanguageStandard>stdcpp14</LanguageStandard>

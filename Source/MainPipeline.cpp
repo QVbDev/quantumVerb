@@ -9,6 +9,7 @@
 */
 
 #include "MainPipeline.h"
+#include "PluginParameters.h"
 
 namespace reverb
 {
@@ -28,6 +29,28 @@ namespace reverb
         convolution = std::make_shared<Convolution>(processor);
         gain = std::make_shared<Gain>(processor);
         dryWetMixer = std::make_shared<Mixer>(processor);
+
+        // Update parameters
+        updateParams();
+    }
+
+    //==============================================================================
+    /**
+     * @brief Read processor parameters and update child parameters as necessary
+     *
+     * @returns True if any parameters were changed, false otherwise.
+     */
+    bool MainPipeline::updateParams(const std::string&)
+    {
+        auto& params = getMapOfParams();
+
+        bool changedConfig = false;
+
+        // Update child parameters
+        changedConfig |= gain->updateParams("out_gain");
+        changedConfig |= dryWetMixer->updateParams("wet_ratio");
+
+        return changedConfig;
     }
 
     //==============================================================================

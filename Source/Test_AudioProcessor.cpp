@@ -17,6 +17,22 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
+ //==============================================================================
+ /**
+ * Mocked AudioProcessor class to facilitate accessing protected members in unit tests.
+ */
+class AudioProcessorMocked : public reverb::AudioProcessor
+{
+public:
+    using AudioProcessor::AudioProcessor;
+
+    reverb::IRPipeline::Ptr getIRPipeline(int channelIdx) { return irPipelines[channelIdx]; }
+    reverb::MainPipeline::Ptr getMainPipeline(int channelIdx) { return mainPipelines[channelIdx]; }
+
+    juce::AudioSampleBuffer& getIRChannel(int channelIdx) { return irChannels[channelIdx]; }
+    juce::AudioSampleBuffer& getAudioChannel(int channelIdx) { return audioChannels[channelIdx]; }
+};
+
 TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
     constexpr int SAMPLE_RATE = 88200; // Hz
     constexpr int NUM_CHANNELS = 2;
@@ -24,12 +40,17 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
     const int NUM_SAMPLES_PER_BLOCK = (int)std::ceil((BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE);
 
     // Create AudioProcessor
-    reverb::AudioProcessor processor;
+    AudioProcessorMocked processor;
     processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
                                    SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
 
-    REQUIRE(processor.irPipeline != nullptr);
-    REQUIRE(processor.mainPipeline != nullptr);
+    processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
+    
+    for (int i = 0; i < NUM_CHANNELS; ++i)
+    {
+        REQUIRE(processor.getIRPipeline(i) != nullptr);
+        REQUIRE(processor.getMainPipeline(i) != nullptr);
+    }
 
     // Create "audio" buffer and fill it with random data
     juce::AudioSampleBuffer audio(NUM_CHANNELS, NUM_SAMPLES_PER_BLOCK);
@@ -50,24 +71,38 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
         }
     }
 
-    // Create empty midi buffer
-    juce::MidiBuffer emptyMidi;
-
-    REQUIRE(emptyMidi.isEmpty());
-
 
     SECTION("IRPipeline should be disabled after execution") {
-        REQUIRE(processor.irPipeline->mustExec);
-
         // First exec (with IR pipeline)
-        processor.processBlock(audio, emptyMidi);
+        for (int i = 0; i < NUM_CHANNELS; ++i)
+        {
+            REQUIRE(processor.getIRPipeline(i)->needsToRun());
+        }
 
-        REQUIRE(!processor.irPipeline->mustExec);
+        auto start = std::chrono::high_resolution_clock::now();
+        processor.processBlock(audio);
+        auto end = std::chrono::high_resolution_clock::now();
+
+        auto firstExecTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+        for (int i = 0; i < NUM_CHANNELS; ++i)
+        {
+            REQUIRE(!processor.getIRPipeline(i)->needsToRun());
+        }
 
         // Second exec (no IR pipeline)
-        processor.processBlock(audio, emptyMidi);
+        start = std::chrono::high_resolution_clock::now();
+        processor.processBlock(audio);
+        end = std::chrono::high_resolution_clock::now();
 
-        REQUIRE(!processor.irPipeline->mustExec);
+        auto secondExecTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        
+        for (int i = 0; i < NUM_CHANNELS; ++i)
+        {
+            REQUIRE(!processor.getIRPipeline(i)->needsToRun());
+        }
+
+        REQUIRE(secondExecTime.count() < firstExecTime.count() - 10);
     }
 
 
@@ -77,11 +112,11 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
 
         // Prepare impulse response
-        processor.processBlock(audio, emptyMidi);
+        processor.processBlock(audio);
 
         // Measure total processing time for one block
         auto start = std::chrono::high_resolution_clock::now();
-        processor.processBlock(audio, emptyMidi);
+        processor.processBlock(audio);
         auto end = std::chrono::high_resolution_clock::now();
 
         auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);

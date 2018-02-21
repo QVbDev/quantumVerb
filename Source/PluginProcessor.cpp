@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "PluginParameters.h"
 #include "Util.h"
 
 namespace reverb
@@ -21,7 +22,7 @@ namespace reverb
      */
 	AudioProcessor::AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-		: AudioProcessor(BusesProperties()
+		, AudioProcessor(BusesProperties()
 #if ! JucePlugin_IsMidiEffect
 #if ! JucePlugin_IsSynth
 			.withInput("Input", juce::AudioChannelSet::stereo(), true)
@@ -31,24 +32,18 @@ namespace reverb
 		)
 #endif
 	{
-        try
+        // Initialise processor parameters
+        auto& params = getMapOfParams();
+
+        for (auto& mappedParam : params)
         {
-            irPipeline = std::make_shared<IRPipeline>(this);
+            addParameter(mappedParam.second);
         }
-        catch (const std::exception& e)
-        {
-            logger.dualPrint(Logger::Level::Fatal, e.what());
-
-            // TODO: Let user know about error through UI
-
-            // TODO: Find a way to exit without crashing the current process so we don't kill the DAW
-        }
-
-        mainPipeline = std::make_shared<MainPipeline>(this);
 	}
 
 	AudioProcessor::~AudioProcessor()
 	{
+        resetMapOfParams();
 	}
 
 	//==============================================================================
@@ -114,16 +109,84 @@ namespace reverb
 	}
 
 	//==============================================================================
+    /**
+     * @brief Prepare the processor before playback starts
+     *
+     * Called before playback starts, to let the processor prepare itself.
+     * 
+     * You can call getTotalNumInputChannels and getTotalNumOutputChannels or query
+     * the busLayout member variable to find out the number of channels your
+     * processBlock callback must process.
+     * 
+     * The maximumExpectedSamplesPerBlock value is a strong hint about the maximum
+     * number of samples that will be provided in each block. You may want to use
+     * this value to resize internal buffers. You should program defensively in case
+     * a buggy host exceeds this value. The actual block sizes that the host uses
+     * may be different each time the callback happens: completely variable block
+     * sizes can be expected from some hosts.
+     *
+     * @param sampleRate [in]       Target sample rate (constant until playback stops)
+     * @param samplesPerBlock [in]  Hint about max. expected samples in upcoming block
+     */
 	void AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 	{
-		// Use this method as the place to do any pre-playback
-		// initialisation that you need..
-	}
+        int numChannels = getTotalNumInputChannels();
 
+        if (getTotalNumInputChannels() != getTotalNumOutputChannels())
+        {
+            std::string errMsg = "Mismatch between input (" +
+                                 std::to_string(getTotalNumInputChannels()) + 
+                                 ") and output (" +
+                                 std::to_string(getTotalNumOutputChannels()) +
+                                 ") channels. Forcing output to " +
+                                 std::to_string(numChannels) +
+                                 " channels.";
+
+            logger.dualPrint(Logger::Level::Error, errMsg);
+        }
+
+        // Add/remove pipelines as needed to meet requeted number of channels
+        for (int i = numChannels; i < irPipelines.size(); ++i)      irPipelines.pop_back();
+        for (int i = irPipelines.size(); i < numChannels; ++i)      irPipelines.emplace_back(new IRPipeline(this, i));
+
+        for (int i = numChannels; i < mainPipelines.size(); ++i)    mainPipelines.pop_back();
+        for (int i = mainPipelines.size(); i < numChannels; ++i)    mainPipelines.emplace_back(new MainPipeline(this));
+
+        // Update parameters across pipelines
+        for (auto& pipeline : irPipelines)      pipeline->updateParams();
+        for (auto& pipeline : mainPipelines)    pipeline->updateParams();
+
+        // Add empty buffers to meet channel count if necessary
+        for (int i = irChannels.size(); i < numChannels; ++i)
+        {
+            irChannels.emplace_back();
+        }
+
+        // Clear existing audio buffers and add/remove buffers of appropriate size if necessary
+        for (int i = numChannels; i < audioChannels.size(); ++i)
+        {
+            audioChannels.pop_back();
+        }
+
+        for (auto& channel : audioChannels)
+        {
+            channel.setSize(1, samplesPerBlock);
+        }
+
+        for (int i = audioChannels.size(); i < numChannels; ++i)
+        {
+            audioChannels.emplace_back(1, samplesPerBlock);
+        }
+    }
+
+    /**
+     * @brief Release resource when playback stops
+     *
+     * Used when playback stops as an opportunity to free up any spare memory, etc.
+     */
 	void AudioProcessor::releaseResources()
 	{
-		// When playback stops, you can use this as an opportunity to free up any
-		// spare memory, etc.
+        audioChannels.clear();
 	}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -175,32 +238,88 @@ namespace reverb
             buffer.clear(i, 0, buffer.getNumSamples());
         }
 
-        // Execute IR pipeline if necessary (i.e. first run or one of its parameters
-        // was changed by the editor)
-        if (irPipeline->mustExec)
+        // We should have the right number of pipelines and channel buffers from
+        // a previous call to prepareToPlay(), but just to be safe let's check
+        // these values here.
+        for (int i = irPipelines.size(); i < buffer.getNumChannels(); ++i)   irPipelines.emplace_back();
+        for (int i = mainPipelines.size(); i < buffer.getNumChannels(); ++i) mainPipelines.emplace_back();
+
+        for (int i = irChannels.size(); i < buffer.getNumChannels(); ++i)    irChannels.emplace_back();
+        for (int i = audioChannels.size(); i < buffer.getNumChannels(); ++i) audioChannels.emplace_back();
+
+        // Split input buffer into one buffer per channel
+        for (int i = 0; i < buffer.getNumChannels(); ++i)
         {
-            juce::AudioSampleBuffer ir;
-
-            try
+            // Audio channel should have been prepared with the right size in
+            // prepareToPlay(), but we should play it safe in case the DAW gave
+            // us the wrong number of samples then.
+            if (audioChannels[i].getNumSamples() != buffer.getNumSamples())
             {
-                irPipeline->exec(ir);
-            }
-            catch (const std::exception& e)
-            {
-                std::string errMsg = "Skipping IR pipeline due to exception:";
-                            errMsg += e.what();
-
-                logger.dualPrint(Logger::Level::Error, errMsg);
-
-                // TODO: Let user know about error through UI (?)
+                audioChannels[i].setSize(1, buffer.getNumSamples(), true);
             }
 
-            mainPipeline->loadIR(std::move(ir));
-            irPipeline->mustExec = false;
+            memcpy(audioChannels[i].getWritePointer(0),
+                   buffer.getReadPointer(i),
+                   buffer.getNumSamples() * sizeof(buffer.getReadPointer(0)[0]));
+        }
+
+        // Execute IR pipeline (only runs if necessary, i.e. on first run or if one
+        // of its parameters was changed by the editor)
+        for (int i = 0; i < buffer.getNumChannels(); ++i)
+        {
+            if (irPipelines[i]->needsToRun())
+            {
+                try
+                {
+                    irPipelines[i]->exec(irChannels[i]);
+                }
+                catch (const std::exception& e)
+                {
+                    std::string errMsg = "Skipping IR pipeline for channel " +
+                        std::to_string(i) +
+                        " due to exception: "
+                        + e.what();
+
+                    logger.dualPrint(Logger::Level::Error, errMsg);
+
+                    // TODO: Let user know about error through UI
+                }
+
+                mainPipelines[i]->loadIR(std::move(irChannels[i]));
+            }
         }
 
         // Execute main pipeline
-        mainPipeline->exec(buffer);
+        for (int i = 0; i < irPipelines.size(); ++i)
+        {
+            mainPipelines[i]->exec(audioChannels[i]);
+        }
+
+        // Merge channels into output buffer
+        for (int i = 0; i < buffer.getNumChannels(); ++i)
+        {
+            // Safety check, we shouldn't enter this section under normal circumstances
+            if (buffer.getNumSamples() < audioChannels[i].getNumSamples())
+            {
+                std::string errMsg = "Processed audio unexpectedly contains more samples than"
+                                     "input buffer (input: " +
+                                     std::to_string(buffer.getNumSamples()) +
+                                     " samples, output: " +
+                                     std::to_string(audioChannels[i].getNumSamples()) +
+                                     " samples)";
+                
+                buffer.setSize(buffer.getNumChannels(),
+                               audioChannels[i].getNumSamples(), true);
+
+                logger.dualPrint(Logger::Level::Error, errMsg);
+            }
+
+            auto channelReadPtr = audioChannels[i].getReadPointer(0);
+
+            memcpy(buffer.getWritePointer(i),
+                   channelReadPtr,
+                   audioChannels[i].getNumSamples() * sizeof(channelReadPtr[0]));
+        }
 	}
 
 	//==============================================================================

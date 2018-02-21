@@ -7,15 +7,28 @@
               buildVST="1" buildVST3="1" buildAU="0" buildAUv3="0" buildRTAS="0"
               buildAAX="0" buildStandalone="1" enableIAA="0" pluginName="QuantumReverb"
               pluginDesc="Convolution reverb audio plugin" pluginManufacturer="Quantum Music"
-              pluginManufacturerCode="Qntm" pluginCode="QRvb" pluginChannelConfigs="{2,2}"
+              pluginManufacturerCode="Qntm" pluginCode="QVrb" pluginChannelConfigs="{1,1},{2,2}"
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="QuantumReverbAU"
               pluginRTASCategory="" aaxIdentifier="ca.quantum-music.QuantumReverb"
-              pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.2.0"
+              pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.2.1"
               companyName="Quantum-Music" companyWebsite="http://quantum-music.ca/"
               companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\vendor\soundtouch\include"
               defines="DONT_SET_USING_JUCE_NAMESPACE=1">
   <MAINGROUP id="wAf2hM" name="QuantumReverb">
+    <GROUP id="{CE63C67B-47F3-3300-2737-C141D0918050}" name="resources">
+      <GROUP id="{E0A3342D-EF01-0D67-E03E-FE0F65621DA8}" name="ImpulseResponses">
+        <FILE id="yItpGA" name="CREDITS.md" compile="0" resource="1" file="Resources/ImpulseResponses/CREDITS.md"/>
+        <FILE id="KfuSfO" name="large_church.wav" compile="0" resource="1"
+              file="Resources/ImpulseResponses/large_church.wav"/>
+        <FILE id="yXfeov" name="large_hall.wav" compile="0" resource="1" file="Resources/ImpulseResponses/large_hall.wav"/>
+        <FILE id="FaDXmj" name="medium_chamber.wav" compile="0" resource="1"
+              file="Resources/ImpulseResponses/medium_chamber.wav"/>
+        <FILE id="Nbstsz" name="medium_hall.wav" compile="0" resource="1" file="Resources/ImpulseResponses/medium_hall.wav"/>
+        <FILE id="Co0StX" name="open_air.wav" compile="0" resource="1" file="Resources/ImpulseResponses/open_air.wav"/>
+      </GROUP>
+      <FILE id="KdBY4m" name="logo_dial.png" compile="0" resource="1" file="Resources/logo_dial.png"/>
+    </GROUP>
     <GROUP id="{16E68198-2536-31A4-D4D0-776A279C4A7E}" name="include">
       <FILE id="ZRYgLa" name="Convolution.h" compile="0" resource="0" file="Source/Convolution.h"/>
       <FILE id="NiupXX" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
@@ -24,6 +37,8 @@
       <FILE id="PY5ljl" name="MainPipeline.h" compile="0" resource="0" file="Source/MainPipeline.h"/>
       <FILE id="Tv11hP" name="Mixer.h" compile="0" resource="0" file="Source/Mixer.h"/>
       <FILE id="rhRhM8" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="Z6KzVP" name="PluginParameters.h" compile="0" resource="0"
+            file="Source/PluginParameters.h"/>
       <FILE id="uWAVTY" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
       <FILE id="UiHVxO" name="PreDelay.h" compile="0" resource="0" file="Source/PreDelay.h"/>
@@ -41,6 +56,8 @@
       <FILE id="wNFPWG" name="Mixer.cpp" compile="1" resource="0" file="Source/Mixer.cpp"/>
       <FILE id="uHldQT" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
+      <FILE id="mhYf2H" name="PluginParameters.cpp" compile="1" resource="0"
+            file="Source/PluginParameters.cpp"/>
       <FILE id="gfAIxI" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="FZ4wVp" name="PreDelay.cpp" compile="1" resource="0" file="Source/PreDelay.cpp"/>
@@ -52,6 +69,7 @@
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
             vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouch.lib"
             IPPLibrary="true">
+            bigIcon="KdBY4m" smallIcon="KdBY4m">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"

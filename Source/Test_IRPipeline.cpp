@@ -14,6 +14,13 @@
 
 #include <chrono>
 
+/**
+* How to write tests with Catch:
+* https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
+*/
+
+// TODO: Test parameter changes
+
 //==============================================================================
 /**
  * Mocked IRPipeline class for loading custom IR buffers in unit tests.
@@ -22,6 +29,11 @@ class IRPipelineMocked : public reverb::IRPipeline
 {
 public:
     using IRPipeline::IRPipeline;
+
+    //==============================================================================
+    constexpr int getMaxIRLengthS() { return MAX_IR_LENGTH_S; }
+
+    juce::String getCurrentIR() { return currentIR; }
 
     //==============================================================================
     /**
@@ -74,11 +86,6 @@ public:
     }
 };
 
-/**
- * How to write tests with Catch:
- * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
- */
-
 TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]") {
     constexpr int IR_SAMPLE_RATE = 96000;
     constexpr int IR_NUM_CHANNELS = 2;
@@ -92,13 +99,15 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
 
     REQUIRE(processor.getSampleRate() == IR_SAMPLE_RATE);
 
-    IRPipelineMocked irPipeline(&processor);
+    IRPipelineMocked irPipeline(&processor, 0);
+
+    REQUIRE(irPipeline.getCurrentIR() == "large_church.wav");
 
 
     SECTION("IR processing shouldn't be excessively long") {
         constexpr std::chrono::seconds MAX_EXEC_TIME_MS(200);
 
-        juce::AudioSampleBuffer ir;
+        juce::AudioSampleBuffer ir(1, 512);
 
         // Measure processing time
         auto start = std::chrono::high_resolution_clock::now();
@@ -112,7 +121,7 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
 
 
     SECTION("IR should be limited to MAX_IR_LENGTH_MS") {
-        constexpr int MAX_NUM_SAMPLES = IR_SAMPLE_RATE * irPipeline.MAX_IR_LENGTH_S;
+        constexpr int MAX_NUM_SAMPLES = IR_SAMPLE_RATE * irPipeline.getMaxIRLengthS();
 
         juce::AudioSampleBuffer irIn(1, MAX_NUM_SAMPLES + 1);
 

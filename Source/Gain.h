@@ -27,10 +27,12 @@ namespace reverb
         using Ptr = std::shared_ptr<Gain>;
 
         //==============================================================================
+        virtual bool updateParams(const std::string& blockId) override;
         virtual void exec(juce::AudioSampleBuffer& buffer) override;
 
+    protected:
         //==============================================================================
-        double gainFactor;
+        float gainFactor;
     };
 
 }

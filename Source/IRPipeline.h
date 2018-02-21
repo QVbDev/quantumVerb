@@ -32,17 +32,22 @@ namespace reverb
     {
     public:
         //==============================================================================
-        IRPipeline(juce::AudioProcessor * processor);
+        IRPipeline(juce::AudioProcessor * processor, int channelIdx);
 
         //==============================================================================
         using Ptr = std::shared_ptr<IRPipeline>;
 
         //==============================================================================
+        virtual bool updateParams(const std::string& = "") override;
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
         void loadIR(const std::string& irFilePath);
 
+        //==============================================================================
+        bool needsToRun() const { return mustExec; }
+
+    protected:
         //==============================================================================
         std::array<Filter::Ptr, 4> filters;
         TimeStretch::Ptr timeStretch;
@@ -52,11 +57,16 @@ namespace reverb
         //==============================================================================
         static constexpr int MAX_IR_LENGTH_S = 5;
 
+        //==============================================================================
         bool mustExec = true;
 
-    protected:
-        std::vector<juce::AudioSampleBuffer> irChannels;
+        //==============================================================================
+        int channelIdx;
+        juce::AudioSampleBuffer irChannel;
+
+        //==============================================================================
         juce::File irBank;
+        juce::String currentIR;
     };
 
 }

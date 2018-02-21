@@ -31,6 +31,7 @@ namespace reverb
         using Ptr = std::shared_ptr<Filter>;
 
         //==============================================================================
+        virtual bool updateParams(const std::string& blockId) override;
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
@@ -38,21 +39,15 @@ namespace reverb
             return pow(10, dB / 10);
         }
 
-        //==============================================================================
-
-		void setFrequency(float);
-		void setQ(float);
-		void setGain(float);
-
 	protected:
+        //==============================================================================
 		bool assertValues();
 		virtual void buildFilter() = 0;
-		
 
-		float frequency;
+        //==============================================================================
+        float frequency;
         float Q;
         float gainFactor;
-
     };
 
     

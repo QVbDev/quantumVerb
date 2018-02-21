@@ -7,6 +7,7 @@
 */
 
 #include "Filter.h"
+#include "PluginParameters.h"
 
 namespace reverb
 {
@@ -22,6 +23,62 @@ namespace reverb
 	Filter::Filter(juce::AudioProcessor * processor, float freq, float q, float gain)
 		: Task(processor), frequency(freq), Q(q), gainFactor(gain)
     {
+    }
+    
+    //==============================================================================
+    /**
+     * @brief Read processor parameters and update block parameters as necessary
+     *
+     * @returns True if any parameters were changed, false otherwise.
+     */
+    bool Filter::updateParams(const std::string& blockId)
+    {
+        auto& params = getMapOfParams();
+        bool changedParams = false;
+
+        // Frequency
+        auto paramFreq = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId + "_freq"));
+
+        if (!paramFreq)
+        {
+            throw std::invalid_argument("Received non-float parameter for frequency in Filter block");
+        }
+
+        if (*paramFreq != frequency)
+        {
+            frequency = *paramFreq;
+            changedParams = true;
+        }
+
+        // Q factor
+        auto paramQ = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId + "_Q"));
+
+        if (!paramQ)
+        {
+            throw std::invalid_argument("Received non-float parameter for Q factor in Filter block");
+        }
+
+        if (*paramQ != Q)
+        {
+            Q = *paramQ;
+            changedParams = true;
+        }
+
+        // Gain
+        auto paramGain = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId + "_gain"));
+
+        if (!paramGain)
+        {
+            throw std::invalid_argument("Received non-float parameter for Q factor in Filter block");
+        }
+
+        if (*paramGain != gainFactor)
+        {
+            gainFactor = *paramGain;
+            changedParams = true;
+        }
+
+        return changedParams;
     }
 
     //==============================================================================
@@ -48,30 +105,6 @@ namespace reverb
 		juce::dsp::IIR::Filter<float>::process(context);
 		
     }
-
-	void Filter::setFrequency(float freq) {
-
-		if (freq < 0 || freq > 20000)
-		    throw WrongParameter();
-
-		frequency = freq;
-	}
-
-	void Filter::setQ(float q) {
-
-		if(q < 0.7)
-		    throw WrongParameter();
-
-		Q = q;
-	}
-
-	void Filter::setGain(float gain) {
-
-		if(gain < 0 || gain > invdB(15))
-		    throw WrongParameter();
-
-		gainFactor = gain;
-	}
 
 	bool Filter::assertValues() {
 		if (frequency > 0 && frequency < 20000 && Q > 0.7 && gainFactor >= 0 && gainFactor < invdB(15))

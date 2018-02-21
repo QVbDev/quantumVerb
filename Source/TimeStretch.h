@@ -30,12 +30,14 @@ namespace reverb
         using Ptr = std::shared_ptr<TimeStretch>;
 
         //==============================================================================
+        virtual bool updateParams(const std::string& = 0) override { return false; };
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
         double origIRSampleRate;
 
     private:
+        //==============================================================================
         std::unique_ptr<soundtouch::SoundTouch> soundtouch;
     };
 

@@ -27,13 +27,15 @@ namespace reverb
         using Ptr = std::shared_ptr<Mixer>;
 
         //==============================================================================
+        virtual bool updateParams(const std::string& blockId) override;
         virtual void exec(juce::AudioSampleBuffer& wetAudio) override;
 
         //==============================================================================
         void loadDry(const juce::AudioSampleBuffer& dryAudio);
 
+    protected:
         //==============================================================================
-        double wetRatio;
+        float wetRatio;
     };
 
 }

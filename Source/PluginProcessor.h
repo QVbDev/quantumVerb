@@ -10,12 +10,14 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 
 #include "IRPipeline.h"
 #include "MainPipeline.h"
 
+#include <map>
 #include <mutex>
+#include <vector>
 
 namespace reverb
 {
@@ -40,7 +42,7 @@ namespace reverb
 		bool isBusesLayoutSupported(const juce::BusesLayout& layouts) const override;
 #endif
 
-		void processBlock(juce::AudioSampleBuffer&, juce::MidiBuffer&) override;
+		void processBlock(juce::AudioSampleBuffer&, juce::MidiBuffer& = juce::MidiBuffer()) override;
 
 		//==============================================================================
 		juce::AudioProcessorEditor* createEditor() override;
@@ -66,10 +68,15 @@ namespace reverb
 		void setStateInformation(const void* data, int sizeInBytes) override;
 
         //==============================================================================
-        IRPipeline::Ptr irPipeline;
-        MainPipeline::Ptr mainPipeline;
-
         std::mutex lock;
+
+    protected:
+        //==============================================================================
+        std::vector<IRPipeline::Ptr>   irPipelines;
+        std::vector<MainPipeline::Ptr> mainPipelines;
+
+        std::vector<juce::AudioSampleBuffer> irChannels;
+        std::vector<juce::AudioSampleBuffer> audioChannels;
 
 	private:
 		//==============================================================================
