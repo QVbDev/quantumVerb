@@ -86,7 +86,7 @@
       </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>xcopy /y /s /i "..\..\ImpulseResponses" "$(OutDir)\ImpulseResponses"</Command>
+      <Command>xcopy /y /s /i "..\..\Resources\ImpulseResponses" "$(OutDir)ImpulseResponses"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

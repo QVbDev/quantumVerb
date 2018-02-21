@@ -48,7 +48,7 @@ namespace reverb
         irBank = juce::File::getSpecialLocation(juce::File::currentApplicationFile).getParentDirectory();
 
         std::string defaultIRFilePath = irBank.getFullPathName().toStdString() +
-                                        "/ImpulseResponses/Resources/" + currentIR.toStdString();
+                                        "/ImpulseResponses/" + currentIR.toStdString();
 
         juce::File irFile(defaultIRFilePath);
         if (!irFile.existsAsFile())

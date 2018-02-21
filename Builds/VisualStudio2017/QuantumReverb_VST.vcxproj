@@ -116,7 +116,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;</Command>
+      <Command>xcopy /y /s /i &quot;..\..\Resources\ImpulseResponses&quot; &quot;$(OutDir)ImpulseResponses&quot;</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -167,7 +167,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;</Command>
+      <Command>xcopy /y /s /i &quot;..\..\Resources\ImpulseResponses&quot; &quot;$(OutDir)ImpulseResponses&quot;</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -68,19 +68,18 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
             vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouch.lib"
-            IPPLibrary="true">
-            bigIcon="KdBY4m" smallIcon="KdBY4m">
+            IPPLibrary="true" smallIcon="KdBY4m" bigIcon="KdBY4m">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
                        libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
-                       postbuildCommand="xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;"/>
+                       postbuildCommand="xcopy /y /s /i &quot;..\..\Resources\ImpulseResponses&quot; &quot;$(OutDir)ImpulseResponses&quot;"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
                        libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
-                       postbuildCommand="xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;"/>
+                       postbuildCommand="xcopy /y /s /i &quot;..\..\Resources\ImpulseResponses&quot; &quot;$(OutDir)ImpulseResponses&quot;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>
