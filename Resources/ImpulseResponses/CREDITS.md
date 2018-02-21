@@ -7,10 +7,10 @@ would like to thank the authors listed below for their work in making these impu
 ## Neolithic timber circle Pömmelte-Zackmünde, Germany
 
 ### File(s)
-open_air.wav
+* open_air.wav
 
 ### Licence
-[Creative Commons 3.0 Attribution Non-Commercial Share-Alike](https://creativecommons.org/licenses/by-nc-sa/3.0/)
+* [Creative Commons 3.0 Attribution Non-Commercial Share-Alike](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 
 ### Credits
 * www.openairlib.net
@@ -24,7 +24,7 @@ open_air.wav
 * medium_hall.wav
 
 ### Licence
-[Creative Commons 3.0 Attribution](https://creativecommons.org/licenses/by/3.0/)
+* [Creative Commons 3.0 Attribution](https://creativecommons.org/licenses/by/3.0/)
 
 ### Credits
 * www.openairlib.net
@@ -37,7 +37,7 @@ open_air.wav
 * large_church.wav
 
 ### Licence
-[Creative Commons 3.0 Attribution Share-Alike](https://creativecommons.org/licenses/by-sa/3.0/)
+* [Creative Commons 3.0 Attribution Share-Alike](https://creativecommons.org/licenses/by-sa/3.0/)
 
 ### Credits
 * www.openairlib.net
@@ -51,7 +51,7 @@ open_air.wav
 * large_hall.wav
 
 ### Licence
-[Creative Commons 3.0 Attribution Share-Alike](https://creativecommons.org/licenses/by-sa/3.0/)
+* [Creative Commons 3.0 Attribution Share-Alike](https://creativecommons.org/licenses/by-sa/3.0/)
 
 ### Credits
 * www.openairlib.net
@@ -65,7 +65,7 @@ open_air.wav
 * chamber_medium.wav
 
 ### Licence
-[Creative Commons 3.0 Attribution Share-Alike](https://creativecommons.org/licenses/by-sa/3.0/)
+* [Creative Commons 3.0 Attribution Share-Alike](https://creativecommons.org/licenses/by-sa/3.0/)
 
 ### Credits
 * www.openairlib.net
