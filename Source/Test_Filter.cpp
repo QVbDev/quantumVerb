@@ -12,11 +12,6 @@ Test_Filter.cpp
 #include "PluginProcessor.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846f
-#endif
-
-enum {LOW, HIGH, PEAK};
 
 /**
 * How to write tests with Catch:
@@ -27,7 +22,7 @@ enum {LOW, HIGH, PEAK};
 bool compareValues(const float a1, const float a2) {
 	float ratio = a1 / a2;
 
-	if (ratio >= 0.99 && ratio <= 1.01)
+	if (ratio >= 0.999 && ratio <= 1.001)
 		return true;
 
 	else
