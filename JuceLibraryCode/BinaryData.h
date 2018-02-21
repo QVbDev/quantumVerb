@@ -9,7 +9,7 @@
 namespace BinaryData
 {
     extern const char*   CREDITS_md;
-    const int            CREDITS_mdSize = 1609;
+    const int            CREDITS_mdSize = 1712;
 
     extern const char*   large_church_wav;
     const int            large_church_wavSize = 768044;

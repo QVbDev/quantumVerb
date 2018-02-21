@@ -32,7 +32,7 @@ namespace reverb
         
         if (!soundtouch)
         {
-            throw std::runtime_error("Failed to create SoundTouch handle");
+            logger.dualPrint(Logger::Level::Error, "Failed to create SoundTouch handle");
         }
     }
 
@@ -55,6 +55,11 @@ namespace reverb
      */
     void TimeStretch::exec(juce::AudioSampleBuffer& ir)
     {
+        if (!soundtouch)
+        {
+            logger.dualPrint(Logger::Level::Error, "No SoundTouch instance exists, cannot apply time stretch to IR");
+        }
+
         soundtouch->setChannels(1);
         soundtouch->setSampleRate((unsigned)origIRSampleRate);
 

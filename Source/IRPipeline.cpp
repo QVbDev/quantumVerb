@@ -23,8 +23,6 @@ namespace reverb
      * and ensures it can be found.
      *
      * @param [in] processor    Pointer to main processor
-     *
-     * @throws std::invalid_argument
      */
     IRPipeline::IRPipeline(juce::AudioProcessor * processor, int channelIdx)
         : Task(processor),
@@ -44,16 +42,38 @@ namespace reverb
         updateParams();
 
         // Look for IR bank
-        // TODO: Choose impulse responses to provide in bank and select default one (current IR is temporary)
-        irBank = juce::File::getSpecialLocation(juce::File::currentApplicationFile).getParentDirectory();
+        juce::File pluginDir = juce::File::getSpecialLocation(juce::File::currentApplicationFile).getParentDirectory();
+        irBank = pluginDir.getChildFile("ImpulseResponses");
 
-        std::string defaultIRFilePath = irBank.getFullPathName().toStdString() +
+        if (!irBank.exists() || !irBank.isDirectory())
+        {
+            processor->suspendProcessing(true);
+
+            std::string errMsg = "Failed to locate IR bank (" +
+                                 irBank.getFullPathName().toStdString() +
+                                 "), suspending processing until valid IR is given";
+
+            logger.dualPrint(Logger::Level::Error, errMsg);
+
+            return;
+        }
+
+        // Look for default IR in bank
+        std::string defaultIRFilePath = pluginDir.getFullPathName().toStdString() +
                                         "/ImpulseResponses/" + currentIR.toStdString();
 
         juce::File irFile(defaultIRFilePath);
         if (!irFile.existsAsFile())
         {
-            throw std::invalid_argument("Failed to locate default impulse response: " + defaultIRFilePath);
+            processor->suspendProcessing(true);
+
+            std::string errMsg = "Failed to locate default impulse response (" +
+                                 irFile.getFullPathName().toStdString() +
+                                 "), suspending processing until valid IR is given";
+
+            logger.dualPrint(Logger::Level::Error, errMsg);
+
+            return;
         }
 
         loadIR(defaultIRFilePath);
@@ -79,7 +99,7 @@ namespace reverb
 
         if (!paramIRChoices)
         {
-            throw std::invalid_argument("Received non-choice parameter for IR choice in IRPipeline block");
+            logger.dualPrint(Logger::Level::Error, "Received non-choice parameter for IR chocie in IRPipeline block");
         }
 
         if (*paramIRChoices != currentIR)
@@ -102,6 +122,27 @@ namespace reverb
         mustExec |= changedConfig;
 
         return changedConfig;
+    }
+
+    //==============================================================================
+    /**
+     * @brief Update sample rate for IR processing
+     * 
+     * Compares new sample rate with previous value. If different, sets mustExec to
+     * true in order to re-run pipeline for new sample rate. Store new sample rate
+     * value once complete.
+     *
+     * @returns True if sample rate changed, false otherwise.
+     */
+    bool IRPipeline::updateSampleRate(double sampleRate)
+    {
+        if (sampleRate != lastSampleRate)
+        {
+            mustExec = true;
+            lastSampleRate = sampleRate;
+        }
+
+        return mustExec;
     }
 
     //==============================================================================
@@ -137,8 +178,6 @@ namespace reverb
                         errMsg += e.what();
                 
             logger.dualPrint(Logger::Level::Error, errMsg);
-
-            // TODO: Let user know about error through UI (?)
         }
 
         // Use move semantics to write to output IR channel
@@ -153,7 +192,8 @@ namespace reverb
      * @brief Loads an impulse response from a file (.WAV or .AIFF) to internal representation
      *
      * Loads the selected impulse response (IR) from disk and splits it into individual buffers
-     * for each channel.
+     * for each channel. This operation is potentially very heavy so processing is suspended
+     * until completion.
      *
      * @param [in] irFilePath   Path to impulse response file
      *
@@ -161,6 +201,9 @@ namespace reverb
      */
     void IRPipeline::loadIR(const std::string& irFilePath)
     {
+        // Suspend processing since this may take a while
+        processor->suspendProcessing(true);
+
         // Load impulse response file
         juce::File irFile(irFilePath);
 
@@ -188,5 +231,8 @@ namespace reverb
 
         // Set parameters based on current impulse response
         timeStretch->origIRSampleRate = reader->sampleRate;
+
+        // Resume processing
+        processor->suspendProcessing(false);
     }
 }

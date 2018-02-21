@@ -42,7 +42,10 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        void loadIR(const std::string& irFilePath);
+        bool updateSampleRate(double sampleRate);
+
+        //==============================================================================
+        void loadIR(const std::string& irNameOrPath);
 
         //==============================================================================
         bool needsToRun() const { return mustExec; }
@@ -58,15 +61,18 @@ namespace reverb
         static constexpr int MAX_IR_LENGTH_S = 5;
 
         //==============================================================================
+        double lastSampleRate = 0;
         bool mustExec = true;
 
         //==============================================================================
+        void loadIRFromDisk(const std::string& irFilePath);
+
         int channelIdx;
         juce::AudioSampleBuffer irChannel;
 
         //==============================================================================
         juce::File irBank;
-        juce::String currentIR;
+        juce::String currentIR = "";
     };
 
 }

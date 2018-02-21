@@ -13,7 +13,7 @@ namespace reverb
 
     //==============================================================================
     Logger::Logger(const std::string& logName,
-                   const std::string& welcomeMsg = "Beginning log")
+                   const std::string& welcomeMsg)
         : log(juce::FileLogger::createDefaultAppLogger(JucePlugin_Name, logName, welcomeMsg)),
             verbosity(Level::Warning)
     {

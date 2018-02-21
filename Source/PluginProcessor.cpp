@@ -1,9 +1,7 @@
 /*
   ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
+  
+    PluginProcessor.cpp
 
   ==============================================================================
 */
@@ -11,7 +9,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "PluginParameters.h"
-#include "Util.h"
+#include "Logger.h"
 
 namespace reverb
 {
@@ -153,8 +151,16 @@ namespace reverb
         for (int i = mainPipelines.size(); i < numChannels; ++i)    mainPipelines.emplace_back(new MainPipeline(this));
 
         // Update parameters across pipelines
-        for (auto& pipeline : irPipelines)      pipeline->updateParams();
-        for (auto& pipeline : mainPipelines)    pipeline->updateParams();
+        for (auto& pipeline : irPipelines)
+        {
+            pipeline->updateParams();
+            pipeline->updateSampleRate(sampleRate);
+        }
+
+        for (auto& pipeline : mainPipelines)
+        {
+            pipeline->updateParams();
+        }
 
         // Add empty buffers to meet channel count if necessary
         for (int i = irChannels.size(); i < numChannels; ++i)
@@ -281,8 +287,6 @@ namespace reverb
                         + e.what();
 
                     logger.dualPrint(Logger::Level::Error, errMsg);
-
-                    // TODO: Let user know about error through UI
                 }
 
                 mainPipelines[i]->loadIR(std::move(irChannels[i]));

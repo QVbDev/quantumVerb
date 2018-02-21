@@ -10,7 +10,7 @@
 
 #include "IRPipeline.h"
 #include "PluginProcessor.h"
-#include "Util.h"
+#include "Logger.h"
 
 #include <chrono>
 
