@@ -44,7 +44,7 @@
       <FILE id="UiHVxO" name="PreDelay.h" compile="0" resource="0" file="Source/PreDelay.h"/>
       <FILE id="Ml2EHl" name="Task.h" compile="0" resource="0" file="Source/Task.h"/>
       <FILE id="ZbZKE4" name="TimeStretch.h" compile="0" resource="0" file="Source/TimeStretch.h"/>
-      <FILE id="RlqKqT" name="Util.h" compile="0" resource="0" file="Source/Util.h"/>
+      <FILE id="RlqKqT" name="Logger.h" compile="0" resource="0" file="Source/Logger.h"/>
     </GROUP>
     <GROUP id="{DD9F08D3-896A-69D7-4B5C-1C9A13F59FFB}" name="source">
       <FILE id="ovcHFj" name="Convolution.cpp" compile="1" resource="0" file="Source/Convolution.cpp"/>
@@ -62,7 +62,7 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="FZ4wVp" name="PreDelay.cpp" compile="1" resource="0" file="Source/PreDelay.cpp"/>
       <FILE id="t35Mb5" name="TimeStretch.cpp" compile="1" resource="0" file="Source/TimeStretch.cpp"/>
-      <FILE id="uQllGP" name="Util.cpp" compile="1" resource="0" file="Source/Util.cpp"/>
+      <FILE id="uQllGP" name="Logger.cpp" compile="1" resource="0" file="Source/Logger.cpp"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

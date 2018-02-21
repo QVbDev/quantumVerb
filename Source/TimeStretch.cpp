@@ -2,13 +2,12 @@
   ==============================================================================
 
     TimeStretch.cpp
-    Created: 20 Jan 2018 5:00:14pm
-    Author:  Eric Seguin
 
   ==============================================================================
 */
 
 #include "TimeStretch.h"
+#include "Logger.h"
 
 #include <algorithm>
 #include <thread>

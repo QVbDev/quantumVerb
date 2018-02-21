@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    Util.h
+    Logger.h
 
   ==============================================================================
 */
@@ -33,11 +33,7 @@ namespace reverb
         * Use Logger::getInstance() to get a reference to the singleton.
         */
         Logger(const std::string& logName,
-               const std::string& welcomeMsg = "Beginning log")
-            : log(juce::FileLogger::createDefaultAppLogger(JucePlugin_Name, logName, welcomeMsg)),
-              verbosity(Level::Warning)
-        {
-        }
+               const std::string& welcomeMsg = "Beginning log");
 
         ~Logger() = default;
 
@@ -63,10 +59,7 @@ namespace reverb
          *
          * @param [in] logLevel New verbosity level
          */
-        void setVerbosity(Level logLevel)
-        {
-            verbosity = logLevel;
-        }
+        void setVerbosity(Level logLevel);
 
 
         //==============================================================================
@@ -79,51 +72,10 @@ namespace reverb
          * @param [in] logLevel Severity of message to print
          * @param [in] msg      Message to print
          */
-        void print(Level logLevel, const std::string& msg)
-        {
-            if (logLevel > verbosity)
-            {
-                return;
-            }
-
-            // Format message with timestamp and severity
-            std::string msgFormatted;
-
-            msgFormatted = juce::Time::getCurrentTime().formatted("%Y-%m-%d %H:%M:%S").toStdString();
-
-            switch (logLevel)
-            {
-            case Level::Fatal:
-                msgFormatted += " [FATAL]: ";
-                break;
-
-            case Level::Error:
-                msgFormatted += " [ERROR]: ";
-                break;
-
-            case Level::Warning:
-                msgFormatted += " [WARNING]: ";
-                break;
-
-            case Level::Info:
-                msgFormatted += " [INFO]: ";
-                break;
-
-            case Level::App:
-            default:
-                msgFormatted += " [APP]: ";
-                break;
-            }
-
-            msgFormatted += msg;
-
-            // Print formatted message to log file (thread-safe)
-            std::lock_guard<std::mutex> lock(mutex);
-            log->logMessage(msgFormatted);
-        }
+        void print(Level logLevel, const std::string& msg);
 
         /**
-         * @brief Print message to console and to log file
+         * @brief Print message to console/UI and to log file
          *
          * All messages get printed to the console. Logged messages are filtered by
          * severity depending on current verbosity setting (see Logger::print()).
@@ -131,11 +83,7 @@ namespace reverb
          * @param [in] logLevel Severity of message to print
          * @param [in] msg      Message to print
          */
-        void dualPrint(Level logLevel, const std::string& msg)
-        {
-            std::cerr << msg;
-            print(logLevel, msg);
-        }
+        void dualPrint(Level logLevel, const std::string& msg);
 
     private:
         //==============================================================================

@@ -8,7 +8,7 @@
 
 #include "IRPipeline.h"
 #include "PluginParameters.h"
-#include "Util.h"
+#include "Logger.h"
 
 #include <algorithm>
 

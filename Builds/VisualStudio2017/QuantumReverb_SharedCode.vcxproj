@@ -182,7 +182,7 @@
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PreDelay.cpp"/>
     <ClCompile Include="..\..\Source\TimeStretch.cpp"/>
-    <ClCompile Include="..\..\Source\Util.cpp"/>
+    <ClCompile Include="..\..\Source\Logger.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1947,7 +1947,7 @@
     <ClInclude Include="..\..\Source\PreDelay.h"/>
     <ClInclude Include="..\..\Source\Task.h"/>
     <ClInclude Include="..\..\Source\TimeStretch.h"/>
-    <ClInclude Include="..\..\Source\Util.h"/>
+    <ClInclude Include="..\..\Source\Logger.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>
