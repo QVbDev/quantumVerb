@@ -96,11 +96,9 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	int order = std::ceil((log(sampleBuffer.getNumSamples()) / log(2)));
 
 	juce::dsp::FFT forwardFFT(order);
+	float * fftBuffer = new float[2 * forwardFFT.getSize()];
 
-	const int fftSize = pow(2, order);
-	float * fftBuffer = new float[2 * fftSize];
-
-	memset(fftBuffer, 0, 2*fftSize*sizeof(*fftBuffer));
+	memset(fftBuffer, 0, 2*forwardFFT.getSize()*sizeof(*fftBuffer));
 
 	//Compute frequency resolution
 	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
