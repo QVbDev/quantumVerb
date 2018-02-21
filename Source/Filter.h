@@ -13,7 +13,7 @@
 #include <memory>
 #include <exception>
 
-#define QMIN 0.7
+#define QMIN 0.2
 #define QMAX 2
 #define GMIN -24
 #define GMAX 15
@@ -40,7 +40,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        static double invdB(double dB) {
+        static float invdB(float dB) {
 			return pow(10, dB / 10);
         }
 

@@ -23,25 +23,16 @@ enum {LOW, HIGH, PEAK};
 * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
 */
 
-float measureGain(float * const fft, float freq, float freqRes, int filter) {
 
-	switch (filter) {
-	case LOW:
-		
-		break;
+bool compareValues(const float a1, const float a2) {
+	float ratio = a1 / a2;
 
-	case HIGH:
+	if (ratio >= 0.99 && ratio <= 1.01)
+		return true;
 
-		break;
+	else
+		return false;
 
-	case PEAK:
-
-		break;
-
-	default:
-		return 0;
-		break;
-	}
 }
 
 
@@ -94,7 +85,6 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 	// compute the next highest power of 2 of sample number
 	int order = std::ceil((log(sampleBuffer.getNumSamples()) / log(2)));
-
 	juce::dsp::FFT forwardFFT(order);
 	float * fftBuffer = new float[2 * forwardFFT.getSize()];
 
@@ -105,29 +95,59 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 
 	SECTION("Testing low-shelf filter") {
-		reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
+		float gain = reverb::Filter::invdB(14);
+		float freq = 5000;
+
+		reverb::LowShelfFilter filter(&processor, freq, 0.71, gain);
 		filter.exec(sampleBuffer);
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
+		//Test for gain at low freuquency
+		REQUIRE(compareValues(gain, fftBuffer[0]));
+
+		//Test for cut-off frequency
+		int cutOffIndex = (int)std::round(freq / freqRes);
+
+		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing high-shelf filter") {
-		reverb::HighShelfFilter filter(&processor, 2000, 0.71, (float)reverb::Filter::invdB(10));
+		float gain = reverb::Filter::invdB(10);
+		float freq = 20000;
+
+		reverb::HighShelfFilter filter(&processor, freq, 0.71, gain);
 		filter.exec(sampleBuffer);
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+		//Test for gain at high frequency
+		REQUIRE(compareValues(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
+
+		//Test for cut-off frequency
+		int cutOffIndex = (int)std::round(freq / freqRes);
+
+		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing peaking filter") {
-		reverb::PeakFilter filter(&processor, 5000, 1, (float)reverb::Filter::invdB(10));
+		float gain = reverb::Filter::invdB(10);
+		float centerFreq = 5000;
+
+		reverb::PeakFilter filter(&processor, centerFreq, 0.71, gain);
 		filter.exec(sampleBuffer);
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+		int peakIndex = (int)std::round(centerFreq / freqRes);
+
+		//Test for gain at center frequency
+		REQUIRE(compareValues(gain, fftBuffer[peakIndex]));
 	}
+
 
 	SECTION("Testing filter toggle") {
 		reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
