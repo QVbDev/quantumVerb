@@ -105,7 +105,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 
 	SECTION("Testing low-shelf filter") {
-		reverb::LowShelfFilter filter(&processor, 5000, 0.5, (float)reverb::Filter::invdB(14));
+		reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
 		filter.exec(sampleBuffer);
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
@@ -130,7 +130,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	}
 
 	SECTION("Testing filter toggle") {
-		reverb::LowShelfFilter filter(&processor, 5000, 0.5, (float)reverb::Filter::invdB(14));
+		reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
 		filter.disable();
 		filter.exec(sampleBuffer);
 

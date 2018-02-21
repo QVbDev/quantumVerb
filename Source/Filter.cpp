@@ -53,7 +53,7 @@ namespace reverb
 
 	void Filter::setFrequency(float freq) {
 
-		if (freq < 0 || freq > 20000)
+		if (freq <= 0 || freq > FMAX)
 		    throw WrongParameterException();
 
 		frequency = freq;
@@ -61,7 +61,7 @@ namespace reverb
 
 	void Filter::setQ(float q) {
 
-		if(q < 0.099)
+		if(q < QMIN || q > QMAX)
 		    throw WrongParameterException();
 
 		Q = q;
@@ -69,7 +69,7 @@ namespace reverb
 
 	void Filter::setGain(float gain) {
 
-		if(gain < 0 || gain > invdB(15))
+		if(gain < invdB(GMIN) || gain > invdB(GMAX))
 		    throw WrongParameterException();
 
 		gainFactor = gain;
@@ -89,7 +89,7 @@ namespace reverb
 	}
 
 	bool Filter::assertValues() {
-		if (frequency > 0 && frequency < 20000 && Q > 0.099 && gainFactor >= 0 && gainFactor < invdB(15))
+		if (frequency > 0 && frequency <= FMAX && Q >= QMIN && Q <= QMAX && gainFactor >= invdB(GMIN) && gainFactor <= invdB(GMAX))
 			return true;
 		else
 			return false;

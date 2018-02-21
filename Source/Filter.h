@@ -13,6 +13,12 @@
 #include <memory>
 #include <exception>
 
+#define QMIN 0.7
+#define QMAX 2
+#define GMIN -24
+#define GMAX 15
+#define FMAX 20000
+
 namespace reverb
 {
 
