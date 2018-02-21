@@ -102,6 +102,9 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		//Test for gain at low freuquency
 		REQUIRE(compareValues(gain, fftBuffer[0]));
 
+		//Test for gain at high frequency
+		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
+
 		//Test for cut-off frequency
 		int cutOffIndex = (int)std::round(freq / freqRes);
 
@@ -117,6 +120,9 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+		//Test for gain at low frequency
+		REQUIRE(compareValues(1, fftBuffer[0]));
 
 		//Test for gain at high frequency
 		REQUIRE(compareValues(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
@@ -141,6 +147,10 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 		//Test for gain at center frequency
 		REQUIRE(compareValues(gain, fftBuffer[peakIndex]));
+
+		//Test for gain at both ends of the spectrum
+		REQUIRE(compareValues(1, fftBuffer[0]));
+		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
 	}
 
 
