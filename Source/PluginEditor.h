@@ -21,11 +21,13 @@ namespace reverb
 
 	//==============================================================================
 	/**
-    * TODO: Description
+    * Implements the plugins UI. This includes window configuration, placement of UI elements and handlers for 
+    * various events such as slider interaction.
 	*/
 	class AudioProcessorEditor : public juce::AudioProcessorEditor
                                , public juce::Button::Listener 
                                , public juce::Slider::Listener
+                               , public juce::TextEditor::Listener
 	{
 	public:
 		AudioProcessorEditor(AudioProcessor&);
@@ -36,29 +38,15 @@ namespace reverb
 		void resized() override;
 
         void buttonClicked(juce::Button * button) override;
-        void sliderValueChanged(juce::Slider *slider) override;
+        /*void loadIR(int num);
+        void handleMenuResult(int result);
+        void menuCallback(int result);*/
+        void sliderValueChanged(juce::Slider *changedSlider) override;
 
 	private:
 		// This reference is provided as a quick way for your editor to
 		// access the processor object that created it.
 		AudioProcessor& processor;
-
-        /*// boxed sections buttons
-        juce::TextButton activateButton;
-        juce::TextButton infoGene;
-        juce::TextButton sampleRate;
-        juce::TextButton graphBox;
-        juce::TextButton eqBox;
-        juce::TextButton gainMixTimeBox;*/
-
-        
-        /*// slider comparison
-        juce::Slider qfilter;
-        juce::Slider qfilter1;
-        juce::Slider qfilter2;
-        juce::Slider qfilter3;
-        juce::Slider qfilter4;
-        juce::Slider qfilter5;*/
 
         GUI_filter_box lowShelf;
         GUI_filter_box peakingLow;
@@ -69,12 +57,11 @@ namespace reverb
 
         juce::ToggleButton isOn;
 
-        juce::TextEditor genInfo;
+        juce::TextButton genInfo;
         juce::TextEditor sampleRate;
 
-        juce::Slider rotationKnob;
-        juce::Image knobPic;
-        
+        juce::Slider preDelay;
+        juce::Label preDelayLabel;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};

@@ -22,8 +22,6 @@ namespace reverb
     Gain::Gain(juce::AudioProcessor * processor)
         : Task(processor)
     {
-        // random testing value
-        gainFactor = 0.03;
     }
 
     //==============================================================================
