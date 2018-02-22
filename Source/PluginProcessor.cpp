@@ -12,6 +12,8 @@
 #include "PluginEditor.h"
 #include "Logger.h"
 
+#include <thread>
+
 namespace reverb
 {
 
@@ -234,7 +236,7 @@ namespace reverb
      * @param [in] buffer   Audio buffer containing samples to process
      * @param midiMessages  Unused
      */
-	void AudioProcessor::processBlock(juce::AudioSampleBuffer& buffer, juce::MidiBuffer&)
+	void AudioProcessor::processBlock(juce::AudioSampleBuffer& audio, juce::MidiBuffer&)
 	{
         // Lock processor during use
         std::lock_guard<std::mutex> guard(lock);
@@ -250,92 +252,83 @@ namespace reverb
 
         for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         {
-            buffer.clear(i, 0, buffer.getNumSamples());
+            audio.clear(i, 0, audio.getNumSamples());
         }
 
         // We should have the right number of pipelines and channel buffers from
         // a previous call to prepareToPlay(), but just to be safe let's check
         // these values here.
-        for (size_t i = irPipelines.size(); i < buffer.getNumChannels(); ++i)
+        for (size_t i = irPipelines.size(); i < audio.getNumChannels(); ++i)
         {
             irPipelines.emplace_back();
         }
 
-        for (size_t i = mainPipelines.size(); i < buffer.getNumChannels(); ++i)
+        for (size_t i = mainPipelines.size(); i < audio.getNumChannels(); ++i)
         {
             mainPipelines.emplace_back();
         }
 
-        for (size_t i = irChannels.size(); i < buffer.getNumChannels(); ++i)
+        for (size_t i = irChannels.size(); i < audio.getNumChannels(); ++i)
         {
             irChannels.emplace_back();
         }
 
-        for (size_t i = audioChannels.size(); i < buffer.getNumChannels(); ++i)
+        for (size_t i = audioChannels.size(); i < audio.getNumChannels(); ++i)
         {
             audioChannels.emplace_back();
         }
 
         // Split input buffer into one buffer per channel
-        for (int i = 0; i < buffer.getNumChannels(); ++i)
+        for (int i = 0; i < audio.getNumChannels(); ++i)
         {
             // Audio channel should have been prepared with the right size in
             // prepareToPlay(), but we should play it safe in case the DAW gave
             // us the wrong number of samples then.
-            if (audioChannels[i].getNumSamples() != buffer.getNumSamples())
+            if (audioChannels[i].getNumSamples() != audio.getNumSamples())
             {
-                audioChannels[i].setSize(1, buffer.getNumSamples(), true);
+                audioChannels[i].setSize(1, audio.getNumSamples(), true);
             }
 
             memcpy(audioChannels[i].getWritePointer(0),
-                   buffer.getReadPointer(i),
-                   buffer.getNumSamples() * sizeof(buffer.getReadPointer(0)[0]));
+                   audio.getReadPointer(i),
+                   audio.getNumSamples() * sizeof(audio.getReadPointer(0)[0]));
         }
 
-        // Execute IR pipeline (only runs if necessary, i.e. on first run or if one
-        // of its parameters was changed by the editor)
-        for (int i = 0; i < buffer.getNumChannels(); ++i)
+#ifdef REVERB_MULTITHREADED
+        // Process each channel in its own thread
+        std::vector<std::thread> channelThreads;
+
+        for (int i = 0; i < audio.getNumChannels(); ++i)
         {
-            if (irPipelines[i]->needsToRun())
-            {
-                try
-                {
-                    irPipelines[i]->exec(irChannels[i]);
-                }
-                catch (const std::exception& e)
-                {
-                    std::string errMsg = "Skipping IR pipeline for channel " +
-                                         std::to_string(i) +
-                                         " due to exception: " +
-                                         e.what();
-
-                    logger.dualPrint(Logger::Level::Error, errMsg);
-                }
-
-                mainPipelines[i]->loadIR(std::move(irChannels[i]));
-            }
+            channelThreads.emplace_back(&AudioProcessor::processChannel, this, i);
         }
 
-        // Execute main pipeline
-        for (int i = 0; i < irPipelines.size(); ++i)
+        // Wait for each thread to complete
+        for (auto& thread : channelThreads)
         {
-            mainPipelines[i]->exec(audioChannels[i]);
+            thread.join();
         }
+#else
+        for (int i = 0; i < audio.getNumChannels(); ++i)
+        {
+            processChannel(i);
+        }
+#endif
 
         // Merge channels into output buffer
-        for (int i = 0; i < buffer.getNumChannels(); ++i)
+        for (int i = 0; i < audio.getNumChannels(); ++i)
         {
             // Safety check, we shouldn't enter this section under normal circumstances
-            if (buffer.getNumSamples() < audioChannels[i].getNumSamples())
+            if (audio.getNumSamples() < audioChannels[i].getNumSamples())
             {
                 std::string errMsg = "Processed audio unexpectedly contains more samples than"
                                      "input buffer (input: " +
-                                     std::to_string(buffer.getNumSamples()) +
+                                     std::to_string(audio.getNumSamples()) +
                                      " samples, output: " +
                                      std::to_string(audioChannels[i].getNumSamples()) +
                                      " samples)";
                 
-                buffer.setSize(buffer.getNumChannels(),
+                audio.setSize(audio.getNumChannels(),
                                audioChannels[i].getNumSamples(), true);
 
                 logger.dualPrint(Logger::Level::Error, errMsg);
@@ -343,11 +336,43 @@ namespace reverb
 
             auto channelReadPtr = audioChannels[i].getReadPointer(0);
 
-            memcpy(buffer.getWritePointer(i),
+            memcpy(audio.getWritePointer(i),
                    channelReadPtr,
                    audioChannels[i].getNumSamples() * sizeof(channelReadPtr[0]));
         }
 	}
+
+    /**
+     * @brief Applies reverb effect on single channel using preconfigured pipelines
+     *
+     * @param [in] channelIdx   Index of channel to process
+     */
+    void AudioProcessor::processChannel(int channelIdx)
+    {
+        // Execute IR pipeline (only runs if necessary, i.e. on first run or if one
+        // of its parameters was changed by the editor)
+        if (irPipelines[channelIdx]->needsToRun())
+        {
+            try
+            {
+                irPipelines[channelIdx]->exec(irChannels[channelIdx]);
+            }
+            catch (const std::exception& e)
+            {
+                std::string errMsg = "Skipping IR pipeline for channel " +
+                                     std::to_string(channelIdx) +
+                                     " due to exception: " +
+                                     e.what();
+
+                logger.dualPrint(Logger::Level::Error, errMsg);
+            }
+
+            mainPipelines[channelIdx]->loadIR(std::move(irChannels[channelIdx]));
+        }
+
+        // Execute main pipeline
+        mainPipelines[channelIdx]->exec(audioChannels[channelIdx]);
+    }
 
 	//==============================================================================
 	bool AudioProcessor::hasEditor() const

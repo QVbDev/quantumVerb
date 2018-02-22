@@ -43,7 +43,7 @@ namespace reverb
 		bool isBusesLayoutSupported(const juce::BusesLayout& layouts) const override;
 #endif
 
-		void processBlock(juce::AudioSampleBuffer&, juce::MidiBuffer&) override;
+		void processBlock(juce::AudioSampleBuffer& audio, juce::MidiBuffer&) override;
 
 		//==============================================================================
 		juce::AudioProcessorEditor* createEditor() override;
@@ -97,6 +97,8 @@ namespace reverb
         bool paramsInitialised = false;
 
         //==============================================================================
+        void processChannel(int channelIdx);
+
         std::vector<IRPipeline::Ptr>   irPipelines;
         std::vector<MainPipeline::Ptr> mainPipelines;
 

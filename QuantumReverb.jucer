@@ -14,7 +14,7 @@
               pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.2.1"
               companyName="Quantum-Music" companyWebsite="http://quantum-music.ca/"
               companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\vendor\soundtouch\include"
-              defines="DONT_SET_USING_JUCE_NAMESPACE=1">
+              defines="DONT_SET_USING_JUCE_NAMESPACE=1&#10;REVERB_MULTITHREADED=1">
   <MAINGROUP id="wAf2hM" name="QuantumReverb">
     <GROUP id="{CE63C67B-47F3-3300-2737-C141D0918050}" name="resources">
       <GROUP id="{E0A3342D-EF01-0D67-E03E-FE0F65621DA8}" name="ImpulseResponses">

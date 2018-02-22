@@ -110,20 +110,26 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
 
 
     SECTION("Regular processing should be real-time") {
-        // TODO: What should our max exec time be? Currently minimum real-time value
-        //       (i.e. actual block time)
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
+        constexpr int NUM_ITERATIONS = 1000;
 
         // Prepare impulse response
+        processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
         processor.processBlock(audio, midi);
 
-        // Measure total processing time for one block
-        auto start = std::chrono::high_resolution_clock::now();
-        processor.processBlock(audio, midi);
-        auto end = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < NUM_ITERATIONS; ++i)
+        {
+            // Measure total processing time for one block
+            auto start = std::chrono::high_resolution_clock::now();
 
-        auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
+            processor.processBlock(audio, midi);
+
+            auto end = std::chrono::high_resolution_clock::now();
+
+            auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         
-        REQUIRE(execTime.count() < MAX_EXEC_TIME_MS.count());
+            REQUIRE(execTime.count() < MAX_EXEC_TIME_MS.count());
+        }
     }
 }
