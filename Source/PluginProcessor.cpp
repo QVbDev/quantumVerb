@@ -335,19 +335,18 @@ namespace reverb
 	//==============================================================================
 	void AudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 	{
-        // TODO
-
-		// You should use this method to store your parameters in the memory block.
-		// You could do that either as raw data, or use the XML or ValueTree classes
-		// as intermediaries to make it easy to save and load complex data.
+        std::unique_ptr<juce::XmlElement> xmlState(parameters.state.createXml());
+        copyXmlToBinary(*xmlState, destData);
 	}
 
 	void AudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 	{
-        // TODO
+        std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
-		// You should use this method to restore your parameters from this memory block,
-		// whose contents will have been created by the getStateInformation() call.
+        if (xmlState && xmlState->hasTagName(parameters.state.getType()))
+        {
+            parameters.state.fromXml(*xmlState);
+        }
 	}
 
     //==============================================================================
@@ -360,28 +359,29 @@ namespace reverb
             return;
         }
 
-        static const float gain15dB = juce::Decibels::decibelsToGain(15);
+        static const float gain15dB = juce::Decibels::decibelsToGain<float>(15);
+        static const float gain15dBInv = 1.0 / gain15dB;
 
         /**
          * Low-shelf filter
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Low-shelf cut-off frequency", "Hz",
+                                          "EQ: Low-shelf cut-off frequency", "<0-20000 Hz>",
                                           juce::NormalisableRange<float>(0, 2e4),
                                           1e3,
                                           nullptr, nullptr );
 
         // TODO: Upper limit on Q factor?
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Low-shelf Q factor", "",
+                                          "EQ: Low-shelf Q factor", "<0.7-10000>",
                                           juce::NormalisableRange<float>(0.7, 1e4),
                                           0.707,
                                           nullptr, nullptr );
         
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_GAIN_SUFFIX,
-                                          "EQ: Low-shelf gain factor", "1 = no change",
+                                          "EQ: Low-shelf gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(0, gain15dB),
-                                          0.707,
+                                          1,
                                           nullptr, nullptr );
 
         
@@ -390,7 +390,7 @@ namespace reverb
          */
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 1 cut-off frequency", "Hz",
+                                          "EQ: Peak filter 1 cut-off frequency", "<0-20000 Hz>",
                                           juce::NormalisableRange<float>(0, 2e4),
                                           1e3,
                                           nullptr, nullptr );
@@ -398,16 +398,16 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 1 Q factor", "",
+                                          "EQ: Peak filter 1 Q factor", "<0.7-10000>",
                                           juce::NormalisableRange<float>(0.7, 1e4),
                                           0.707,
                                           nullptr, nullptr );
 
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_GAIN_SUFFIX,
-                                          "EQ: Peak filter 1 gain factor", "1 = no change",
+                                          "EQ: Peak filter 1 gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(0, gain15dB),
-                                          0.707,
+                                          1,
                                           nullptr, nullptr );
 
         
@@ -416,7 +416,7 @@ namespace reverb
          */
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 2 cut-off frequency", "Hz",
+                                          "EQ: Peak filter 2 cut-off frequency", "<0-20000 Hz>",
                                           juce::NormalisableRange<float>(0, 2e4),
                                           1e3,
                                           nullptr, nullptr );
@@ -424,16 +424,16 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 2 Q factor", "",
+                                          "EQ: Peak filter 2 Q factor", "<0.7-10000>",
                                           juce::NormalisableRange<float>(0.7, 1e4),
                                           0.707,
                                           nullptr, nullptr );
 
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_GAIN_SUFFIX,
-                                          "EQ: Peak filter 2 gain factor", "1 = no change",
+                                          "EQ: Peak filter 2 gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(0, gain15dB),
-                                          0.707,
+                                          1,
                                           nullptr, nullptr );
 
 
@@ -442,7 +442,7 @@ namespace reverb
          */
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: High-shelf cut-off frequency", "Hz",
+                                          "EQ: High-shelf cut-off frequency", "<0-20000 Hz>",
                                           juce::NormalisableRange<float>(0, 2e4),
                                           1e3,
                                           nullptr, nullptr );
@@ -450,16 +450,16 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: High-shelf Q factor", "",
+                                          "EQ: High-shelf Q factor", "<0.7-10000>",
                                           juce::NormalisableRange<float>(0.7, 1e4),
                                           0.707,
                                           nullptr, nullptr );
 
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_GAIN_SUFFIX,
-                                          "EQ: High-shelf gain factor", "1 = no change",
+                                          "EQ: High-shelf gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(0, gain15dB),
-                                          0.707,
+                                          1,
                                           nullptr, nullptr );
 
 
@@ -468,7 +468,7 @@ namespace reverb
          */
         // TODO: Upper limit on IR gain?
         parameters.createAndAddParameter( PID_IR_GAIN,
-                                          "Impulse response gain", "1 = no change",
+                                          "Impulse response gain", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(0, gain15dB),
                                           1,
                                           nullptr, nullptr );
@@ -478,7 +478,7 @@ namespace reverb
          * Pre-delay
          */
         parameters.createAndAddParameter( PID_PREDELAY,
-                                          "Pre-delay", "ms",
+                                          "Pre-delay", "<0-1000 ms>",
                                           juce::NormalisableRange<float>(0, 1000),
                                           0,
                                           nullptr, nullptr );
@@ -489,7 +489,7 @@ namespace reverb
          */
         // TODO: Default wet ratio?
         parameters.createAndAddParameter( PID_WETRATIO,
-                                          "Dry/wet ratio", "0 = all dry, 1 = all wet",
+                                          "Dry/wet ratio", "<0 = dry, 1 = wet>",
                                           juce::NormalisableRange<float>(0, 1),
                                           0.5,
                                           nullptr, nullptr );
@@ -500,7 +500,7 @@ namespace reverb
          */
         // TODO: Is range appropriate (i.e. do we want to allow boosting volume too)?
         parameters.createAndAddParameter( PID_AUDIO_OUT_GAIN,
-                                          "Output gain", "1 = no change",
+                                          "Output gain", "<" + juce::String(gain15dBInv) + "= no change>",
                                           juce::NormalisableRange<float>(0, gain15dB),
                                           1,
                                           nullptr, nullptr );
