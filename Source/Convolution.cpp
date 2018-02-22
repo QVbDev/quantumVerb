@@ -26,6 +26,18 @@ namespace reverb
 
     //==============================================================================
     /**
+     * @brief No parameters to update, do nothing
+     *
+     * @returns False
+     */
+    bool Convolution::updateParams(const juce::AudioProcessorValueTreeState&,
+                                   const juce::String&)
+    {
+        return false;
+    }
+
+    //==============================================================================
+    /**
      * @brief (TODO) Brief description
      *
      * (TODO) Detailed description

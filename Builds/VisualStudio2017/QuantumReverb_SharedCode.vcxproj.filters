@@ -430,6 +430,9 @@
     <ClCompile Include="..\..\Source\Gain.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\IRBank.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\IRPipeline.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
@@ -440,9 +443,6 @@
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PluginEditor.cpp">
-      <Filter>QuantumReverb\source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\PluginParameters.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp">
@@ -2382,6 +2382,9 @@
     <ClInclude Include="..\..\Source\Gain.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\IRBank.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\IRPipeline.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
@@ -2392,9 +2395,6 @@
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PluginEditor.h">
-      <Filter>QuantumReverb\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\PluginParameters.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PluginProcessor.h">

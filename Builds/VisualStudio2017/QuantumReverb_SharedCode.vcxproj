@@ -174,11 +174,11 @@
     <ClCompile Include="..\..\Source\Convolution.cpp"/>
     <ClCompile Include="..\..\Source\Filter.cpp"/>
     <ClCompile Include="..\..\Source\Gain.cpp"/>
+    <ClCompile Include="..\..\Source\IRBank.cpp"/>
     <ClCompile Include="..\..\Source\IRPipeline.cpp"/>
     <ClCompile Include="..\..\Source\MainPipeline.cpp"/>
     <ClCompile Include="..\..\Source\Mixer.cpp"/>
     <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
-    <ClCompile Include="..\..\Source\PluginParameters.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PreDelay.cpp"/>
     <ClCompile Include="..\..\Source\TimeStretch.cpp"/>
@@ -1938,11 +1938,11 @@
     <ClInclude Include="..\..\Source\Convolution.h"/>
     <ClInclude Include="..\..\Source\Filter.h"/>
     <ClInclude Include="..\..\Source\Gain.h"/>
+    <ClInclude Include="..\..\Source\IRBank.h"/>
     <ClInclude Include="..\..\Source\IRPipeline.h"/>
     <ClInclude Include="..\..\Source\MainPipeline.h"/>
     <ClInclude Include="..\..\Source\Mixer.h"/>
     <ClInclude Include="..\..\Source\PluginEditor.h"/>
-    <ClInclude Include="..\..\Source\PluginParameters.h"/>
     <ClInclude Include="..\..\Source\PluginProcessor.h"/>
     <ClInclude Include="..\..\Source\PreDelay.h"/>
     <ClInclude Include="..\..\Source\Task.h"/>

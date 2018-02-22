@@ -9,7 +9,6 @@
 */
 
 #include "Mixer.h"
-#include "PluginParameters.h"
 
 namespace reverb
 {
@@ -33,17 +32,17 @@ namespace reverb
      *
      * @returns True if any parameters were changed, false otherwise.
      */
-    bool Mixer::updateParams(const std::string& blockId)
+    bool Mixer::updateParams(const juce::AudioProcessorValueTreeState& params,
+                             const juce::String& blockId)
     {
-        auto& params = getMapOfParams();
         bool changedConfig = false;
 
         // Dry/wet ratio
-        auto paramWetRatio = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId));
+        auto paramWetRatio = params.getRawParameterValue(blockId);
 
         if (!paramWetRatio)
         {
-            throw std::invalid_argument("Received non-float parameter for wet ratio in Mixer block");
+            throw std::invalid_argument("Parameter not found for wet ratio in Mixer block");
         }
 
         if (*paramWetRatio != wetRatio)

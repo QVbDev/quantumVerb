@@ -24,13 +24,15 @@ namespace reverb
     public:
         //==============================================================================
         TimeStretch(juce::AudioProcessor * processor);
-        ~TimeStretch() noexcept;
+        ~TimeStretch() = default;
 
         //==============================================================================
         using Ptr = std::shared_ptr<TimeStretch>;
 
         //==============================================================================
-        virtual bool updateParams(const std::string& = 0) override { return false; };
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& = "") override;
+
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================

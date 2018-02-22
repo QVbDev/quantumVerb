@@ -12,6 +12,7 @@
 
 #include "Filter.h"
 #include "Gain.h"
+#include "IRBank.h"
 #include "PreDelay.h"
 #include "TimeStretch.h"
 
@@ -32,20 +33,22 @@ namespace reverb
     {
     public:
         //==============================================================================
-        IRPipeline(juce::AudioProcessor * processor, int channelIdx);
+        IRPipeline(juce::AudioProcessor * processor, const IRBank& irBank, int channelIdx);
 
         //==============================================================================
         using Ptr = std::shared_ptr<IRPipeline>;
 
         //==============================================================================
-        virtual bool updateParams(const std::string& = "") override;
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& = "") override;
+
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
         bool updateSampleRate(double sampleRate);
 
         //==============================================================================
-        void loadIR(const std::string& irNameOrPath);
+        void loadIR(const std::string& irNameOrFilePath);
 
         //==============================================================================
         bool needsToRun() const { return mustExec; }
@@ -65,13 +68,14 @@ namespace reverb
         bool mustExec = true;
 
         //==============================================================================
+        void loadIRFromBank(const std::string& irBuffer);
         void loadIRFromDisk(const std::string& irFilePath);
 
         int channelIdx;
         juce::AudioSampleBuffer irChannel;
 
         //==============================================================================
-        juce::File irBank;
+        const IRBank& irBank;
         juce::String currentIR = "";
     };
 

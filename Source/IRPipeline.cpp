@@ -7,8 +7,10 @@
 */
 
 #include "IRPipeline.h"
-#include "PluginParameters.h"
+
+#include "IRBank.h"
 #include "Logger.h"
+#include "PluginProcessor.h"
 
 #include <algorithm>
 
@@ -24,8 +26,9 @@ namespace reverb
      *
      * @param [in] processor    Pointer to main processor
      */
-    IRPipeline::IRPipeline(juce::AudioProcessor * processor, int channelIdx)
+    IRPipeline::IRPipeline(juce::AudioProcessor * processor, const IRBank& irBank, int channelIdx)
         : Task(processor),
+          irBank(irBank),
           channelIdx(channelIdx)
     {
         // Initialise pipeline steps
@@ -38,45 +41,10 @@ namespace reverb
         gain = std::make_shared<Gain>(processor);
         preDelay = std::make_shared<PreDelay>(processor);
 
-        // Update parameters
-        updateParams();
+        // Get default IR from bank
+        auto& firstIRName = irBank.buffers.begin()->first;
 
-        // Look for IR bank
-        juce::File pluginDir = juce::File::getSpecialLocation(juce::File::currentApplicationFile).getParentDirectory();
-        irBank = pluginDir.getChildFile("ImpulseResponses");
-
-        if (!irBank.exists() || !irBank.isDirectory())
-        {
-            processor->suspendProcessing(true);
-
-            std::string errMsg = "Failed to locate IR bank (" +
-                                 irBank.getFullPathName().toStdString() +
-                                 "), suspending processing until valid IR is given";
-
-            logger.dualPrint(Logger::Level::Error, errMsg);
-
-            return;
-        }
-
-        // Look for default IR in bank
-        std::string defaultIRFilePath = pluginDir.getFullPathName().toStdString() +
-                                        "/ImpulseResponses/" + currentIR.toStdString();
-
-        juce::File irFile(defaultIRFilePath);
-        if (!irFile.existsAsFile())
-        {
-            processor->suspendProcessing(true);
-
-            std::string errMsg = "Failed to locate default impulse response (" +
-                                 irFile.getFullPathName().toStdString() +
-                                 "), suspending processing until valid IR is given";
-
-            logger.dualPrint(Logger::Level::Error, errMsg);
-
-            return;
-        }
-
-        loadIR(defaultIRFilePath);
+        loadIR(firstIRName);
     }
 
     //==============================================================================
@@ -88,35 +56,32 @@ namespace reverb
      *
      * @returns True if any parameters were changed, false otherwise.
      */
-    bool IRPipeline::updateParams(const std::string&)
+    bool IRPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String&)
     {
-        auto& params = getMapOfParams();
-
         bool changedConfig = false;
 
         // Update pipeline parameters
-        auto paramIRChoices = dynamic_cast<juce::AudioParameterChoice*>(params.at("ir_choices"));
+        auto paramIRChoice = params.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE);
 
-        if (!paramIRChoices)
+        if (paramIRChoice.getProperty("value") != currentIR)
         {
-            logger.dualPrint(Logger::Level::Error, "Received non-choice parameter for IR chocie in IRPipeline block");
-        }
+            currentIR = paramIRChoice.getProperty("value");
 
-        if (*paramIRChoices != currentIR)
-        {
-            currentIR = *paramIRChoices;
+            loadIR(currentIR.toStdString());
+
             changedConfig = true;
         }
 
         // Update child parameters
         for (int i = 0; i < filters.size(); ++i)
         {
-            std::string filterId = "filter0" + std::to_string(i);
-            changedConfig |= filters[i]->updateParams(filterId);
+            std::string filterId = AudioProcessor::PID_FILTER_PREFIX + std::to_string(i);
+            changedConfig |= filters[i]->updateParams(params, filterId);
         }
 
-        changedConfig |= gain->updateParams("ir_gain");
-        changedConfig |= preDelay->updateParams("predelay");
+        changedConfig |= gain->updateParams(params, AudioProcessor::PID_IR_GAIN);
+        changedConfig |= preDelay->updateParams(params, AudioProcessor::PID_PREDELAY);
 
         // Update mustExec flag
         mustExec |= changedConfig;
@@ -189,6 +154,84 @@ namespace reverb
 
     //==============================================================================
     /**
+     * @brief Loads an impulse response from disk or IR bank
+     *
+     * If given string is the name of an IR in IR bank, load that buffer. Otherwise,
+     * look for IR on disk.
+     *
+     * @param [in] irName   Name or path of IR file
+     *
+     * @throws std::invalid_argument
+     */
+    void IRPipeline::loadIR(const std::string& irNameOrFilePath)
+    {
+        if (irNameOrFilePath.empty())
+        {
+            throw std::invalid_argument("Received invalid IR name/path");
+        }
+
+        if (irBank.buffers.find(irNameOrFilePath) != irBank.buffers.end())
+        {
+            loadIRFromBank(irNameOrFilePath);
+        }
+        else
+        {
+            loadIRFromDisk(irNameOrFilePath);
+        }
+    }
+
+    //==============================================================================
+    /**
+     * @brief Loads an impulse response from provided IR bank
+     *
+     * Loads the appropriate channel from the selected impulse response (IR) in memory.
+     * Since this operation involves copying an entire buffer and thus may be fairly heavy,
+     * processing is suspended until completion.
+     *
+     * @param [in] irName   Name of banked IR file
+     *
+     * @throws std::invalid_argument
+     */
+    void IRPipeline::loadIRFromBank(const std::string& irName)
+    {
+        // Suspend processing since this may take a while
+        processor->suspendProcessing(true);
+
+        // Find requested IR
+        auto& irIter = irBank.buffers.find(irName);
+        auto& sampleRateIter = irBank.sampleRates.find(irName);
+
+        if (irIter == irBank.buffers.end() ||
+            sampleRateIter == irBank.sampleRates.end())
+        {
+            throw std::invalid_argument("Requested impulse response (" + irName + ") does not exist in IR bank");
+        }
+
+        const juce::AudioSampleBuffer& ir = irIter->second;
+        double irSampleRate = sampleRateIter->second;
+
+        // Read samples (limit to max. MAX_IR_LENGTH_S) into separate buffers for each channel
+        int numSamples = std::min(ir.getNumSamples(),
+                                  (int)std::ceil(irSampleRate * MAX_IR_LENGTH_S));
+
+        irChannel.clear();
+
+        // Read channel corresponding to pipeline channel index
+        if (channelIdx < ir.getNumChannels())
+        {
+            irChannel.setSize(1, numSamples);
+            irChannel.copyFrom(0, 0, ir.getReadPointer(channelIdx), numSamples);
+        }
+
+        // Set parameters based on current impulse response
+        timeStretch->origIRSampleRate = irSampleRate;
+
+        // Resume processing
+        processor->suspendProcessing(false);
+    }
+
+    //==============================================================================
+    /**
      * @brief Loads an impulse response from a file (.WAV or .AIFF) to internal representation
      *
      * Loads the selected impulse response (IR) from disk and splits it into individual buffers
@@ -199,7 +242,7 @@ namespace reverb
      *
      * @throws std::invalid_argument
      */
-    void IRPipeline::loadIR(const std::string& irFilePath)
+    void IRPipeline::loadIRFromDisk(const std::string& irFilePath)
     {
         // Suspend processing since this may take a while
         processor->suspendProcessing(true);

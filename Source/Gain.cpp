@@ -7,7 +7,7 @@
 */
 
 #include "Gain.h"
-#include "PluginParameters.h"
+#include "PluginProcessor.h"
 
 namespace reverb
 {
@@ -31,17 +31,17 @@ namespace reverb
      *
      * @returns True if any parameters were changed, false otherwise.
      */
-    bool Gain::updateParams(const std::string& blockId)
+    bool Gain::updateParams(const juce::AudioProcessorValueTreeState& params,
+                            const juce::String& blockId)
     {
-        auto& params = getMapOfParams();
         bool changedConfig = false;
 
         // Gain factor
-        auto paramGain = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId));
+        auto paramGain = params.getRawParameterValue(blockId);
 
         if (!paramGain)
         {
-            throw std::invalid_argument("Received non-float parameter for gain in Gain block");
+            throw std::invalid_argument("Parameter not found for gain in Gain block");
         }
 
         if (*paramGain != gainFactor)

@@ -31,7 +31,9 @@ namespace reverb
         using Ptr = std::shared_ptr<Filter>;
 
         //==============================================================================
-        virtual bool updateParams(const std::string& blockId) override;
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& blockId) override;
+
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================

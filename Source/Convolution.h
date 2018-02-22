@@ -28,7 +28,9 @@ namespace reverb
         using Ptr = std::shared_ptr<Convolution>;
 
         //==============================================================================
-        virtual bool updateParams(const std::string& = "") override { return false; };
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& = "") override;
+
         virtual void exec(juce::AudioSampleBuffer& audio) override;
 
         //==============================================================================

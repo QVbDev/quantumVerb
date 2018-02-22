@@ -38,10 +38,14 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Destroys a TimeStretch object with its internal SoundTouch handle
-    */
-    TimeStretch::~TimeStretch()
+     * @brief No parameters to update, do nothing
+     *
+     * @returns False
+     */
+    bool TimeStretch::updateParams(const juce::AudioProcessorValueTreeState&,
+                                   const juce::String&)
     {
+        return false;
     }
 
     //==============================================================================

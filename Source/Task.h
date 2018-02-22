@@ -27,11 +27,12 @@ namespace reverb
         using Ptr = std::shared_ptr<Task>;
 
         //==============================================================================
-        virtual bool updateParams(const std::string& blockId) = 0;
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& blockId) = 0;
+
         virtual void exec(juce::AudioSampleBuffer&) = 0;
 
     protected:
-
         //==============================================================================
         juce::AudioProcessor * processor;
     };

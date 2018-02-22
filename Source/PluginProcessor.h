@@ -12,6 +12,7 @@
 
 #include "JuceHeader.h"
 
+#include "IRBank.h"
 #include "IRPipeline.h"
 #include "MainPipeline.h"
 
@@ -70,7 +71,31 @@ namespace reverb
         //==============================================================================
         std::mutex lock;
 
+        //==============================================================================
+        IRBank irBank;
+
+        //==============================================================================
+        juce::AudioProcessorValueTreeState parameters;
+        
+        // Unique parameter IDs
+        static constexpr const char * PID_IR_FILE_CHOICE     = "ir_file_choice";
+
+        static constexpr const char * PID_FILTER_PREFIX      = "filter";
+        static constexpr const char * PID_FILTER_FREQ_SUFFIX = "_freq";
+        static constexpr const char * PID_FILTER_Q_SUFFIX    = "_q";
+        static constexpr const char * PID_FILTER_GAIN_SUFFIX = "_gain";
+
+        static constexpr const char * PID_PREDELAY           = "predelay";
+        static constexpr const char * PID_IR_GAIN            = "ir_gain";
+        static constexpr const char * PID_WETRATIO           = "wetratio";
+        static constexpr const char * PID_AUDIO_OUT_GAIN     = "audio_out_gain";
+
+
     protected:
+        //==============================================================================
+        void initParams();
+        bool paramsInitialised = false;
+
         //==============================================================================
         std::vector<IRPipeline::Ptr>   irPipelines;
         std::vector<MainPipeline::Ptr> mainPipelines;

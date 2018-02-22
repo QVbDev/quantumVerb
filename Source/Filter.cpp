@@ -7,7 +7,7 @@
 */
 
 #include "Filter.h"
-#include "PluginParameters.h"
+#include "PluginProcessor.h"
 
 namespace reverb
 {
@@ -31,13 +31,13 @@ namespace reverb
      *
      * @returns True if any parameters were changed, false otherwise.
      */
-    bool Filter::updateParams(const std::string& blockId)
+    bool Filter::updateParams(const juce::AudioProcessorValueTreeState& params,
+                              const juce::String& blockId)
     {
-        auto& params = getMapOfParams();
         bool changedParams = false;
 
         // Frequency
-        auto paramFreq = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId + "_freq"));
+        auto paramFreq = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_FREQ_SUFFIX);
 
         if (!paramFreq)
         {
@@ -51,11 +51,11 @@ namespace reverb
         }
 
         // Q factor
-        auto paramQ = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId + "_Q"));
+        auto paramQ = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_Q_SUFFIX);
 
         if (!paramQ)
         {
-            throw std::invalid_argument("Received non-float parameter for Q factor in Filter block");
+            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
         }
 
         if (*paramQ != Q)
@@ -65,13 +65,13 @@ namespace reverb
         }
 
         // Gain
-        auto paramGain = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId + "_gain"));
+        auto paramGain = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_GAIN_SUFFIX);
 
         if (!paramGain)
         {
-            throw std::invalid_argument("Received non-float parameter for Q factor in Filter block");
+            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
         }
-
+        
         if (*paramGain != gainFactor)
         {
             gainFactor = *paramGain;

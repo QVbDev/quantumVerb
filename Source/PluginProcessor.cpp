@@ -7,8 +7,9 @@
 */
 
 #include "PluginProcessor.h"
+
+#include "IRBank.h"
 #include "PluginEditor.h"
-#include "PluginParameters.h"
 #include "Logger.h"
 
 namespace reverb
@@ -18,7 +19,8 @@ namespace reverb
     /**
      * @brief Constructs a reverb audio processor & initialises its inner pipelines
      */
-	AudioProcessor::AudioProcessor()
+    AudioProcessor::AudioProcessor()
+        : parameters(*this, nullptr)
 #ifndef JucePlugin_PreferredChannelConfigurations
 		, AudioProcessor(BusesProperties()
 #if ! JucePlugin_IsMidiEffect
@@ -30,18 +32,11 @@ namespace reverb
 		)
 #endif
 	{
-        // Initialise processor parameters
-        auto& params = getMapOfParams();
-
-        for (auto& mappedParam : params)
-        {
-            addParameter(mappedParam.second);
-        }
+        initParams();
 	}
 
 	AudioProcessor::~AudioProcessor()
 	{
-        resetMapOfParams();
 	}
 
 	//==============================================================================
@@ -145,7 +140,7 @@ namespace reverb
 
         // Add/remove pipelines as needed to meet requeted number of channels
         for (int i = numChannels; i < irPipelines.size(); ++i)      irPipelines.pop_back();
-        for (int i = irPipelines.size(); i < numChannels; ++i)      irPipelines.emplace_back(new IRPipeline(this, i));
+        for (int i = irPipelines.size(); i < numChannels; ++i)      irPipelines.emplace_back(new IRPipeline(this, irBank, i));
 
         for (int i = numChannels; i < mainPipelines.size(); ++i)    mainPipelines.pop_back();
         for (int i = mainPipelines.size(); i < numChannels; ++i)    mainPipelines.emplace_back(new MainPipeline(this));
@@ -153,13 +148,13 @@ namespace reverb
         // Update parameters across pipelines
         for (auto& pipeline : irPipelines)
         {
-            pipeline->updateParams();
+            pipeline->updateParams(parameters);
             pipeline->updateSampleRate(sampleRate);
         }
 
         for (auto& pipeline : mainPipelines)
         {
-            pipeline->updateParams();
+            pipeline->updateParams(parameters);
         }
 
         // Add empty buffers to meet channel count if necessary
@@ -354,6 +349,189 @@ namespace reverb
 		// You should use this method to restore your parameters from this memory block,
 		// whose contents will have been created by the getStateInformation() call.
 	}
+
+    //==============================================================================
+    void AudioProcessor::initParams()
+    {
+        // Only build parameters once. This saves work and avoids memory leaks due to
+        // allocating memory for the same parameter more than once.
+        if (paramsInitialised)
+        {
+            return;
+        }
+
+        static const float gain15dB = juce::Decibels::decibelsToGain(15);
+
+        /**
+         * Low-shelf filter
+         */
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_FREQ_SUFFIX,
+                                          "EQ: Low-shelf cut-off frequency", "Hz",
+                                          juce::NormalisableRange<float>(0, 2e4),
+                                          1e3,
+                                          nullptr, nullptr );
+
+        // TODO: Upper limit on Q factor?
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_Q_SUFFIX,
+                                          "EQ: Low-shelf Q factor", "",
+                                          juce::NormalisableRange<float>(0.7, 1e4),
+                                          0.707,
+                                          nullptr, nullptr );
+        
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_GAIN_SUFFIX,
+                                          "EQ: Low-shelf gain factor", "1 = no change",
+                                          juce::NormalisableRange<float>(0, gain15dB),
+                                          0.707,
+                                          nullptr, nullptr );
+
+        
+        /**
+         * Peak filter 1
+         */
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
+                                          "EQ: Peak filter 1 cut-off frequency", "Hz",
+                                          juce::NormalisableRange<float>(0, 2e4),
+                                          1e3,
+                                          nullptr, nullptr );
+
+        // TODO: Upper limit on Q factor?
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
+                                          "EQ: Peak filter 1 Q factor", "",
+                                          juce::NormalisableRange<float>(0.7, 1e4),
+                                          0.707,
+                                          nullptr, nullptr );
+
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_GAIN_SUFFIX,
+                                          "EQ: Peak filter 1 gain factor", "1 = no change",
+                                          juce::NormalisableRange<float>(0, gain15dB),
+                                          0.707,
+                                          nullptr, nullptr );
+
+        
+        /**
+         * Peak filter 2
+         */
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
+                                          "EQ: Peak filter 2 cut-off frequency", "Hz",
+                                          juce::NormalisableRange<float>(0, 2e4),
+                                          1e3,
+                                          nullptr, nullptr );
+
+        // TODO: Upper limit on Q factor?
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
+                                          "EQ: Peak filter 2 Q factor", "",
+                                          juce::NormalisableRange<float>(0.7, 1e4),
+                                          0.707,
+                                          nullptr, nullptr );
+
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_GAIN_SUFFIX,
+                                          "EQ: Peak filter 2 gain factor", "1 = no change",
+                                          juce::NormalisableRange<float>(0, gain15dB),
+                                          0.707,
+                                          nullptr, nullptr );
+
+
+        /**
+         * Low-shelf filter
+         */
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_FREQ_SUFFIX,
+                                          "EQ: High-shelf cut-off frequency", "Hz",
+                                          juce::NormalisableRange<float>(0, 2e4),
+                                          1e3,
+                                          nullptr, nullptr );
+
+        // TODO: Upper limit on Q factor?
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_Q_SUFFIX,
+                                          "EQ: High-shelf Q factor", "",
+                                          juce::NormalisableRange<float>(0.7, 1e4),
+                                          0.707,
+                                          nullptr, nullptr );
+
+        // TODO: Vary filter parameters by type (Alex?)
+        parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_GAIN_SUFFIX,
+                                          "EQ: High-shelf gain factor", "1 = no change",
+                                          juce::NormalisableRange<float>(0, gain15dB),
+                                          0.707,
+                                          nullptr, nullptr );
+
+
+        /**
+         * IR gain
+         */
+        // TODO: Upper limit on IR gain?
+        parameters.createAndAddParameter( PID_IR_GAIN,
+                                          "Impulse response gain", "1 = no change",
+                                          juce::NormalisableRange<float>(0, gain15dB),
+                                          1,
+                                          nullptr, nullptr );
+
+
+        /**
+         * Pre-delay
+         */
+        parameters.createAndAddParameter( PID_PREDELAY,
+                                          "Pre-delay", "ms",
+                                          juce::NormalisableRange<float>(0, 1000),
+                                          0,
+                                          nullptr, nullptr );
+
+
+        /**
+         * Dry/wet mixer
+         */
+        // TODO: Default wet ratio?
+        parameters.createAndAddParameter( PID_WETRATIO,
+                                          "Dry/wet ratio", "0 = all dry, 1 = all wet",
+                                          juce::NormalisableRange<float>(0, 1),
+                                          0.5,
+                                          nullptr, nullptr );
+
+
+        /**
+         * Output gain
+         */
+        // TODO: Is range appropriate (i.e. do we want to allow boosting volume too)?
+        parameters.createAndAddParameter( PID_AUDIO_OUT_GAIN,
+                                          "Output gain", "1 = no change",
+                                          juce::NormalisableRange<float>(0, gain15dB),
+                                          1,
+                                          nullptr, nullptr );
+
+
+        parameters.state = juce::ValueTree(juce::Identifier(JucePlugin_Name));
+
+        
+        /**
+         * Impulse responses
+         * 
+         * IR file choice is given by a string that may be one of the following:
+         *     1) name of a valid audio resource in BinaryData.h
+         *     2) full path to user-provided IR file
+         */
+        juce::ValueTree irFile(PID_IR_FILE_CHOICE);
+
+        if (irBank.buffers.begin() != irBank.buffers.end())
+        {
+            const juce::String& firstBankedIR = irBank.buffers.begin()->first;
+            irFile.setProperty("value", firstBankedIR, nullptr);
+        }
+
+        parameters.state.addChild(irFile, -1, nullptr);
+
+
+        /**
+         * END: Processor is responsible for deleting parameters on destruction
+         */
+        paramsInitialised = true;
+    }
 
 }
 

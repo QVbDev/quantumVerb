@@ -9,7 +9,6 @@
 */
 
 #include "PreDelay.h"
-#include "PluginParameters.h"
 
 #include <algorithm>
 
@@ -33,17 +32,17 @@ namespace reverb
      *
      * @returns True if any parameters were changed, false otherwise.
      */
-    bool PreDelay::updateParams(const std::string& blockId)
+    bool PreDelay::updateParams(const juce::AudioProcessorValueTreeState& params,
+                                const juce::String& blockId)
     {
-        auto& params = getMapOfParams();
         bool changedConfig = false;
 
         // Delay (ms)
-        auto paramDelayMs = dynamic_cast<juce::AudioParameterFloat*>(params.at(blockId));
+        auto paramDelayMs = params.getRawParameterValue(blockId);
 
         if (!paramDelayMs)
         {
-            throw std::invalid_argument("Received non-float parameter for pre-delay in PreDelay block");
+            throw std::invalid_argument("Parameter not found for pre-delay in PreDelay block");
         }
 
         if (*paramDelayMs != delayMs)
