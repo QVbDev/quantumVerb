@@ -88,16 +88,16 @@ namespace reverb
 		return 0;
 	}
 
-	void AudioProcessor::setCurrentProgram(int index)
+	void AudioProcessor::setCurrentProgram(int)
 	{
 	}
 
-	const juce::String AudioProcessor::getProgramName(int index)
+	const juce::String AudioProcessor::getProgramName(int)
 	{
 		return {};
 	}
 
-	void AudioProcessor::changeProgramName(int index, const juce::String& newName)
+	void AudioProcessor::changeProgramName(int, const juce::String&)
 	{
 	}
 
@@ -121,29 +121,43 @@ namespace reverb
      * @param sampleRate [in]       Target sample rate (constant until playback stops)
      * @param samplesPerBlock [in]  Hint about max. expected samples in upcoming block
      */
-	void AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
-	{
-        int numChannels = getTotalNumInputChannels();
+    void AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+    {
+        size_t numChannels = getTotalNumInputChannels();
 
         if (getTotalNumInputChannels() != getTotalNumOutputChannels())
         {
             std::string errMsg = "Mismatch between input (" +
-                                 std::to_string(getTotalNumInputChannels()) + 
-                                 ") and output (" +
-                                 std::to_string(getTotalNumOutputChannels()) +
-                                 ") channels. Forcing output to " +
-                                 std::to_string(numChannels) +
-                                 " channels.";
+                std::to_string(getTotalNumInputChannels()) +
+                ") and output (" +
+                std::to_string(getTotalNumOutputChannels()) +
+                ") channels. Forcing output to " +
+                std::to_string(numChannels) +
+                " channels.";
 
             logger.dualPrint(Logger::Level::Error, errMsg);
         }
 
         // Add/remove pipelines as needed to meet requeted number of channels
-        for (int i = numChannels; i < irPipelines.size(); ++i)      irPipelines.pop_back();
-        for (int i = irPipelines.size(); i < numChannels; ++i)      irPipelines.emplace_back(new IRPipeline(this, irBank, i));
+        for (size_t i = numChannels; i < irPipelines.size(); ++i)
+        {
+            irPipelines.pop_back();
+        }
 
-        for (int i = numChannels; i < mainPipelines.size(); ++i)    mainPipelines.pop_back();
-        for (int i = mainPipelines.size(); i < numChannels; ++i)    mainPipelines.emplace_back(new MainPipeline(this));
+        for (size_t i = irPipelines.size(); i < numChannels; ++i)
+        {
+            irPipelines.emplace_back(new IRPipeline(this, irBank, (int)i));
+        }
+
+        for (size_t i = numChannels; i < mainPipelines.size(); ++i)
+        {
+            mainPipelines.pop_back();
+        }
+
+        for (size_t i = mainPipelines.size(); i < numChannels; ++i)
+        {
+            mainPipelines.emplace_back(new MainPipeline(this));
+        }
 
         // Update parameters across pipelines
         for (auto& pipeline : irPipelines)
@@ -158,13 +172,13 @@ namespace reverb
         }
 
         // Add empty buffers to meet channel count if necessary
-        for (int i = irChannels.size(); i < numChannels; ++i)
+        for (size_t i = irChannels.size(); i < numChannels; ++i)
         {
             irChannels.emplace_back();
         }
 
         // Clear existing audio buffers and add/remove buffers of appropriate size if necessary
-        for (int i = numChannels; i < audioChannels.size(); ++i)
+        for (size_t i = numChannels; i < audioChannels.size(); ++i)
         {
             audioChannels.pop_back();
         }
@@ -174,7 +188,7 @@ namespace reverb
             channel.setSize(1, samplesPerBlock);
         }
 
-        for (int i = audioChannels.size(); i < numChannels; ++i)
+        for (size_t i = audioChannels.size(); i < numChannels; ++i)
         {
             audioChannels.emplace_back(1, samplesPerBlock);
         }
@@ -242,11 +256,25 @@ namespace reverb
         // We should have the right number of pipelines and channel buffers from
         // a previous call to prepareToPlay(), but just to be safe let's check
         // these values here.
-        for (int i = irPipelines.size(); i < buffer.getNumChannels(); ++i)   irPipelines.emplace_back();
-        for (int i = mainPipelines.size(); i < buffer.getNumChannels(); ++i) mainPipelines.emplace_back();
+        for (size_t i = irPipelines.size(); i < buffer.getNumChannels(); ++i)
+        {
+            irPipelines.emplace_back();
+        }
 
-        for (int i = irChannels.size(); i < buffer.getNumChannels(); ++i)    irChannels.emplace_back();
-        for (int i = audioChannels.size(); i < buffer.getNumChannels(); ++i) audioChannels.emplace_back();
+        for (size_t i = mainPipelines.size(); i < buffer.getNumChannels(); ++i)
+        {
+            mainPipelines.emplace_back();
+        }
+
+        for (size_t i = irChannels.size(); i < buffer.getNumChannels(); ++i)
+        {
+            irChannels.emplace_back();
+        }
+
+        for (size_t i = audioChannels.size(); i < buffer.getNumChannels(); ++i)
+        {
+            audioChannels.emplace_back();
+        }
 
         // Split input buffer into one buffer per channel
         for (int i = 0; i < buffer.getNumChannels(); ++i)
@@ -277,9 +305,9 @@ namespace reverb
                 catch (const std::exception& e)
                 {
                     std::string errMsg = "Skipping IR pipeline for channel " +
-                        std::to_string(i) +
-                        " due to exception: "
-                        + e.what();
+                                         std::to_string(i) +
+                                         " due to exception: " +
+                                         e.what();
 
                     logger.dualPrint(Logger::Level::Error, errMsg);
                 }
@@ -360,28 +388,28 @@ namespace reverb
         }
 
         static const float gain15dB = juce::Decibels::decibelsToGain<float>(15);
-        static const float gain15dBInv = 1.0 / gain15dB;
+        static const float gain15dBInv = 1.0f / gain15dB;
 
         /**
          * Low-shelf filter
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_FREQ_SUFFIX,
                                           "EQ: Low-shelf cut-off frequency", "<0-20000 Hz>",
-                                          juce::NormalisableRange<float>(0, 2e4),
-                                          1e3,
+                                          juce::NormalisableRange<float>(0.0f, 2e4f),
+                                          1e3f,
                                           nullptr, nullptr );
 
         // TODO: Upper limit on Q factor?
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_Q_SUFFIX,
                                           "EQ: Low-shelf Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7, 1e4),
-                                          0.707,
+                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          0.707f,
                                           nullptr, nullptr );
         
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_GAIN_SUFFIX,
                                           "EQ: Low-shelf gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
-                                          juce::NormalisableRange<float>(0, gain15dB),
-                                          1,
+                                          juce::NormalisableRange<float>(0.0f, gain15dB),
+                                          1.0f,
                                           nullptr, nullptr );
 
         
@@ -391,23 +419,23 @@ namespace reverb
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
                                           "EQ: Peak filter 1 cut-off frequency", "<0-20000 Hz>",
-                                          juce::NormalisableRange<float>(0, 2e4),
-                                          1e3,
+                                          juce::NormalisableRange<float>(0.0f, 2e4f),
+                                          1e3f,
                                           nullptr, nullptr );
 
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
                                           "EQ: Peak filter 1 Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7, 1e4),
-                                          0.707,
+                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          0.707f,
                                           nullptr, nullptr );
 
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_GAIN_SUFFIX,
                                           "EQ: Peak filter 1 gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
-                                          juce::NormalisableRange<float>(0, gain15dB),
-                                          1,
+                                          juce::NormalisableRange<float>(0.0f, gain15dB),
+                                          1.0f,
                                           nullptr, nullptr );
 
         
@@ -417,23 +445,23 @@ namespace reverb
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
                                           "EQ: Peak filter 2 cut-off frequency", "<0-20000 Hz>",
-                                          juce::NormalisableRange<float>(0, 2e4),
-                                          1e3,
+                                          juce::NormalisableRange<float>(0.0f, 2e4f),
+                                          1e3f,
                                           nullptr, nullptr );
 
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
                                           "EQ: Peak filter 2 Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7, 1e4),
-                                          0.707,
+                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          0.707f,
                                           nullptr, nullptr );
 
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_GAIN_SUFFIX,
                                           "EQ: Peak filter 2 gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
-                                          juce::NormalisableRange<float>(0, gain15dB),
-                                          1,
+                                          juce::NormalisableRange<float>(0.0f, gain15dB),
+                                          1.0f,
                                           nullptr, nullptr );
 
 
@@ -443,23 +471,23 @@ namespace reverb
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_FREQ_SUFFIX,
                                           "EQ: High-shelf cut-off frequency", "<0-20000 Hz>",
-                                          juce::NormalisableRange<float>(0, 2e4),
-                                          1e3,
+                                          juce::NormalisableRange<float>(0.0f, 2e4f),
+                                          1e3f,
                                           nullptr, nullptr );
 
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_Q_SUFFIX,
                                           "EQ: High-shelf Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7, 1e4),
-                                          0.707,
+                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          0.707f,
                                           nullptr, nullptr );
 
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_GAIN_SUFFIX,
                                           "EQ: High-shelf gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
-                                          juce::NormalisableRange<float>(0, gain15dB),
-                                          1,
+                                          juce::NormalisableRange<float>(0.0f, gain15dB),
+                                          1.0f,
                                           nullptr, nullptr );
 
 
@@ -469,8 +497,8 @@ namespace reverb
         // TODO: Upper limit on IR gain?
         parameters.createAndAddParameter( PID_IR_GAIN,
                                           "Impulse response gain", "<" + juce::String(gain15dBInv) + " = no change>",
-                                          juce::NormalisableRange<float>(0, gain15dB),
-                                          1,
+                                          juce::NormalisableRange<float>(0.0f, gain15dB),
+                                          1.0f,
                                           nullptr, nullptr );
 
 
@@ -479,8 +507,8 @@ namespace reverb
          */
         parameters.createAndAddParameter( PID_PREDELAY,
                                           "Pre-delay", "<0-1000 ms>",
-                                          juce::NormalisableRange<float>(0, 1000),
-                                          0,
+                                          juce::NormalisableRange<float>(0.0f, 1000.0f),
+                                          0.0f,
                                           nullptr, nullptr );
 
 
@@ -490,8 +518,8 @@ namespace reverb
         // TODO: Default wet ratio?
         parameters.createAndAddParameter( PID_WETRATIO,
                                           "Dry/wet ratio", "<0 = dry, 1 = wet>",
-                                          juce::NormalisableRange<float>(0, 1),
-                                          0.5,
+                                          juce::NormalisableRange<float>(0.0f, 1.0f),
+                                          0.5f,
                                           nullptr, nullptr );
 
 
@@ -501,8 +529,8 @@ namespace reverb
         // TODO: Is range appropriate (i.e. do we want to allow boosting volume too)?
         parameters.createAndAddParameter( PID_AUDIO_OUT_GAIN,
                                           "Output gain", "<" + juce::String(gain15dBInv) + "= no change>",
-                                          juce::NormalisableRange<float>(0, gain15dB),
-                                          1,
+                                          juce::NormalisableRange<float>(0.0f, gain15dB),
+                                          1.0f,
                                           nullptr, nullptr );
 
 

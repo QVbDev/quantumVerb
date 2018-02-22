@@ -198,8 +198,8 @@ namespace reverb
         processor->suspendProcessing(true);
 
         // Find requested IR
-        auto& irIter = irBank.buffers.find(irName);
-        auto& sampleRateIter = irBank.sampleRates.find(irName);
+        const auto irIter = irBank.buffers.find(irName);
+        const auto sampleRateIter = irBank.sampleRates.find(irName);
 
         if (irIter == irBank.buffers.end() ||
             sampleRateIter == irBank.sampleRates.end())

@@ -63,7 +63,7 @@ namespace reverb
             if (reader)
             {
                 int numChannels = reader->numChannels;
-                int numSamples = reader->lengthInSamples;
+                int numSamples = (int)reader->lengthInSamples;
 
                 buffersModifiable[BinaryData::namedResourceList[i]] = juce::AudioSampleBuffer(numChannels, numSamples);
                 reader->read(&buffersModifiable[BinaryData::namedResourceList[i]], 0, numSamples, 0, true, true);

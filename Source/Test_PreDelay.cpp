@@ -29,7 +29,7 @@ class PreDelayMocked : public reverb::PreDelay
 public:
     using PreDelay::PreDelay;
 
-    void setDelayMs(float delayMs) { this->delayMs = delayMs; }
+    void setDelayMs(float delay) { delayMs = delay; }
     float getDelayMs() { return delayMs; }
 
     constexpr int getMaxDelayMs() { return MAX_DELAY_MS; }
@@ -105,7 +105,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
 
     SECTION("When pre-delay exceeds 1s, block should throw an exception") {
-        preDelay.setDelayMs(preDelay.getMaxDelayMs() + 1);
+        preDelay.setDelayMs(preDelay.getMaxDelayMs() + 1.0f);
 
         REQUIRE(preDelay.getDelayMs() == preDelay.getMaxDelayMs() + 1);
 

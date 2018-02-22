@@ -71,6 +71,9 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
         }
     }
 
+    // Create dummy midi buffer for processBlock() method
+    juce::MidiBuffer midi;
+
 
     SECTION("IRPipeline should be disabled after execution") {
         // First exec (with IR pipeline)
@@ -80,7 +83,7 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
         }
 
         auto start = std::chrono::high_resolution_clock::now();
-        processor.processBlock(audio);
+        processor.processBlock(audio, midi);
         auto end = std::chrono::high_resolution_clock::now();
 
         auto firstExecTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -92,7 +95,7 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
 
         // Second exec (no IR pipeline)
         start = std::chrono::high_resolution_clock::now();
-        processor.processBlock(audio);
+        processor.processBlock(audio, midi);
         end = std::chrono::high_resolution_clock::now();
 
         auto secondExecTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -112,11 +115,11 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
 
         // Prepare impulse response
-        processor.processBlock(audio);
+        processor.processBlock(audio, midi);
 
         // Measure total processing time for one block
         auto start = std::chrono::high_resolution_clock::now();
-        processor.processBlock(audio);
+        processor.processBlock(audio, midi);
         auto end = std::chrono::high_resolution_clock::now();
 
         auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);

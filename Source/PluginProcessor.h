@@ -43,7 +43,7 @@ namespace reverb
 		bool isBusesLayoutSupported(const juce::BusesLayout& layouts) const override;
 #endif
 
-		void processBlock(juce::AudioSampleBuffer&, juce::MidiBuffer& = juce::MidiBuffer()) override;
+		void processBlock(juce::AudioSampleBuffer&, juce::MidiBuffer&) override;
 
 		//==============================================================================
 		juce::AudioProcessorEditor* createEditor() override;
