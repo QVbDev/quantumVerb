@@ -111,7 +111,7 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
 
     SECTION("Regular processing should be real-time") {
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
-        constexpr int NUM_ITERATIONS = 1000;
+        constexpr int NUM_ITERATIONS = 500;
 
         // Prepare impulse response
         processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
