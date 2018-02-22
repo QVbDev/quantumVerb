@@ -102,7 +102,7 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
     IRPipelineMocked irPipeline(&processor, processor.irBank, 0);
     irPipeline.updateParams(processor.parameters);
 
-    REQUIRE(irPipeline.getCurrentIR() == "large_church_wav");
+    REQUIRE(irPipeline.getCurrentIR() == processor.irBank.buffers.begin()->first);
 
 
     SECTION("IR processing shouldn't be excessively long") {

@@ -71,13 +71,11 @@
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
-                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
-                       postbuildCommand="xcopy /y /s /i &quot;..\..\Resources\ImpulseResponses&quot; &quot;$(OutDir)ImpulseResponses&quot;"/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
-                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
-                       postbuildCommand="xcopy /y /s /i &quot;..\..\Resources\ImpulseResponses&quot; &quot;$(OutDir)ImpulseResponses&quot;"/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>
