@@ -14,6 +14,14 @@
 
 using namespace juce;
 
+float FILTER_BOX_RELATIVE_WIDTH = 0.2f;
+float FILTER_BOX_RELATIVE_HEIGHT = 0.35f;
+float HEADER_BOX_RELATIVE_HEIGHT = 0.10f;
+float SAMPLE_RATE_BOX_RELATIVE_WIDTH = 0.35f;
+float ON_BUTTON_RELATIVE_WIDTH = 0.15f;
+float INFO_BUTTON_RELATIVE_WIDTH = 0.5f;
+float REVERB_BOX_RELATIVE_HEIGHT = 0.55F;
+
 namespace reverb
 {
 	AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
@@ -29,7 +37,6 @@ namespace reverb
         isOn.setColour(isOn.tickColourId, juce::Colour(3, 169, 244));
         isOn.setColour(isOn.tickDisabledColourId, juce::Colour(204, 204, 204));
         isOn.setButtonText("On");
-        isOn.setSize(getWidth()*0.15,getHeight()*0.1);
         isOn.addListener(this);        
         addAndMakeVisible(isOn);
 
@@ -40,10 +47,11 @@ namespace reverb
         sampleRate.setReadOnly(true);
         addAndMakeVisible(sampleRate);
 
+        // TODO: display IR file
         // IR file box config
-        std::size_t pos = 0;
-        std::string path = p.irPipeline->irFilePath;
-        genInfo.setButtonText("IR file: " + path );
+        //std::size_t pos = 0;
+        //std::string path = p.irPipeline->irFilePath;
+        //genInfo.setButtonText("IR file: " + path );
         genInfo.addListener(this);
         addAndMakeVisible(genInfo);
 
@@ -59,7 +67,7 @@ namespace reverb
         // predelay slider config
         preDelay.setSliderStyle(juce::Slider::RotaryVerticalDrag);
         preDelay.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 40, 20);
-        preDelay.setRange(0, 100, 1);
+        preDelay.setRange(0, 1000, 1);
         preDelay.addListener(this);
         addAndMakeVisible(preDelay);
 
@@ -98,22 +106,32 @@ namespace reverb
     // sets the layout of displayed components
 	void AudioProcessorEditor::resized()
 	{
-        juce::Rectangle<int> pluginWindowBox(getLocalBounds());
-        auto header = pluginWindowBox.removeFromTop(pluginWindowBox.getHeight()*0.1);
-        juce::Rectangle<int> EQareaBox(pluginWindowBox.removeFromBottom(pluginWindowBox.getHeight()*0.35));
-        int EQfilterArea = pluginWindowBox.getWidth() / 5;
+        isOn.setBoundsRelative(0, 0, ON_BUTTON_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
+        isOn.setTopLeftPosition(0, 0);
+        
+        genInfo.setBoundsRelative(0, 0, INFO_BUTTON_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
+        genInfo.setTopLeftPosition(isOn.getRight(), 0);
+        
+        sampleRate.setBoundsRelative(0, 0, SAMPLE_RATE_BOX_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
+        sampleRate.setTopLeftPosition(genInfo.getRight(), 0);        
 
-        isOn.setBounds(header.removeFromLeft(header.getWidth()*0.15));
-        sampleRate.setBounds(header.removeFromRight(header.getWidth()*0.35));
-        genInfo.setBounds(header);
+        reverbParam.setBoundsRelative(0, 0, SAMPLE_RATE_BOX_RELATIVE_WIDTH, REVERB_BOX_RELATIVE_HEIGHT);
+        reverbParam.setTopRightPosition(sampleRate.getRight(),sampleRate.getBottom());
+        
+        preDelay.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
+        preDelay.setTopLeftPosition(0, reverbParam.getBottom());
 
-        reverbParam.setBounds(pluginWindowBox.removeFromRight(pluginWindowBox.getWidth()*0.3));
+        lowShelf.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
+        lowShelf.setTopLeftPosition(preDelay.getRight(), reverbParam.getBottom());
 
-        preDelay.setBounds(EQareaBox.removeFromLeft(EQfilterArea));
-        lowShelf.setBounds(EQareaBox.removeFromLeft(EQfilterArea));
-        peakingLow.setBounds(EQareaBox.removeFromLeft(EQfilterArea));
-        peakingHigh.setBounds(EQareaBox.removeFromLeft(EQfilterArea));
-        highShelf.setBounds(EQareaBox);              
+        peakingLow.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
+        peakingLow.setTopLeftPosition(lowShelf.getRight(), reverbParam.getBottom());
+
+        peakingHigh.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
+        peakingHigh.setTopLeftPosition(peakingLow.getRight(), reverbParam.getBottom());
+
+        highShelf.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
+        highShelf.setTopLeftPosition(peakingHigh.getRight(), reverbParam.getBottom());
 	}
 
     // handler for button clicks
@@ -204,50 +222,55 @@ namespace reverb
                 
         else if (lowShelfSlider) {
             if (lowShelfSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->Q = lowShelfSlider->getValue();
+                processor.irPipeline->filters[0]->setQ(lowShelfSlider->getValue());
             }
             else if (lowShelfSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->freq = lowShelfSlider->getValue();
+                processor.irPipeline->filters[0]->setFrequency(lowShelfSlider->getValue());
             }
             else {
-                processor.irPipeline->filters[0]->gainFactor = lowShelfSlider->getValue();
+                processor.irPipeline->filters[0]->setGain(lowShelfSlider->getValue());
             }
         }
                 
         else if (peakingLowSlider) {
             if (peakingLowSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->Q = peakingLowSlider->getValue();
+                processor.irPipeline->filters[0]->setQ(peakingLowSlider->getValue());
             }
             else if (peakingLowSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->freq = peakingLowSlider->getValue();
+                processor.irPipeline->filters[0]->setFrequency(peakingLowSlider->getValue());
             }
             else {
-                processor.irPipeline->filters[0]->gainFactor = peakingLowSlider->getValue();
+                processor.irPipeline->filters[0]->setGain(peakingLowSlider->getValue());
             }
         }
                 
         else if (peakingHighSlider) {
             if (peakingHighSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->Q = peakingHighSlider->getValue();
+                processor.irPipeline->filters[0]->setQ(peakingHighSlider->getValue());
             }
             else if (peakingHighSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->freq = peakingHighSlider->getValue();
+                processor.irPipeline->filters[0]->setFrequency(peakingHighSlider->getValue());
             }
             else {
-                processor.irPipeline->filters[0]->gainFactor = peakingHighSlider->getValue();
+                processor.irPipeline->filters[0]->setGain(peakingHighSlider->getValue());
             }
         }
                 
         else if (highShelfSlider) {
             if (highShelfSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->Q = highShelfSlider->getValue();
+                processor.irPipeline->filters[0]->setQ(highShelfSlider->getValue());
             }
             else if (highShelfSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->freq = highShelfSlider->getValue();
+                processor.irPipeline->filters[0]->setFrequency(highShelfSlider->getValue());
             }
             else {
-                processor.irPipeline->filters[0]->gainFactor = highShelfSlider->getValue();
+                processor.irPipeline->filters[0]->setGain(highShelfSlider->getValue());
             }
+        }
+
+        else if( changedSlider == &preDelay)
+        {
+            processor.irPipeline->preDelay->delayMs = changedSlider->getValue();
         }
 
         else {

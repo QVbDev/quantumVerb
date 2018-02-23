@@ -161,6 +161,8 @@
     <ClCompile Include="..\..\Source\Convolution.cpp" />
     <ClCompile Include="..\..\Source\Filter.cpp" />
     <ClCompile Include="..\..\Source\Gain.cpp" />
+    <ClCompile Include="..\..\Source\GUI_filter_box.cpp" />
+    <ClCompile Include="..\..\Source\GUI_reverb_box.cpp" />
     <ClCompile Include="..\..\Source\IRPipeline.cpp" />
     <ClCompile Include="..\..\Source\MainPipeline.cpp" />
     <ClCompile Include="..\..\Source\Mixer.cpp" />
@@ -1921,6 +1923,8 @@
     <ClInclude Include="..\..\Source\Convolution.h" />
     <ClInclude Include="..\..\Source\Filter.h" />
     <ClInclude Include="..\..\Source\Gain.h" />
+    <ClInclude Include="..\..\Source\GUI_filter_box.h" />
+    <ClInclude Include="..\..\Source\GUI_reverb_box.h" />
     <ClInclude Include="..\..\Source\IRPipeline.h" />
     <ClInclude Include="..\..\Source\MainPipeline.h" />
     <ClInclude Include="..\..\Source\Mixer.h" />
