@@ -16,16 +16,12 @@
 namespace reverb
 {
 
-	static float invdB(float dB) {
-		return pow(10, dB / 10);
-	}
-
     //==============================================================================
     /**
     * TODO: Description
     */
     class Filter : public Task,
-                   public juce::dsp::IIR::Filter<float>
+                   protected juce::dsp::IIR::Filter<float>
     {
     public:
         //==============================================================================
@@ -38,7 +34,9 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-	
+        static double invdB(double dB) {
+            return pow(10, dB / 10);
+        }
 
         //==============================================================================
 
@@ -51,9 +49,9 @@ namespace reverb
 		virtual void buildFilter() = 0;
 		
 
-		double frequency;
-		double Q;
-		double gainFactor;
+		float frequency;
+        float Q;
+        float gainFactor;
 
     };
 
@@ -106,7 +104,6 @@ namespace reverb
 	/**
 	* Exceptions for Filter class
 	*/
-
 	struct ChannelNumberException : public std::exception {
 		const char * what() const throw () {
 			return "Filter: AudioBuffer channel number is not 1";

@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Util.h"
 
 namespace reverb
 {
@@ -30,7 +31,19 @@ namespace reverb
 		)
 #endif
 	{
-        irPipeline = std::make_shared<IRPipeline>(this);
+        try
+        {
+            irPipeline = std::make_shared<IRPipeline>(this);
+        }
+        catch (const std::exception& e)
+        {
+            logger.dualPrint(Logger::Level::Fatal, e.what());
+
+            // TODO: Let user know about error through UI
+
+            // TODO: Find a way to exit without crashing the current process so we don't kill the DAW
+        }
+
         mainPipeline = std::make_shared<MainPipeline>(this);
 	}
 
@@ -167,7 +180,20 @@ namespace reverb
         if (irPipeline->mustExec)
         {
             juce::AudioSampleBuffer ir;
-            irPipeline->exec(ir);
+
+            try
+            {
+                irPipeline->exec(ir);
+            }
+            catch (const std::exception& e)
+            {
+                std::string errMsg = "Skipping IR pipeline due to exception:";
+                            errMsg += e.what();
+
+                logger.dualPrint(Logger::Level::Error, errMsg);
+
+                // TODO: Let user know about error through UI (?)
+            }
 
             mainPipeline->loadIR(std::move(ir));
             irPipeline->mustExec = false;

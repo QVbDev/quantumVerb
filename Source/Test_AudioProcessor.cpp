@@ -18,15 +18,15 @@ Test_AudioProcessor.cpp
 */
 
 TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
-	constexpr int SAMPLE_RATE = 88200; // Hz
-	constexpr int NUM_CHANNELS = 2;
-	constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20); // ms
-	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE;
+    constexpr int SAMPLE_RATE = 88200; // Hz
+    constexpr int NUM_CHANNELS = 2;
+    constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20); // ms
+    const int NUM_SAMPLES_PER_BLOCK = (int)std::ceil((BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE);
 
-	// Create AudioProcessor
-	reverb::AudioProcessor processor;
-	processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
-		SAMPLE_RATE, (int)std::ceil(NUM_SAMPLES_PER_BLOCK));
+    // Create AudioProcessor
+    reverb::AudioProcessor processor;
+    processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
+                                   SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
 
 	REQUIRE(processor.irPipeline != nullptr);
 	REQUIRE(processor.mainPipeline != nullptr);
