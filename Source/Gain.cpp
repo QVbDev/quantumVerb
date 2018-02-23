@@ -13,8 +13,10 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief Constructor. Creates a Gain object.
+     * @brief Constructor. Creates a Gain object
+     *
      * Creates a Gain object associated to an AudioProcessor.
+     *
      * @param [in] processor    Pointer to main processor
      */
     Gain::Gain(juce::AudioProcessor * processor)
@@ -26,13 +28,21 @@ namespace reverb
     /**
      * @brief Apply Gain to input buffer to change volume of signal audio 
      *
-     *  Gain to apply to audio buffer is stocked in gainFactor
+     * Gain to apply to audio buffer is stocked in gainFactor
      *
-     * @param [in,out] Audio sample buffer to process
+     * @param [in,out] buffer   Audio sample buffer to process
      */
     void Gain::exec(juce::AudioSampleBuffer& buffer)
     {
-		buffer.applyGain(gainFactor);
+		// Accepted value of gainFactor
+
+		if(gainFactor > 0 && gainFactor < 10) { 
+			buffer.applyGain (gainFactor); }
+
+		else {
+			 buffer.applyGain(1.0);
+		}
+		
     }
 
 }

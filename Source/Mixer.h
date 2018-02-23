@@ -15,7 +15,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    *  Class used to mix dry sound with wet sound after convolution.
+    * Class used to mix dry sound with wet sound after convolution.
     */
     class Mixer : public Task
     {
@@ -33,8 +33,9 @@ namespace reverb
         void loadDry(const juce::AudioSampleBuffer& dryAudio);
 
         //==============================================================================
-        double wetRatio;
-		juce::AudioBuffer<double> dryAudio;
+        double wetRatio=0.0;
+		juce::AudioSampleBuffer& dryAudio;
+
     };
 
 }

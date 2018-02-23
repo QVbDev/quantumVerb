@@ -15,7 +15,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * Apply a gain to audio signal
+    * TODO: Description
     */
     class Gain : public Task
     {
@@ -30,7 +30,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& buffer) override;
 
         //==============================================================================
-        double gainFactor;
+        double gainFactor=1.0;
     };
 
 }

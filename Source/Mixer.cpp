@@ -2,8 +2,8 @@
   ==============================================================================
 
     Mixer.cpp
-    Created     : 20 Jan 2018 5:00:24pm by Eric Seguin
-    implemented : 8 Fev 2018  23:40:01  by Ilham Ennaji  
+    Created: 20 Jan 2018 5:00:24pm
+    Author:  Eric Seguin
 
   ==============================================================================
 */
@@ -30,24 +30,30 @@ namespace reverb
     /**
      * @brief Mix the wet and dry sound according to a proportionality parameter
      *
-     * Mixing the wet sound passed as an argument with the dry sound content
-     * in the dryAudio buffer.
+     * Mixing the wet sound passed as an argument with the dry sound content in the 
+	 dryAudio buffer.
+     *
      * @param [in,out] wetAudio Buffer containing the wet audio signal 
      */
     void Mixer::exec(juce::AudioSampleBuffer& wetAudio)
     {
-		wetAudio = wetRatio * wetAudio + (1 - wetRatio) * dryAudio;
+		wetAudio.applyGain (wetRatio);
+		dryAudio.applyGain (1 - wetRatio);
+		wetAudio.addFrom(wetAudio.getNumChannels(),0,dryAudio,dryAudio.getNumChannels(),0,wetAudio.getNumSamples(),1.0);
+
     }
 
     //==============================================================================
     /**
     * @brief loads the dry signal into the dryAudio variable
     *
+    * (TODO) Detailed description
+    *
     * @param [in,out] dryAudio Buffer containing the dry signal
     */
     void Mixer::loadDry(const juce::AudioSampleBuffer& dryAudio)
     {
-		this.dryAudio = dryAudio;
+		this->dryAudio = dryAudio;
     }
 
 }
