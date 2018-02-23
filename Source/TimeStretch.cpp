@@ -29,9 +29,9 @@ namespace reverb
     TimeStretch::TimeStretch(juce::AudioProcessor * processor)
         : Task(processor), origIRSampleRate(0)
     {
-        soundtouchHandle = soundtouch_createInstance();
+        soundtouch.reset(new soundtouch::SoundTouch());
         
-        if (!soundtouchHandle)
+        if (!soundtouch)
         {
             throw std::runtime_error("Failed to create SoundTouch handle");
         }
@@ -43,7 +43,6 @@ namespace reverb
     */
     TimeStretch::~TimeStretch()
     {
-        soundtouch_destroyInstance(soundtouchHandle);
     }
 
     //==============================================================================
@@ -57,8 +56,8 @@ namespace reverb
      */
     void TimeStretch::exec(juce::AudioSampleBuffer& ir)
     {
-        soundtouch_setChannels(soundtouchHandle, 1);
-        soundtouch_setSampleRate(soundtouchHandle, (unsigned)origIRSampleRate);
+        soundtouch->setChannels(1);
+        soundtouch->setSampleRate((unsigned)origIRSampleRate);
 
         // Move input data to new buffer; ir becomes output buffer for SoundTouch processing
         juce::AudioSampleBuffer irIn = std::move(ir);
@@ -81,12 +80,11 @@ namespace reverb
         for (int channel = 0; channel < irIn.getNumChannels(); ++channel)
         {
             // Prepare SoundTouch processor
-            soundtouch_clear(soundtouchHandle);
-            soundtouch_setTempoChange(soundtouchHandle, tempoChange * 100.0f);
+            soundtouch->clear();
+            soundtouch->setTempoChange(tempoChange * 100.0f);
 
             // Put block in processor
-            soundtouch_putSamples(soundtouchHandle,
-                                  irIn.getReadPointer(channel), irIn.getNumSamples());
+            soundtouch->putSamples(irIn.getReadPointer(channel), irIn.getNumSamples());
 
             // Wait for processing to complete
             unsigned curSample = 0;
@@ -99,25 +97,23 @@ namespace reverb
                 // Write processed samples to output buffer
                 auto curWritePtr = &ir.getWritePointer(channel)[curSample];
                 
-                nbSamplesReceived = soundtouch_receiveSamples(soundtouchHandle,
-                                                              curWritePtr,
-                                                              ir.getNumSamples() - curSample);
+                nbSamplesReceived = soundtouch->receiveSamples(curWritePtr,
+                                                               ir.getNumSamples() - curSample);
             }
             while (nbSamplesReceived != 0 &&
-                   soundtouch_numUnprocessedSamples(soundtouchHandle) != 0);
+                   soundtouch->numUnprocessedSamples() != 0);
 
             // Get last remaining samples from SoundTouch pipeline, if any
-            if (soundtouch_numUnprocessedSamples(soundtouchHandle) != 0)
+            if (soundtouch->numUnprocessedSamples() != 0)
             {
-                soundtouch_flush(soundtouchHandle);
+                soundtouch->flush();
                 
-                curSample += soundtouch_numSamples(soundtouchHandle);
+                curSample += soundtouch->numSamples();
 
                 // Write processed samples to output buffer
                 auto curWritePtr = &ir.getWritePointer(channel)[curSample];
 
-                soundtouch_receiveSamples(soundtouchHandle,
-                                          curWritePtr, ir.getNumSamples() - curSample);
+                soundtouch->receiveSamples(curWritePtr, ir.getNumSamples() - curSample);
             }
         }
     }
