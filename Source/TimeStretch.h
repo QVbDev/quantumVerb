@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "SoundTouchDLL.h"
+#include "SoundTouch.h"
 
 #include "Task.h"
 
@@ -36,7 +36,7 @@ namespace reverb
         double origIRSampleRate;
 
     private:
-        HANDLE soundtouchHandle = nullptr;
+        std::unique_ptr<soundtouch::SoundTouch> soundtouch;
     };
 
 }
