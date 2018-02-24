@@ -181,6 +181,8 @@
     <ClCompile Include="..\..\Source\PreDelay.cpp"/>
     <ClCompile Include="..\..\Source\TimeStretch.cpp"/>
     <ClCompile Include="..\..\Source\Util.cpp"/>
+    <ClCompile Include="..\..\Source\GUI_filter_box.cpp" />
+    <ClCompile Include="..\..\Source\GUI_reverb_box.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
