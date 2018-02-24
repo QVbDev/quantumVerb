@@ -14,13 +14,50 @@
 
 using namespace juce;
 
-float FILTER_BOX_RELATIVE_WIDTH = 0.2f;
-float FILTER_BOX_RELATIVE_HEIGHT = 0.35f;
-float HEADER_BOX_RELATIVE_HEIGHT = 0.10f;
-float SAMPLE_RATE_BOX_RELATIVE_WIDTH = 0.35f;
-float ON_BUTTON_RELATIVE_WIDTH = 0.15f;
-float INFO_BUTTON_RELATIVE_WIDTH = 0.5f;
-float REVERB_BOX_RELATIVE_HEIGHT = 0.55F;
+const float FILTER_BOX_RELATIVE_WIDTH = 0.2f;
+const float FILTER_BOX_RELATIVE_HEIGHT = 0.35f;
+const float HEADER_BOX_RELATIVE_HEIGHT = 0.10f;
+const float SAMPLE_RATE_BOX_RELATIVE_WIDTH = 0.35f;
+const float ON_BUTTON_RELATIVE_WIDTH = 0.15f;
+const float INFO_BUTTON_RELATIVE_WIDTH = 0.5f;
+const float REVERB_BOX_RELATIVE_HEIGHT = 0.55F;
+const float IR_LENGTH_MIN = 0.1f;
+const float IR_LENGTH_MAX = 5.0f;
+const float IR_LENGTH_DEFAULT = 2.55f;
+const float IR_VOL_MIN = 0.0f;
+const float IR_VOL_MAX = 1.0f;
+const float IR_VOL_DEFAULT = 0.5f;
+
+// TODO: check float/dB conversion required or not
+const float OUT_GAIN_MIN = -50.0f;
+const float OUT_GAIN_MAX = 0.0f;
+const float OUT_GAIN_DEFAULT = -25.0f;
+
+const float DRY_WET_MIN = 0.0f;
+const float DRY_WET_MAX = 1.0f;
+const float DRY_WET_DEFAULT = 0.5f;
+
+// TODO: check float/dB conversion required or not
+const float PARAM_A_MIN = -24.0f;
+const float PARAM_A_MAX = 12.0f;
+const float PARAM_A_DEFAULT = -6.0f;
+
+const float PARAM_F_LOW_MIN = 16.0f;
+const float PARAM_F_LOW_MAX = 1600.0f;
+const float PARAM_F_LOW_DEFAULT = 808.0f;
+const float PARAM_F_HIGH_MIN = 1000.0f;
+const float PARAM_F_HIGH_MAX = 21000.0f;
+const float PARAM_F_HIGH_DEFAULT = 11000.0f;
+const float PARAM_Q_SHELF_MIN = 0.71f;
+const float PARAM_Q_SHELF_MAX = 1.41f;
+const float PARAM_Q_SHELF_DEFAULT = 1.06f;
+const float PARAM_Q_PEAK_MIN = 0.26f;
+const float PARAM_Q_PEAK_MAX = 6.50f;
+const float PARAM_Q_PEAK_DEFAULT = 3.38f;
+
+const float PREDELAY_MIN = 0.0f;
+const float PREDELAY_MAX = 1000.0f;
+const float PREDELAY_DEFAULT = 500.0f;
 
 namespace reverb
 {
@@ -67,7 +104,8 @@ namespace reverb
         // predelay slider config
         preDelay.setSliderStyle(juce::Slider::RotaryVerticalDrag);
         preDelay.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 40, 20);
-        preDelay.setRange(0, 1000, 1);
+        preDelay.setRange(PREDELAY_MIN, PREDELAY_MAX);
+        preDelay.setValue(PREDELAY_DEFAULT);
         preDelay.addListener(this);
         addAndMakeVisible(preDelay);
 
@@ -83,6 +121,53 @@ namespace reverb
         peakingHigh.addListener(this);
         peakingLow.addListener(this);
         
+        // set slider ranges
+        reverbParam.lenIR.setRange(IR_LENGTH_MIN, IR_LENGTH_MAX);
+        reverbParam.volIR.setRange(IR_VOL_MIN, IR_VOL_MAX);
+        reverbParam.gainOut.setRange(OUT_GAIN_MIN, OUT_GAIN_MAX);
+        reverbParam.dryWet.setRange(DRY_WET_MIN, DRY_WET_MAX);
+
+        lowShelf.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
+        lowShelf.paramf.setRange(PARAM_F_LOW_MIN, PARAM_F_LOW_MAX);
+        lowShelf.paramQ.setRange(PARAM_Q_SHELF_MIN, PARAM_Q_SHELF_MAX);
+
+        peakingLow.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
+        peakingLow.paramf.setRange(PARAM_F_LOW_MIN, PARAM_F_LOW_MAX);
+        peakingLow.paramQ.setRange(PARAM_Q_PEAK_MIN, PARAM_Q_PEAK_MAX);
+
+        peakingHigh.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
+        peakingHigh.paramf.setRange(PARAM_F_HIGH_MIN, PARAM_F_HIGH_MAX);
+        peakingHigh.paramQ.setRange(PARAM_Q_PEAK_MIN, PARAM_Q_PEAK_MAX);
+
+        highShelf.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
+        highShelf.paramf.setRange(PARAM_F_HIGH_MIN, PARAM_F_HIGH_MAX);
+        highShelf.paramQ.setRange(PARAM_Q_SHELF_MIN, PARAM_Q_SHELF_MAX);
+
+        // set slider default values
+        reverbParam.lenIR.setValue(IR_LENGTH_DEFAULT);
+        reverbParam.volIR.setValue(IR_VOL_DEFAULT);
+        reverbParam.gainOut.setValue(OUT_GAIN_DEFAULT);
+        //reverbParam.dryWet.setValue(DRY_WET_DEFAULT);
+
+        //lowShelf.paramA.setValue(PARAM_A_DEFAULT);
+        lowShelf.paramf.setValue(PARAM_F_LOW_DEFAULT);
+        lowShelf.paramQ.setValue(PARAM_Q_SHELF_DEFAULT);
+
+        //peakingLow.paramA.setValue(PARAM_A_DEFAULT);
+        peakingLow.paramf.setValue(PARAM_F_LOW_DEFAULT);
+        peakingLow.paramQ.setValue(PARAM_Q_PEAK_DEFAULT);
+
+        //peakingHigh.paramA.setValue(PARAM_A_DEFAULT);
+        peakingHigh.paramf.setValue(PARAM_F_HIGH_DEFAULT);
+        peakingHigh.paramQ.setValue(PARAM_Q_PEAK_DEFAULT);
+
+        //highShelf.paramA.setValue(PARAM_A_DEFAULT);
+        highShelf.paramf.setValue(PARAM_F_HIGH_DEFAULT);
+        highShelf.paramQ.setValue(PARAM_Q_SHELF_DEFAULT);
+
+
+        // Calls resized when creating UI to position all the elements as if window was resized.
+        this->resized();
 	}
 
 	AudioProcessorEditor::~AudioProcessorEditor()
@@ -214,9 +299,13 @@ namespace reverb
             else if (reverbSlider->getComponentID() == "gainOut") {
                 processor.mainPipeline->gain->gainFactor = reverbSlider->getValue();
             }
-            else {
+            else if (reverbSlider->getComponentID() == "dryWet") {
                 // TODO: check if value to provide is in range [0 - 100] or [0.00 - 1]
                 processor.mainPipeline->dryWetMixer->wetRatio = reverbSlider->getValue();
+            }
+            else
+            {
+                // TODO: add warning/error
             }
         }
                 
@@ -227,44 +316,60 @@ namespace reverb
             else if (lowShelfSlider->getComponentID() == "paramf") {
                 processor.irPipeline->filters[0]->setFrequency(lowShelfSlider->getValue());
             }
-            else {
+            else if (lowShelfSlider->getComponentID() == "paramA") {
                 processor.irPipeline->filters[0]->setGain(lowShelfSlider->getValue());
+            }
+            else
+            {
+                // TODO: add warning/error
             }
         }
                 
         else if (peakingLowSlider) {
             if (peakingLowSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->setQ(peakingLowSlider->getValue());
+                processor.irPipeline->filters[1]->setQ(peakingLowSlider->getValue());
             }
             else if (peakingLowSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->setFrequency(peakingLowSlider->getValue());
+                processor.irPipeline->filters[1]->setFrequency(peakingLowSlider->getValue());
             }
-            else {
-                processor.irPipeline->filters[0]->setGain(peakingLowSlider->getValue());
+            else if (peakingLowSlider->getComponentID() == "paramA") {
+                processor.irPipeline->filters[1]->setGain(peakingLowSlider->getValue());
+            }
+            else
+            {
+                // TODO: add warning/error
             }
         }
                 
         else if (peakingHighSlider) {
             if (peakingHighSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->setQ(peakingHighSlider->getValue());
+                processor.irPipeline->filters[2]->setQ(peakingHighSlider->getValue());
             }
             else if (peakingHighSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->setFrequency(peakingHighSlider->getValue());
+                processor.irPipeline->filters[2]->setFrequency(peakingHighSlider->getValue());
             }
-            else {
-                processor.irPipeline->filters[0]->setGain(peakingHighSlider->getValue());
+            else if (peakingHighSlider->getComponentID() == "paramA") {
+                processor.irPipeline->filters[2]->setGain(peakingHighSlider->getValue());
+            }
+            else
+            {
+                // TODO: add warning/error
             }
         }
                 
         else if (highShelfSlider) {
             if (highShelfSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->setQ(highShelfSlider->getValue());
+                processor.irPipeline->filters[3]->setQ(highShelfSlider->getValue());
             }
             else if (highShelfSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->setFrequency(highShelfSlider->getValue());
+                processor.irPipeline->filters[3]->setFrequency(highShelfSlider->getValue());
             }
-            else {
-                processor.irPipeline->filters[0]->setGain(highShelfSlider->getValue());
+            else if (highShelfSlider->getComponentID() == "paramA") {
+                processor.irPipeline->filters[3]->setGain(highShelfSlider->getValue());
+            }
+            else
+            {
+                // TODO: add warning/error
             }
         }
 

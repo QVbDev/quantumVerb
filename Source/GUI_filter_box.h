@@ -16,7 +16,6 @@ namespace reverb {
 
         juce::Slider* getSlider(juce::Slider* sliderToFind);
         void addListener(juce::Slider::Listener * pluginEditor);
-    private:
 
         juce::Slider paramQ;
         juce::Label QLabel;
