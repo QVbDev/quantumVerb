@@ -30,7 +30,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& buffer) override;
 
         //==============================================================================
-        double gainFactor;
+        double gainFactor=1.0;
     };
 
 }
