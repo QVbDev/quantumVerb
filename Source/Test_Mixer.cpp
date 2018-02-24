@@ -32,6 +32,7 @@ TEST_CASE("Mixer class is tested", "[Mixer]") {
 	reverb::Mixer mixerObj (&processor);
 
 	SECTION ("Mix two audio buffer") {
+		constexpr double RATIO_WET = 0.5;
 
 		// Create one audio block 
 		juce::AudioSampleBuffer wetAudio (1, audioNumSample);
@@ -55,10 +56,32 @@ TEST_CASE("Mixer class is tested", "[Mixer]") {
 			dryAudio.setSample (0, i, 1);
 		}
 
+		mixerObj.wetRatio = RATIO_WET;
+
 		// Mixing
 		mixerObj.loadDry (dryAudio);
 		mixerObj.exec (wetAudio);
 
+		// Test 
+
+		juce::AudioSampleBuffer wetAudioT (1, audioNumSample);
+
+		REQUIRE (wetAudioT.getNumChannels () == 1);
+		REQUIRE (wetAudioT.getNumSamples () == audioNumSample);
+
+		for(int i = 0; i < audioNumSample; i++)
+		{
+			wetAudioT.setSample (0, i, 1);
+		}
+
+		wetAudioT.applyGain (RATIO_WET);
+		dryAudio.applyGain (1 - RATIO_WET);
+		wetAudioT.addFrom (0, 0, dryAudio, 0, 0, wetAudioT.getNumSamples (), 1.0);
+
+		for(int i = 1; i < audioNumSample; i++)
+		{
+			REQUIRE ((wetAudioT.getSample (0, i)/wetAudio.getSample (0, i))== 1);
+		}
 
 	}
 

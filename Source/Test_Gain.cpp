@@ -31,6 +31,7 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
 	reverb::Gain gain (&processor);
 
 	SECTION("Apply gain to audio buffer"){
+		constexpr double GAIN_TEST = 2.0;
 
 		// Create audio block
 
@@ -51,14 +52,17 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
 
 		REQUIRE (audioGain.getNumChannels () == 1);
 		REQUIRE (audioGain.getNumSamples () == audioNumSample);
-
-		float gain1 = 2.0f, gain2 =100.0f ;
+		for(int i = 0; i < audioNumSample; i++)
+		{
+			audioGain.setSample (0, i, 1);
+		}
+		gain.gainFactor = GAIN_TEST;
 		//juce::Decibels decibelsToGain(float gain, float gainDb);
-		audioGain.applyGain (gain1);
+		gain.exec (audioGain);
 		rmsAudioGain = audioGain.getRMSLevel (0, 0, audioNumSample);
 
-		REQUIRE (rmsAudioGain/rmsAudio == 2.0f);
 
+		REQUIRE (rmsAudioGain / rmsAudio == GAIN_TEST);
 
 	}
 

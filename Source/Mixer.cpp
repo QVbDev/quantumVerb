@@ -23,8 +23,18 @@ namespace reverb
      */
     Mixer::Mixer(juce::AudioProcessor * processor)
         : Task(processor)
-    {
+    { 
+		wetRatio = 0.0;
     }
+
+	//==============================================================================
+	/**
+	* @brief Destroys a Mixer object
+
+	*/
+	Mixer::~Mixer()
+	{
+	}
 
     //==============================================================================
     /**
@@ -39,7 +49,7 @@ namespace reverb
     {
 		wetAudio.applyGain (wetRatio);
 		dryAudio.applyGain (1 - wetRatio);
-		wetAudio.addFrom(wetAudio.getNumChannels(),0,dryAudio,dryAudio.getNumChannels(),0,wetAudio.getNumSamples(),1.0);
+		wetAudio.addFrom(0,0,dryAudio,0,0,wetAudio.getNumSamples(),1.0);
 
     }
 
@@ -47,11 +57,9 @@ namespace reverb
     /**
     * @brief loads the dry signal into the dryAudio variable
     *
-    * (TODO) Detailed description
-    *
     * @param [in,out] dryAudio Buffer containing the dry signal
     */
-    void Mixer::loadDry(const juce::AudioSampleBuffer& dryAudio)
+    void Mixer::loadDry(const juce::AudioSampleBuffer dryAudio)
     {
 		this->dryAudio = dryAudio;
     }

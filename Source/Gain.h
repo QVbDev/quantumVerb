@@ -22,6 +22,7 @@ namespace reverb
     public:
         //==============================================================================
         Gain(juce::AudioProcessor * processor);
+		~Gain ();
 
         //==============================================================================
         using Ptr = std::shared_ptr<Gain>;
@@ -30,7 +31,7 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& buffer) override;
 
         //==============================================================================
-        double gainFactor=1.0;
+        double gainFactor;
     };
 
 }

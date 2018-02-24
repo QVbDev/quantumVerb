@@ -22,7 +22,17 @@ namespace reverb
     Gain::Gain(juce::AudioProcessor * processor)
         : Task(processor)
     {
+		gainFactor = 1.0;
     }
+
+	//==============================================================================
+	/**
+	* @brief Destroys a Gain object
+
+	*/
+	Gain::~Gain()
+	{
+	}
 
     //==============================================================================
     /**
@@ -34,14 +44,7 @@ namespace reverb
      */
     void Gain::exec(juce::AudioSampleBuffer& buffer)
     {
-		// Accepted value of gainFactor
-
-		if(gainFactor > 0 && gainFactor < 10) { 
-			buffer.applyGain (gainFactor); }
-
-		else {
-			 buffer.applyGain(1.0);
-		}
+		buffer.applyGain (gainFactor);
 		
     }
 

@@ -22,6 +22,7 @@ namespace reverb
     public:
         //==============================================================================
         Mixer(juce::AudioProcessor * processor);
+		~Mixer ();
 
         //==============================================================================
         using Ptr = std::shared_ptr<Mixer>;
@@ -30,11 +31,11 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& wetAudio) override;
 
         //==============================================================================
-        void loadDry(const juce::AudioSampleBuffer& dryAudio);
+        void loadDry(const juce::AudioSampleBuffer dryAudio);
 
         //==============================================================================
-        double wetRatio=0.0;
-		juce::AudioSampleBuffer& dryAudio;
+        double wetRatio;
+		juce::AudioSampleBuffer dryAudio;
 
     };
 
