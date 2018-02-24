@@ -1,9 +1,9 @@
 /*
-  ==============================================================================
+==============================================================================
 
-    Test_IRPipeline.cpp
+Test_IRPipeline.cpp
 
-  ==============================================================================
+==============================================================================
 */
 
 #include "catch.hpp"
@@ -90,25 +90,25 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
     processor.setPlayConfigDetails(IR_NUM_CHANNELS, IR_NUM_CHANNELS,
                                    IR_SAMPLE_RATE, IR_NUM_SAMPLES);
 
-    REQUIRE(processor.getSampleRate() == IR_SAMPLE_RATE);
+	REQUIRE(processor.getSampleRate() == IR_SAMPLE_RATE);
 
     IRPipelineMocked irPipeline(&processor);
 
 
-    SECTION("IR processing shouldn't be excessively long") {
-        constexpr std::chrono::seconds MAX_EXEC_TIME_MS(200);
+	SECTION("IR processing shouldn't be excessively long") {
+		constexpr std::chrono::seconds MAX_EXEC_TIME_MS(200);
 
-        juce::AudioSampleBuffer ir;
+		juce::AudioSampleBuffer ir;
 
-        // Measure processing time
-        auto start = std::chrono::high_resolution_clock::now();
-        irPipeline.exec(ir);
-        auto end = std::chrono::high_resolution_clock::now();
+		// Measure processing time
+		auto start = std::chrono::high_resolution_clock::now();
+		irPipeline.exec(ir);
+		auto end = std::chrono::high_resolution_clock::now();
 
-        auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-        REQUIRE(execTime.count() < MAX_EXEC_TIME_MS.count());
-    }
+		REQUIRE(execTime.count() < MAX_EXEC_TIME_MS.count());
+	}
 
 
     SECTION("IR should be limited to MAX_IR_LENGTH_MS") {

@@ -13,7 +13,7 @@
               pluginRTASCategory="" aaxIdentifier="ca.quantum-music.QuantumReverb"
               pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.2.0"
               companyName="Quantum-Music" companyWebsite="http://quantum-music.ca/"
-              companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\vendor\SoundTouch"
+              companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\vendor\soundtouch\include"
               defines="DONT_SET_USING_JUCE_NAMESPACE=1">
   <MAINGROUP id="wAf2hM" name="QuantumReverb">
     <GROUP id="{16E68198-2536-31A4-D4D0-776A279C4A7E}" name="include">
@@ -50,16 +50,19 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
-            vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouchDll_x64.lib">
+            vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouch.lib"
+            IPPLibrary="true">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="QuantumReverb"
-                       libraryPath="..\..\vendor\SoundTouch\" prebuildCommand="copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
+                       postbuildCommand="xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
                        linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="QuantumReverb"
-                       libraryPath="..\..\vendor\SoundTouch\" prebuildCommand="copy &quot;..\..\vendor\SoundTouch\SoundTouch_x64.dll&quot; &quot;$(OutDir)&quot;"/>
+                       libraryPath="$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\"
+                       postbuildCommand="xcopy /y /s /i &quot;..\..\ImpulseResponses&quot; &quot;$(OutDir)\ImpulseResponses&quot;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>
