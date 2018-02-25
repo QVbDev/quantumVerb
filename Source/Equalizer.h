@@ -17,6 +17,13 @@ Equalizer.h
 enum{LOW, PEAK1, PEAK2, HIGH};
 
 namespace reverb {
+
+	struct EQParameters {
+		std::array<float, 4> frequencySet;
+		std::array<float, 4> gainSet;
+		std::array<float, 4> QSet;
+	};
+
 	class Equalizer : public Task 
 	{
 	public:
@@ -39,9 +46,7 @@ namespace reverb {
 
 		juce::OwnedArray<Filter> filterSet;
 
-		std::array<float, 4> frequencySet;
-		std::array<float, 4> gainSet;
-		std::array<float, 4> QSet;
+		EQParameters parameters;
 	};
 
 	struct InvalidFilterException : public std::exception {

@@ -19,7 +19,23 @@ namespace reverb {
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new HighShelfFilter(processor));
 
-		//updateFilters();
+		setFilterFrequency(100, LOW);
+		setFilterGain(3, LOW);
+		setFilterQ(0.71, LOW);
+
+		setFilterFrequency(1000, PEAK1);
+		setFilterGain(2, PEAK1);
+		setFilterQ(0.5, PEAK1);
+
+		setFilterFrequency(9000, PEAK2);
+		setFilterGain(4, PEAK2);
+		setFilterQ(0.5, PEAK2);
+
+		setFilterFrequency(15000, HIGH);
+		setFilterGain(3, HIGH);
+		setFilterQ(0.71, HIGH);
+
+		updateFilters();
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
@@ -35,9 +51,9 @@ namespace reverb {
 		//Update filter parameters before gain normalization
 
 		for (int i = 0; i < filterSet.size(); i++) {
-			filterSet[i]->setFrequency(frequencySet[i]);
-			filterSet[i]->setGain(gainSet[i]);
-			filterSet[i]->setQ(QSet[i]);
+			filterSet[i]->setFrequency(parameters.frequencySet[i]);
+			filterSet[i]->setGain(parameters.gainSet[i]);
+			filterSet[i]->setQ(parameters.QSet[i]);
 		}
 
 #if CALIBRATE
@@ -77,8 +93,8 @@ namespace reverb {
 
 		//Set computed gains
 		for (int i = 0; i < filterSet.size(); i++) {
-			gainSet[i] = Filter::invdB(lambda_data[i]);
-			filterSet[i]->setGain(gainSet[i]);
+			parameters.gainSet[i] = Filter::invdB(lambda_data[i]);
+			filterSet[i]->setGain(parameters.gainSet[i]);
 		}
 		
 
@@ -101,19 +117,19 @@ namespace reverb {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
 		else
-			frequencySet[num] = freq;
+			parameters.frequencySet[num] = freq;
 	}
 	void Equalizer::setFilterGain(float gain, int num) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
 		else
-			gainSet[num] = gain;
+			parameters.gainSet[num] = gain;
 
 	}
 	void Equalizer::setFilterQ(float Q, int num) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
 		else
-			QSet[num] = Q;
+			parameters.QSet[num] = Q;
 	}
 }

@@ -75,22 +75,6 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 
 		reverb::Equalizer EQ(&processor);
 
-		EQ.setFilterFrequency(100, LOW);
-		EQ.setFilterGain(3, LOW);
-		EQ.setFilterQ(0.71, LOW);
-
-		EQ.setFilterFrequency(1000, PEAK1);
-		EQ.setFilterGain(2, PEAK1);
-		EQ.setFilterQ(0.5, PEAK1);
-
-		EQ.setFilterFrequency(9000, PEAK2);
-		EQ.setFilterGain(4, PEAK2);
-		EQ.setFilterQ(0.5, PEAK2);
-
-		EQ.setFilterFrequency(15000, HIGH);
-		EQ.setFilterGain(3, HIGH);
-		EQ.setFilterQ(0.71, HIGH);
-
 		EQ.exec(sampleBuffer);
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
