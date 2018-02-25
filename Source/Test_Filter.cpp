@@ -9,6 +9,7 @@ Test_Filter.cpp
 #include "catch.hpp"
 
 #include "Filter.h"
+#include "Test_Util.h"
 #include "PluginProcessor.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -18,17 +19,6 @@ Test_Filter.cpp
 * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
 */
 
-
-bool compareValues(const float a1, const float a2) {
-	float ratio = a1 / a2;
-
-	if (ratio >= 0.99 && ratio <= 1.01)
-		return true;
-
-	else
-		return false;
-
-}
 
 
 

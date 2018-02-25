@@ -18,6 +18,8 @@ namespace reverb {
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new HighShelfFilter(processor));
+
+		//updateFilters();
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
@@ -81,6 +83,17 @@ namespace reverb {
 		
 
 #endif
+
+	}
+
+	float Equalizer::getdBAmplitude(float freq) {
+		float dBAmplitude = 0;
+
+		for (int i = 0; i < filterSet.size(); i++) {
+			dBAmplitude += filterSet[i]->getdBAmplitude(freq);
+		}
+
+		return dBAmplitude;
 
 	}
 

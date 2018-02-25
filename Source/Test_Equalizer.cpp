@@ -9,6 +9,7 @@ Test_Equalizer.cpp
 #include "catch.hpp"
 
 #include "Equalizer.h"
+#include "Test_Util.h"
 #include "PluginProcessor.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -17,6 +18,7 @@ Test_Equalizer.cpp
 * How to write tests with Catch:
 * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
 */
+
 
 TEST_CASE("Equalizer class is tested", "[equalizer]") {
 	//==============================================================================
@@ -68,20 +70,6 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 	//Compute frequency resolution
 	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
 
-	SECTION("Testing Matrix class") {
-		reverb::Matrix<float> A(2, 2);
-
-		A.set(1, 0, 0);
-		A.set(2, 0, 1);
-		A.set(3, 1, 0);
-		A.set(4, 1, 1);
-
-		REQUIRE(A(0, 0) == 1);
-		REQUIRE(A(0, 1) == 2);
-		REQUIRE(A(1, 0) == 3);
-		REQUIRE(A(1, 1) == 4);
-	}
-
 
 	SECTION("Testing equalizer") {
 
@@ -107,6 +95,10 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+
+
+		REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000)));
 
 	}
 }

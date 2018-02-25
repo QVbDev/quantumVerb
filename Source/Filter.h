@@ -41,6 +41,11 @@ namespace reverb
         //==============================================================================
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
+		//==============================================================================
+		static float todB(float m) {
+			return 20 * std::log10(m);
+		}
+
         //==============================================================================
         static float invdB(float dB) {
 			return pow(10, dB / 20);
