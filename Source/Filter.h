@@ -13,6 +13,8 @@
 #include <memory>
 #include <exception>
 
+# define M_PI 3.14159265358979323846f
+
 #define QMIN 0.2
 #define QMAX 2
 #define GMIN -24
@@ -41,10 +43,13 @@ namespace reverb
 
         //==============================================================================
         static float invdB(float dB) {
-			return pow(10, dB / 10);
+			return pow(10, dB / 20);
         }
 
         //==============================================================================
+
+		float getAmplitude(float freq);
+		float getdBAmplitude(float freq);
 
 		void setFrequency(float);
 		void setQ(float);
@@ -54,14 +59,15 @@ namespace reverb
 		void enable();
 		void disable();
 
+		float frequency;
+		float Q;
+		float gainFactor;
+
 	protected:
 		bool assertValues();
 		virtual void buildFilter() = 0;
 		
 		bool isOn;
-		float frequency;
-        float Q;
-        float gainFactor;
 
     };
 

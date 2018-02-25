@@ -22,6 +22,7 @@ namespace reverb
 	Filter::Filter(juce::AudioProcessor * processor, float freq, float q, float gain)
 		: Task(processor),isOn(true), frequency(freq), Q(q), gainFactor(gain)
     {
+		
     }
 
     //==============================================================================
@@ -41,7 +42,6 @@ namespace reverb
 			throw WrongParameterException();
 		
 		if (isOn) {
-
 			buildFilter();
 			juce::dsp::AudioBlock<float> block(ir);
 
@@ -51,12 +51,44 @@ namespace reverb
 		
     }
 
+	float Filter::getAmplitude(float freq){
+		// All filters are 2nd order
+		float * coeffs = coefficients->getRawCoefficients();
+
+		float b0 = coeffs[0];
+		float b1 = coeffs[1];
+		float b2 = coeffs[2];
+		float a1 = coeffs[3];
+		float a2 = coeffs[4];
+
+		//Compute transfer function argument
+		std::complex<float> input;
+		std::complex<float> output;
+
+		float minus_omega = -(2 * M_PI * freq) / processor->getSampleRate();
+
+		input.real(std::cos(minus_omega));
+		input.imag(std::sin(minus_omega));
+
+		//Compute and return Transfer Function amplitude
+
+		return std::abs(b0 + b1 * input + b2 * std::pow(input, 2)) / std::abs(1.0f + a1 * input + a2 * std::pow(input, 2));
+	}
+
+	float Filter::getdBAmplitude(float freq) {
+		return 20 * std::log10(getAmplitude(freq));
+	}
+
+	
+
 	void Filter::setFrequency(float freq) {
 
 		if (freq <= 0 || freq > FMAX)
 		    throw WrongParameterException();
 
 		frequency = freq;
+
+		buildFilter();
 	}
 
 	void Filter::setQ(float q) {
@@ -65,6 +97,8 @@ namespace reverb
 		    throw WrongParameterException();
 
 		Q = q;
+
+		buildFilter();
 	}
 
 	void Filter::setGain(float gain) {
@@ -73,6 +107,8 @@ namespace reverb
 		    throw WrongParameterException();
 
 		gainFactor = gain;
+
+		buildFilter();
 	}
 
 	bool Filter::isEnabled() {
