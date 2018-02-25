@@ -48,5 +48,8 @@
     <ClCompile Include="..\..\Source\Test_PreDelay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Test_Equalizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
