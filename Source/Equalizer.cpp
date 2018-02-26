@@ -7,7 +7,6 @@ Equalizer.cpp
 */
 
 #include "Equalizer.h"
-#define CALIBRATE 1
 
 namespace reverb {
 
@@ -56,7 +55,6 @@ namespace reverb {
 			filterSet[i]->setQ(parameters.QSet[i]);
 		}
 
-#if CALIBRATE
 		
 		juce::dsp::Matrix<float> B(filterSet.size(), filterSet.size());
 		juce::dsp::Matrix<float> lambda(filterSet.size(), 1);
@@ -65,8 +63,6 @@ namespace reverb {
 		float * lambda_data = lambda.getRawDataPointer();
 
 		//Compute lambda column
-
-		float probe = filterSet[LOW]->getAmplitude(filterSet[0]->frequency);
 
 		for (int i = 0; i < filterSet.size(); i++) {
 
@@ -98,7 +94,6 @@ namespace reverb {
 		}
 		
 
-#endif
 
 	}
 
@@ -116,20 +111,26 @@ namespace reverb {
 	void Equalizer::setFilterFrequency(float freq, int num) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
-		else
+
 			parameters.frequencySet[num] = freq;
+
+			updateFilters();
 	}
 	void Equalizer::setFilterGain(float gain, int num) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
-		else
+
 			parameters.gainSet[num] = gain;
+
+			updateFilters();
 
 	}
 	void Equalizer::setFilterQ(float Q, int num) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
-		else
+
 			parameters.QSet[num] = Q;
+			
+			updateFilters();
 	}
 }
