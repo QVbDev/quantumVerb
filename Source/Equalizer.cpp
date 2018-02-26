@@ -20,16 +20,16 @@ namespace reverb {
 		filterSet.add(new HighShelfFilter(processor));
 
 		setFilterFrequency(100, LOW);
-		setFilterGain(3, LOW);
+		setFilterGain(2, LOW);
 		setFilterQ(0.71, LOW);
 
 		setFilterFrequency(1000, PEAK1);
 		setFilterGain(2, PEAK1);
-		setFilterQ(0.5, PEAK1);
+		setFilterQ(1, PEAK1);
 
 		setFilterFrequency(9000, PEAK2);
-		setFilterGain(4, PEAK2);
-		setFilterQ(0.5, PEAK2);
+		setFilterGain(2, PEAK2);
+		setFilterQ(1, PEAK2);
 
 		setFilterFrequency(15000, HIGH);
 		setFilterGain(3, HIGH);
