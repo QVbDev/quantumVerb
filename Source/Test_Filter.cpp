@@ -105,6 +105,14 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		REQUIRE(compareValues(filter.getAmplitude(freq), std::sqrt(gain)));
 		REQUIRE(compareValues(filter.getAmplitude(0), gain));
 		REQUIRE(compareValues(filter.getAmplitude(30000), 1.0f));
+
+		float probe1 = filter.getdBAmplitude(32000);
+		float probe2 = reverb::Filter::todB(1.0f);
+
+		//Test for getdBAmplitude()
+		REQUIRE(compareValues(filter.getdBAmplitude(freq), reverb::Filter::todB(std::sqrt(gain))));
+		REQUIRE(compareValues(filter.getdBAmplitude(0), reverb::Filter::todB(gain)));
+		REQUIRE(compareValues(filter.getdBAmplitude(32000), reverb::Filter::todB(1.0f)));
 	}
 
 	SECTION("Testing high-shelf filter") {

@@ -32,7 +32,7 @@ namespace reverb {
 		setFilterQ(1, PEAK2);
 
 		setFilterFrequency(15000, HIGH);
-		setFilterGain(1, HIGH);
+		setFilterGain(4, HIGH);
 		setFilterQ(0.71, HIGH);
 
 		updateFilters();
@@ -51,9 +51,9 @@ namespace reverb {
 		//Update filter parameters before gain normalization
 
 		for (int i = 0; i < filterSet.size(); i++) {
-			filterSet[i]->frequency = parameters.frequencySet[i];
-			filterSet[i]->gainFactor = parameters.gainSet[i];
-			filterSet[i]->Q = parameters.QSet[i];
+			filterSet[i]->setFrequency(parameters.frequencySet[i]);
+			filterSet[i]->setGain(parameters.gainSet[i]);
+			filterSet[i]->setQ(parameters.QSet[i]);
 		}
 
 #if CALIBRATE
@@ -66,7 +66,7 @@ namespace reverb {
 
 		//Compute lambda column
 
-		float gain = 0;
+		float probe = filterSet[LOW]->getAmplitude(filterSet[0]->frequency);
 
 		for (int i = 0; i < filterSet.size(); i++) {
 
@@ -84,7 +84,7 @@ namespace reverb {
 
 			for (int j = 0; j < filterSet.size(); j++) {
 
-				B_data[j + B.getNumColumns() * i] = filterSet[i]->getdBAmplitude(filterSet[j]->frequency);
+				B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(filterSet[i]->frequency);
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace reverb {
 		//Set computed gains
 		for (int i = 0; i < filterSet.size(); i++) {
 			parameters.gainSet[i] = Filter::invdB(lambda_data[i]);
-			filterSet[i]->gainFactor = parameters.gainSet[i];
+			filterSet[i]->setGain(parameters.gainSet[i]);
 		}
 		
 

@@ -8,12 +8,16 @@
 
 #pragma once
 
-bool compareValues(const float a1, const float a2) {
-	float ratio = a1 / a2;
+#include "Test_Util.h"
 
-	if (ratio >= 0.99 && ratio <= 1.01)
+bool compareValues(const float val, const float nom) {
+	float diff = std::abs(val - nom);
+
+	if (nom != 0)
+		diff /= nom;
+
+	if (diff <= 0.01)
 		return true;
-
 	else
 		return false;
 
