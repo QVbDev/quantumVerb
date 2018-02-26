@@ -31,6 +31,9 @@ namespace reverb
     class Filter : public Task,
                    protected juce::dsp::IIR::Filter<float>
     {
+
+	friend class Equalizer;
+
     public:
         //==============================================================================
         Filter(juce::AudioProcessor * processor, float freq = 1000.0f, float q = 0.71f, float gain = 1.0f);
@@ -64,15 +67,15 @@ namespace reverb
 		void enable();
 		void disable();
 
-		float frequency;
-		float Q;
-		float gainFactor;
-
 	protected:
 		bool assertValues();
 		virtual void buildFilter() = 0;
 		
 		bool isOn;
+
+		float frequency;
+		float Q;
+		float gainFactor;
 
     };
 

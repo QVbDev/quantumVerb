@@ -26,6 +26,7 @@ namespace reverb {
 
 	class Equalizer : public Task 
 	{
+
 	public:
 
 		Equalizer(juce::AudioProcessor * processor);
@@ -52,12 +53,6 @@ namespace reverb {
 	struct InvalidFilterException : public std::exception {
 		const char * what() const throw () {
 			return "Equalizer: Filter ID is invalid";
-		}
-	};
-
-	struct InvalidIndexException : public std::exception {
-		const char * what() const throw () {
-			return "Matrix: Index is out of bounds";
 		}
 	};
 }

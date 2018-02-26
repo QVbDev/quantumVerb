@@ -20,7 +20,7 @@ namespace reverb {
 		filterSet.add(new HighShelfFilter(processor));
 
 		setFilterFrequency(100, LOW);
-		setFilterGain(2, LOW);
+		setFilterGain(0.5, LOW);
 		setFilterQ(0.71, LOW);
 
 		setFilterFrequency(1000, PEAK1);
@@ -32,7 +32,7 @@ namespace reverb {
 		setFilterQ(1, PEAK2);
 
 		setFilterFrequency(15000, HIGH);
-		setFilterGain(3, HIGH);
+		setFilterGain(1, HIGH);
 		setFilterQ(0.71, HIGH);
 
 		updateFilters();
@@ -51,9 +51,9 @@ namespace reverb {
 		//Update filter parameters before gain normalization
 
 		for (int i = 0; i < filterSet.size(); i++) {
-			filterSet[i]->setFrequency(parameters.frequencySet[i]);
-			filterSet[i]->setGain(parameters.gainSet[i]);
-			filterSet[i]->setQ(parameters.QSet[i]);
+			filterSet[i]->frequency = parameters.frequencySet[i];
+			filterSet[i]->gainFactor = parameters.gainSet[i];
+			filterSet[i]->Q = parameters.QSet[i];
 		}
 
 #if CALIBRATE
@@ -94,7 +94,7 @@ namespace reverb {
 		//Set computed gains
 		for (int i = 0; i < filterSet.size(); i++) {
 			parameters.gainSet[i] = Filter::invdB(lambda_data[i]);
-			filterSet[i]->setGain(parameters.gainSet[i]);
+			filterSet[i]->gainFactor = parameters.gainSet[i];
 		}
 		
 

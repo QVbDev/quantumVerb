@@ -80,8 +80,8 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 
 	SECTION("Testing low-shelf filter") {
-		float gain = reverb::Filter::invdB(14);
-		float freq = 5000.5;
+		float gain = reverb::Filter::invdB(-10);
+		float freq = 1000;
 
 		reverb::LowShelfFilter filter(&processor, freq, 0.71, gain);
 		filter.exec(sampleBuffer);
@@ -108,7 +108,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	}
 
 	SECTION("Testing high-shelf filter") {
-		float gain = reverb::Filter::invdB(14);
+		float gain = reverb::Filter::invdB(-10);
 		float freq = 1000;
 
 		reverb::HighShelfFilter filter(&processor, freq, 0.71, gain);
@@ -136,7 +136,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	}
 
 	SECTION("Testing peaking filter") {
-		float gain = reverb::Filter::invdB(14);
+		float gain = reverb::Filter::invdB(-10);
 		float centerFreq = 5000;
 
 		reverb::PeakFilter filter(&processor, centerFreq, 0.71, gain);
