@@ -23,18 +23,16 @@ namespace reverb {
 		setFilterQ(0.71, LOW, false);
 
 		setFilterFrequency(1000, PEAK1, false);
-		setFilterGain(2, PEAK1, false);
-		setFilterQ(1, PEAK1, false);
+		setFilterGain(1.5, PEAK1, false);
+		setFilterQ(0.71, PEAK1, false);
 
 		setFilterFrequency(9000, PEAK2, false);
-		setFilterGain(2, PEAK2, false);
-		setFilterQ(1, PEAK2, false);
+		setFilterGain(1.5, PEAK2, false);
+		setFilterQ(0.71, PEAK2, false);
 
 		setFilterFrequency(15000, HIGH, false);
-		setFilterGain(4, HIGH, false);
-		setFilterQ(0.71, HIGH, false);
-
-		updateFilters();
+		setFilterGain(3, HIGH, false);
+		setFilterQ(1.5, HIGH, false);
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
