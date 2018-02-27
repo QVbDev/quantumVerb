@@ -7,6 +7,7 @@
 */
 
 #pragma once
+
 #include "../JuceLibraryCode/JuceHeader.h"
 
-bool compareValues(const float a1, const float a2);
+bool compareValues(float val, float nom, float tolerance = 1.0f);

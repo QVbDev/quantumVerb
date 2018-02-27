@@ -10,13 +10,13 @@
 
 #include "Test_Util.h"
 
-bool compareValues(const float val, const float nom) {
+bool compareValues(float val, float nom, float tolerance = 1.0f) {
 	float diff = std::abs(val - nom);
 
 	if (nom != 0)
 		diff /= nom;
 
-	if (diff <= 0.01)
+	if (diff <= (tolerance / 100))
 		return true;
 	else
 		return false;

@@ -65,7 +65,7 @@ namespace reverb
 	*/
 
 	float Filter::getAmplitude(float freq){
-		// All filters are 2nd order
+		// All filters are 2nd order and thus have five coefficients
 		float * coeffs = coefficients->getRawCoefficients();
 
 		float b0 = coeffs[0];
