@@ -2353,6 +2353,12 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_video.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GUI_filter_box.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GUI_reverb_box.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Convolution.h">
@@ -4451,6 +4457,12 @@
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GUI_filter_box.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GUI_reverb_box.h">
+      <Filter>QuantumReverb\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
