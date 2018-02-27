@@ -37,9 +37,9 @@ namespace reverb {
 
 		float getdBAmplitude(float freq);
 
-		void setFilterFrequency(float freq, int num);
-		void setFilterGain(float freq, int num);
-		void setFilterQ(float freq, int num);
+		void setFilterFrequency(float freq, int num, bool update = true);
+		void setFilterGain(float freq, int num, bool update = true);
+		void setFilterQ(float freq, int num, bool update = true);
 
 
 	private:

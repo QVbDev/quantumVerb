@@ -18,21 +18,21 @@ namespace reverb {
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new HighShelfFilter(processor));
 
-		setFilterFrequency(100, LOW);
-		setFilterGain(0.5, LOW);
-		setFilterQ(0.71, LOW);
+		setFilterFrequency(100, LOW, false);
+		setFilterGain(0.5, LOW, false);
+		setFilterQ(0.71, LOW, false);
 
-		setFilterFrequency(1000, PEAK1);
-		setFilterGain(2, PEAK1);
-		setFilterQ(1, PEAK1);
+		setFilterFrequency(1000, PEAK1, false);
+		setFilterGain(2, PEAK1, false);
+		setFilterQ(1, PEAK1, false);
 
-		setFilterFrequency(9000, PEAK2);
-		setFilterGain(2, PEAK2);
-		setFilterQ(1, PEAK2);
+		setFilterFrequency(9000, PEAK2, false);
+		setFilterGain(2, PEAK2, false);
+		setFilterQ(1, PEAK2, false);
 
-		setFilterFrequency(15000, HIGH);
-		setFilterGain(4, HIGH);
-		setFilterQ(0.71, HIGH);
+		setFilterFrequency(15000, HIGH, false);
+		setFilterGain(4, HIGH, false);
+		setFilterQ(0.71, HIGH, false);
 
 		updateFilters();
 	}
@@ -108,29 +108,32 @@ namespace reverb {
 
 	}
 
-	void Equalizer::setFilterFrequency(float freq, int num) {
+	void Equalizer::setFilterFrequency(float freq, int num, bool update) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
 
 			parameters.frequencySet[num] = freq;
 
-			updateFilters();
+			if (update)
+				updateFilters();
 	}
-	void Equalizer::setFilterGain(float gain, int num) {
+	void Equalizer::setFilterGain(float gain, int num, bool update) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
 
 			parameters.gainSet[num] = gain;
 
-			updateFilters();
+			if (update)
+				updateFilters();
 
 	}
-	void Equalizer::setFilterQ(float Q, int num) {
+	void Equalizer::setFilterQ(float Q, int num, bool update) {
 		if (num < 0 || num > 3)
 			throw InvalidFilterException();
 
 			parameters.QSet[num] = Q;
 			
-			updateFilters();
+			if(update)
+				updateFilters();
 	}
 }
