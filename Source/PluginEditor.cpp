@@ -37,10 +37,11 @@ const float DRY_WET_MIN = 0.0f;
 const float DRY_WET_MAX = 1.0f;
 const float DRY_WET_DEFAULT = 0.5f;
 
-// TODO: check float/dB conversion required or not
-const float PARAM_A_MIN = -24.0f;
-const float PARAM_A_MAX = 12.0f;
-const float PARAM_A_DEFAULT = -6.0f;
+// TODO: check float/dB conversion 
+// conversion used: Db to amplitude
+const float PARAM_A_MIN = 0.063f;
+const float PARAM_A_MAX = 3.97f;
+const float PARAM_A_DEFAULT = 0.5f;
 
 const float PARAM_F_LOW_MIN = 16.0f;
 const float PARAM_F_LOW_MAX = 1600.0f;
@@ -53,7 +54,9 @@ const float PARAM_Q_SHELF_MAX = 1.41f;
 const float PARAM_Q_SHELF_DEFAULT = 1.06f;
 const float PARAM_Q_PEAK_MIN = 0.26f;
 const float PARAM_Q_PEAK_MAX = 6.50f;
-const float PARAM_Q_PEAK_DEFAULT = 3.38f;
+
+// TODO default back to 1/2 range = 3.38f
+const float PARAM_Q_PEAK_DEFAULT = 1.9f;
 
 const float PREDELAY_MIN = 0.0f;
 const float PREDELAY_MAX = 1000.0f;
@@ -147,21 +150,21 @@ namespace reverb
         reverbParam.lenIR.setValue(IR_LENGTH_DEFAULT);
         reverbParam.volIR.setValue(IR_VOL_DEFAULT);
         reverbParam.gainOut.setValue(OUT_GAIN_DEFAULT);
-        //reverbParam.dryWet.setValue(DRY_WET_DEFAULT);
+        reverbParam.dryWet.setValue(DRY_WET_DEFAULT);
 
-        //lowShelf.paramA.setValue(PARAM_A_DEFAULT);
+        lowShelf.paramA.setValue(PARAM_A_DEFAULT);
         lowShelf.paramf.setValue(PARAM_F_LOW_DEFAULT);
         lowShelf.paramQ.setValue(PARAM_Q_SHELF_DEFAULT);
 
-        //peakingLow.paramA.setValue(PARAM_A_DEFAULT);
+        peakingLow.paramA.setValue(PARAM_A_DEFAULT);
         peakingLow.paramf.setValue(PARAM_F_LOW_DEFAULT);
         peakingLow.paramQ.setValue(PARAM_Q_PEAK_DEFAULT);
 
-        //peakingHigh.paramA.setValue(PARAM_A_DEFAULT);
+        peakingHigh.paramA.setValue(PARAM_A_DEFAULT);
         peakingHigh.paramf.setValue(PARAM_F_HIGH_DEFAULT);
         peakingHigh.paramQ.setValue(PARAM_Q_PEAK_DEFAULT);
 
-        //highShelf.paramA.setValue(PARAM_A_DEFAULT);
+        highShelf.paramA.setValue(PARAM_A_DEFAULT);
         highShelf.paramf.setValue(PARAM_F_HIGH_DEFAULT);
         highShelf.paramQ.setValue(PARAM_Q_SHELF_DEFAULT);
 
