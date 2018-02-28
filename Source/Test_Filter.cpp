@@ -1,20 +1,36 @@
 /*
-  ==============================================================================
+==============================================================================
 
-    Test_Filter.cpp
+Test_Filter.cpp
 
-  ==============================================================================
+==============================================================================
 */
 
 #include "catch.hpp"
 
 #include "Filter.h"
 #include "PluginProcessor.h"
+#include "../JuceLibraryCode/JuceHeader.h"
+
 
 /**
- * How to write tests with Catch:
- * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
- */
+* How to write tests with Catch:
+* https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
+*/
+
+
+bool compareValues(const float a1, const float a2) {
+	float ratio = a1 / a2;
+
+	if (ratio >= 0.999 && ratio <= 1.001)
+		return true;
+
+	else
+		return false;
+
+}
+
+
 
  // TODO: Test parameter changes
 
@@ -27,11 +43,11 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	constexpr int sampleRate = 44100;
 	constexpr int channelNumber = 1;
 	constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
-	const int NUM_SAMPLES_PER_BLOCK = (int)std::ceil((BLOCK_DURATION_MS.count() / 1000.0) * sampleRate);
+	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * sampleRate;
 
 
 	reverb::AudioProcessor processor;
-	processor.setPlayConfigDetails(channelNumber, channelNumber, sampleRate, NUM_SAMPLES_PER_BLOCK);
+	processor.setPlayConfigDetails(channelNumber, channelNumber, sampleRate, std::ceil(NUM_SAMPLES_PER_BLOCK));
 
 	REQUIRE(processor.getSampleRate() == sampleRate);
 
@@ -45,19 +61,17 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	* Unit impulse construction
 	*/
 
-	juce::AudioBuffer<float> sampleBuffer(channelNumber, sampleRate);
+	int numSamples = 44100;
+
+	juce::AudioBuffer<float> sampleBuffer(channelNumber, numSamples);
 
 	float * const buffer = sampleBuffer.getWritePointer(0);
 
-	for (int i = 0; i < sampleBuffer.getNumSamples(); i++) {
+	memset(buffer, 0, sampleBuffer.getNumSamples() * sizeof(*buffer));
 
-		if (i == 0) {
-				buffer[i] = 1.0f;
-		}
-		else {
-				buffer[i] = 0;
-		}
-	}
+	buffer[0] = 1.0f;
+
+
 
 	//==============================================================================
 	/**
@@ -66,48 +80,90 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 	//Prepare a buffer of proper size for FFT
 
-	unsigned int v = sampleBuffer.getNumSamples(); // compute the next highest power of 2 of sample number
+	// compute the next highest power of 2 of sample number
+	int order = std::ceil((log(sampleBuffer.getNumSamples()) / log(2)));
+	juce::dsp::FFT forwardFFT(order);
+	float * fftBuffer = new float[2 * forwardFFT.getSize()];
 
-	v--;
-	v |= v >> 1;
-	v |= v >> 2;
-	v |= v >> 4;
-	v |= v >> 8;
-	v |= v >> 16;
-	v++;
+	memset(fftBuffer, 0, 2*forwardFFT.getSize()*sizeof(*fftBuffer));
 
-	juce::dsp::FFT forwardFFT(v);
+	//Compute frequency resolution
+	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
 
-	const int fftSize = 1 << v;
-	float * fftBuffer = new float[2 * fftSize];
-
-	memset(fftBuffer, 0, sizeof(*fftBuffer));
 
 	SECTION("Testing low-shelf filter") {
-		reverb::LowShelfFilter lowShelf(&processor, 100, 0.71f, (float)reverb::Filter::invdB(-24));
-		lowShelf.exec(sampleBuffer);
+		float gain = reverb::Filter::invdB(14);
+		float freq = 5000;
 
-		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		reverb::LowShelfFilter filter(&processor, freq, 0.71, gain);
+		filter.exec(sampleBuffer);
+
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+		//Test for gain at low freuquency
+		REQUIRE(compareValues(gain, fftBuffer[0]));
+
+		//Test for gain at high frequency
+		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
+
+		//Test for cut-off frequency
+		int cutOffIndex = (int)std::round(freq / freqRes);
+
+		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing high-shelf filter") {
-		reverb::HighShelfFilter lowShelf(&processor, 100, 0.71f, (float)reverb::Filter::invdB(-24));
-		lowShelf.exec(sampleBuffer);
+		float gain = reverb::Filter::invdB(10);
+		float freq = 20000;
 
-		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		reverb::HighShelfFilter filter(&processor, freq, 0.71, gain);
+		filter.exec(sampleBuffer);
+
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+		//Test for gain at low frequency
+		REQUIRE(compareValues(1, fftBuffer[0]));
+
+		//Test for gain at high frequency
+		REQUIRE(compareValues(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
+
+		//Test for cut-off frequency
+		int cutOffIndex = (int)std::round(freq / freqRes);
+
+		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing peaking filter") {
-		reverb::PeakFilter lowShelf(&processor, 100, 0.71f, (float)reverb::Filter::invdB(-24));
-		lowShelf.exec(sampleBuffer);
+		float gain = reverb::Filter::invdB(10);
+		float centerFreq = 5000;
 
-		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sizeof(*sampleBuffer.getReadPointer(0)));
+		reverb::PeakFilter filter(&processor, centerFreq, 0.71, gain);
+		filter.exec(sampleBuffer);
+
+		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+		int peakIndex = (int)std::round(centerFreq / freqRes);
+
+		//Test for gain at center frequency
+		REQUIRE(compareValues(gain, fftBuffer[peakIndex]));
+
+		//Test for gain at both ends of the spectrum
+		REQUIRE(compareValues(1, fftBuffer[0]));
+		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
 	}
-	
-	delete [] fftBuffer;
+
+    /*
+	SECTION("Testing filter toggle") {
+		reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
+		filter.disable();
+		filter.exec(sampleBuffer);
+
+	}
+    */
+	delete[] fftBuffer;
 
 
 }

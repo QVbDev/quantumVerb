@@ -15,13 +15,14 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
+    * Class used to mix dry sound with wet sound after convolution.
     */
     class Mixer : public Task
     {
     public:
         //==============================================================================
         Mixer(juce::AudioProcessor * processor);
+		~Mixer ();
 
         //==============================================================================
         using Ptr = std::shared_ptr<Mixer>;
@@ -33,11 +34,13 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& wetAudio) override;
 
         //==============================================================================
-        void loadDry(const juce::AudioSampleBuffer& dryAudio);
+        void loadDry(const juce::AudioSampleBuffer dryAudio);
 
     protected:
         //==============================================================================
         float wetRatio;
+		juce::AudioSampleBuffer dryAudio;
+
     };
 
 }

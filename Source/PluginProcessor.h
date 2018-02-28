@@ -79,12 +79,13 @@ namespace reverb
         
         // Unique parameter IDs
         static constexpr const char * PID_IR_FILE_CHOICE     = "ir_file_choice";
+        static constexpr const char * PID_IR_LENGTH          = "ir_length";
 
         static constexpr const char * PID_FILTER_PREFIX      = "filter";
         static constexpr const char * PID_FILTER_FREQ_SUFFIX = "_freq";
         static constexpr const char * PID_FILTER_Q_SUFFIX    = "_q";
         static constexpr const char * PID_FILTER_GAIN_SUFFIX = "_gain";
-
+        
         static constexpr const char * PID_PREDELAY           = "predelay";
         static constexpr const char * PID_IR_GAIN            = "ir_gain";
         static constexpr const char * PID_WETRATIO           = "wetratio";

@@ -13,6 +13,12 @@
 #include <memory>
 #include <exception>
 
+#define QMIN 0.2
+#define QMAX 2
+#define GMIN -24
+#define GMAX 15
+#define FMAX 20000
+
 namespace reverb
 {
 
@@ -37,15 +43,20 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        static double invdB(double dB) {
-            return pow(10, dB / 10);
+        static float invdB(float dB) {
+			return pow(10, dB / 10);
         }
 
 	protected:
         //==============================================================================
+
+		bool isEnabled();
+		void enable();
+		void disable();
+
 		bool assertValues();
 		virtual void buildFilter() = 0;
-
+		bool isOn;
         //==============================================================================
         float frequency;
         float Q;
@@ -107,7 +118,7 @@ namespace reverb
 		}
 	};
 
-	struct WrongParameter : public std::exception {
+	struct WrongParameterException : public std::exception {
 		const char * what() const throw () {
 			return "Filter: Parameter(s) is out of bounds";
 		}

@@ -33,6 +33,10 @@
       <FILE id="ZRYgLa" name="Convolution.h" compile="0" resource="0" file="Source/Convolution.h"/>
       <FILE id="NiupXX" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="d86bmX" name="Gain.h" compile="0" resource="0" file="Source/Gain.h"/>
+      <FILE id="z8cMdJ" name="GUI_filter_box.h" compile="0" resource="0"
+            file="Source/GUI_filter_box.h"/>
+      <FILE id="hOdS1U" name="GUI_reverb_box.h" compile="0" resource="0"
+            file="Source/GUI_reverb_box.h"/>
       <FILE id="HauXtr" name="IRBank.h" compile="0" resource="0" file="Source/IRBank.h"/>
       <FILE id="G0uyVb" name="IRPipeline.h" compile="0" resource="0" file="Source/IRPipeline.h"/>
       <FILE id="PY5ljl" name="MainPipeline.h" compile="0" resource="0" file="Source/MainPipeline.h"/>
@@ -49,6 +53,10 @@
       <FILE id="ovcHFj" name="Convolution.cpp" compile="1" resource="0" file="Source/Convolution.cpp"/>
       <FILE id="FSa5IZ" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
       <FILE id="MMwaIE" name="Gain.cpp" compile="1" resource="0" file="Source/Gain.cpp"/>
+      <FILE id="nALbRD" name="GUI_filter_box.cpp" compile="1" resource="0"
+            file="Source/GUI_filter_box.cpp"/>
+      <FILE id="yvMPMr" name="GUI_reverb_box.cpp" compile="1" resource="0"
+            file="Source/GUI_reverb_box.cpp"/>
       <FILE id="cXaEak" name="IRBank.cpp" compile="1" resource="0" file="Source/IRBank.cpp"/>
       <FILE id="noghEt" name="IRPipeline.cpp" compile="1" resource="0" file="Source/IRPipeline.cpp"/>
       <FILE id="F42Bk9" name="MainPipeline.cpp" compile="1" resource="0"

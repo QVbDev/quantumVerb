@@ -78,13 +78,13 @@ Global
 		{B3E33977-312C-4CA8-8919-DB260B6E4BE7}.Debug|x86.Build.0 = Debug|Win32
 		{B3E33977-312C-4CA8-8919-DB260B6E4BE7}.Release|x64.ActiveCfg = Release|x64
 		{B3E33977-312C-4CA8-8919-DB260B6E4BE7}.Release|x64.Build.0 = Release|x64
-		{B3E33977-312C-4CA8-8919-DB260B6E4BE7}.Release|x86.ActiveCfg = Debug|Win32
-		{B3E33977-312C-4CA8-8919-DB260B6E4BE7}.Release|x86.Build.0 = Debug|Win32
+		{B3E33977-312C-4CA8-8919-DB260B6E4BE7}.Release|x86.ActiveCfg = Release|Win32
+		{B3E33977-312C-4CA8-8919-DB260B6E4BE7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6E16BCC5-C450-4128-9898-766DFC1265A5}
+		SolutionGuid = {4D9931F8-2948-41A7-BCC6-35A230A80DC7}
 	EndGlobalSection
 EndGlobal

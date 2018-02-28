@@ -430,6 +430,12 @@
     <ClCompile Include="..\..\Source\Gain.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GUI_filter_box.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GUI_reverb_box.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\IRBank.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
@@ -2380,6 +2386,12 @@
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Gain.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GUI_filter_box.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GUI_reverb_box.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\IRBank.h">

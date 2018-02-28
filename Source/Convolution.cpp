@@ -38,22 +38,16 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief (TODO) Brief description
+     * @brief Main function of the Convolution class. Executes the convolution of
+     *        the audio buffer with the IR.
      *
-     * (TODO) Detailed description
+     * @details Creates a ProcessContext object that specifies the audio buffer to
+     *          convolve and the buffer to contain the resulted signal. Calls the
+     *          juce::dsp::Convolution::process() function to compute the
+     *          convolution.
      *
-     * @param [in,out] audio    (TODO) Parameter description
+     * @param [in,out] audio    The audio buffer to be convolved with the IR.
      */
-    * @brief Main function of the Convolution class. Executes the convolution of
-    *        the audio buffer with the IR.
-    *
-    * @details Creates a ProcessContext object that specifies the audio buffer to
-    *          convolve and the buffer to contain the resulted signal. Calls the
-    *          juce::dsp::Convolution::process() function to compute the
-    *          convolution.
-    *
-    * @param [in,out] audio    The audio buffer to be convolved with the IR.
-    */
     void Convolution::exec(juce::AudioSampleBuffer& audio)
     {
         juce::dsp::AudioBlock<float> audioBlock(audio);
