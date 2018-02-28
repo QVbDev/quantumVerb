@@ -19,20 +19,20 @@ namespace reverb {
 		filterSet.add(new HighShelfFilter(processor));
 
 		setFilterFrequency(100, LOW, false);
-		setFilterGain(0.5, LOW, false);
+		setFilterGain(2, LOW, false);
 		setFilterQ(0.71, LOW, false);
 
 		setFilterFrequency(1000, PEAK1, false);
-		setFilterGain(1.5, PEAK1, false);
+		setFilterGain(0.5, PEAK1, false);
 		setFilterQ(0.71, PEAK1, false);
 
 		setFilterFrequency(9000, PEAK2, false);
-		setFilterGain(1.5, PEAK2, false);
+		setFilterGain(3, PEAK2, false);
 		setFilterQ(0.71, PEAK2, false);
 
 		setFilterFrequency(15000, HIGH, false);
-		setFilterGain(3, HIGH, false);
-		setFilterQ(1.5, HIGH, false);
+		setFilterGain(4, HIGH, false);
+		setFilterQ(0.71, HIGH, false);
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
@@ -90,6 +90,33 @@ namespace reverb {
 			parameters.gainSet[i] = Filter::invdB(lambda_data[i]);
 			filterSet[i]->setGain(parameters.gainSet[i]);
 		}
+
+		/*
+		//Correction algorithm
+
+
+
+		for (int i = 0; i < filterSet.size(); i++) {
+
+			lambda_data[i] = 1 / lambda_data[i];
+		}
+
+		juce::dsp::Matrix<float> gamma(filterSet.size(), 1);
+
+		float * gamma_data = gamma.getRawDataPointer();
+
+		for (int i = 0; i < filterSet.size(); i++) {
+
+			lambda_data[i] = 1 / lambda_data[i];
+		}
+
+		for (int i = 0; i < filterSet.size(); i++) {
+
+			gamma_data[i] = getdBAmplitude(filterSet[i]->frequency);
+		}
+
+		lambda = B * lambda*gamma;
+		*/
 		
 
 
