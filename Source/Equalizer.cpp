@@ -22,6 +22,8 @@ namespace reverb {
 			EQGains.push_back(1.0f);
 		}
 
+		//These constructor setters will likely need to be updated in the very near future.
+
 		setFilterFrequency(1000, LOW);
 		setFilterGain(2, LOW);
 		setFilterQ(0.71, LOW);
@@ -115,6 +117,12 @@ namespace reverb {
 
 
 	}
+
+	/**
+	* @brief Gives the Equalizer amplitude response in dB at a given frequency
+	*
+	* @param [in] freq   Frequency at which the filter magnitude is evaluated
+	*/
 
 	float Equalizer::getdBAmplitude(float freq) {
 		float dBAmplitude = 0;
