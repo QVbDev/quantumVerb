@@ -41,10 +41,12 @@ namespace reverb {
 
 		float getEQGain(int num);
 
+		int getNumFilters();
+
 
 	private:
 		juce::OwnedArray<Filter> filterSet;
-		std::array<float, 4> EQGains;
+		std::vector<float> EQGains;
 	};
 
 	struct InvalidFilterException : public std::exception {
