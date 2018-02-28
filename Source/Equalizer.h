@@ -35,11 +35,16 @@ namespace reverb {
 		void setFilterGain(float freq, int num);
 		void setFilterQ(float freq, int num);
 
+		float getFilterFrequency(int num);
+		float getFilterGain(int num);
+		float getFilterQ(int num);
+
+		float getEQGain(int num);
+
 
 	private:
-
-
 		juce::OwnedArray<Filter> filterSet;
+		std::array<float, 4> EQGains;
 	};
 
 	struct InvalidFilterException : public std::exception {

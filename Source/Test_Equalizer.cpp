@@ -87,7 +87,21 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 			dBPlot[i] = reverb::Filter::todB(fftBuffer[i]);
 		}
 
-	REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000), 10));
+	//Test band gains (at 0, f1, f2 and fmax)
+	REQUIRE(compareValues(fftBuffer[0], EQ.getEQGain(LOW)));
+
+	REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(PEAK1) / freqRes)], EQ.getEQGain(PEAK1)));
+
+	REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(PEAK2) / freqRes)], EQ.getEQGain(PEAK2)));
+
+	REQUIRE(compareValues(fftBuffer[(int)(FMAX / freqRes)], EQ.getEQGain(HIGH)));
+
+	//Test getdBAmplitude()
+
+	REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000)));
+
+
+
 
 	}
 

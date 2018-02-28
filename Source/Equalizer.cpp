@@ -133,6 +133,8 @@ namespace reverb {
 		if (num < 0 || num >= filterSet.size())
 			throw InvalidFilterException();
 
+			EQGains[num] = gain;
+
 			filterSet[num]->setGain(gain);
 
 	}
@@ -141,5 +143,33 @@ namespace reverb {
 			throw InvalidFilterException();
 
 			filterSet[num]->setQ(Q);
+	}
+
+	float Equalizer::getFilterFrequency(int num) {
+		if (num < 0 || num >= filterSet.size())
+			throw InvalidFilterException();
+
+		return filterSet[num]->frequency;
+	}
+
+	float Equalizer::getFilterGain(int num) {
+		if (num < 0 || num >= filterSet.size())
+			throw InvalidFilterException();
+
+		return filterSet[num]->gainFactor;
+	}
+
+	float Equalizer::getFilterQ(int num) {
+		if (num < 0 || num >= filterSet.size())
+			throw InvalidFilterException();
+
+		return filterSet[num]->gainFactor;
+	}
+
+	float Equalizer::getEQGain(int num) {
+		if (num < 0 || num >= filterSet.size())
+			throw InvalidFilterException();
+
+		return EQGains[num];
 	}
 }
