@@ -16,8 +16,6 @@ namespace reverb {
 		filterSet.add(new LowShelfFilter(processor));
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new PeakFilter(processor));
-		filterSet.add(new PeakFilter(processor));
-		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new HighShelfFilter(processor));
 
 		for (int i = 0; i < filterSet.size(); i++) {
@@ -38,15 +36,7 @@ namespace reverb {
 
 		setFilterFrequency(4000, HIGH);
 		setFilterGain(2, HIGH);
-		setFilterQ(4, HIGH);
-
-		setFilterFrequency(5000, 4);
-		setFilterGain(2, 4);
-		setFilterQ(4, 4);
-
-		setFilterFrequency(6000, 5);
-		setFilterGain(2, 5);
-		setFilterQ(0.71, 5);
+		setFilterQ(0.71, HIGH);
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
