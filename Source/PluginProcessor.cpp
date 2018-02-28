@@ -389,7 +389,15 @@ namespace reverb
 	void AudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 	{
         std::unique_ptr<juce::XmlElement> xmlState(parameters.state.createXml());
-        copyXmlToBinary(*xmlState, destData);
+        
+        if (xmlState)
+        {
+            copyXmlToBinary(*xmlState, destData);
+        }
+        else
+        {
+            logger.dualPrint(Logger::Level::Error, "Failed to get state information");
+        }
 	}
 
 	void AudioProcessor::setStateInformation(const void* data, int sizeInBytes)
@@ -398,7 +406,11 @@ namespace reverb
 
         if (xmlState && xmlState->hasTagName(parameters.state.getType()))
         {
-            parameters.state.fromXml(*xmlState);
+            parameters.state = juce::ValueTree::fromXml(*xmlState);
+        }
+        else
+        {
+            logger.dualPrint(Logger::Level::Error, "Failed to set state information");
         }
 	}
 
