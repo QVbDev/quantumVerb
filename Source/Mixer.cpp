@@ -10,6 +10,8 @@
 
 #include "Mixer.h"
 
+#include "Logger.h"
+
 namespace reverb
 {
 

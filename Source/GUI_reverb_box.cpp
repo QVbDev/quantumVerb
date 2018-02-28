@@ -5,10 +5,15 @@ namespace reverb {
     GUI_reverb_box::GUI_reverb_box(AudioProcessor& processor)
     {
         // Sliders
-        irLength.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-        irGain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-        outGain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-        wetRatio.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        irLength.setSliderStyle(juce::Slider::Rotary);
+        irGain.setSliderStyle(juce::Slider::Rotary);
+        outGain.setSliderStyle(juce::Slider::Rotary);
+        wetRatio.setSliderStyle(juce::Slider::Rotary);
+
+        irLength.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        irGain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        outGain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        wetRatio.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 
         irLength.setComponentID(processor.PID_IR_LENGTH);
         irGain.setComponentID(processor.PID_IR_GAIN);

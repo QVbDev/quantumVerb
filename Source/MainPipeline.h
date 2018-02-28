@@ -30,6 +30,8 @@ namespace reverb
         //==============================================================================
         MainPipeline(juce::AudioProcessor * processor);
 
+        ~MainPipeline() = default;
+
         //==============================================================================
         using Ptr = std::shared_ptr<MainPipeline>;
 
@@ -38,6 +40,14 @@ namespace reverb
                                   const juce::String& = "") override;
 
         virtual void exec(juce::AudioSampleBuffer& audio) override;
+
+        //==============================================================================
+        /**
+         * @brief Pipeline must always be executed
+         *
+         * @returns True
+         */
+        virtual bool needsToRun() const override { return true; }
 
         //==============================================================================
         void loadIR(juce::AudioSampleBuffer&& ir);

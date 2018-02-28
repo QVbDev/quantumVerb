@@ -15,8 +15,8 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
-    */
+     * TODO: Description
+     */
     class Task
     {
     public:
@@ -32,9 +32,14 @@ namespace reverb
 
         virtual void exec(juce::AudioSampleBuffer&) = 0;
 
+        virtual bool needsToRun() const { return mustExec; }
+
     protected:
         //==============================================================================
         juce::AudioProcessor * processor;
+
+        //==============================================================================
+        bool mustExec = true;
     };
 
 }

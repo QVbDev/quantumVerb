@@ -30,6 +30,7 @@ bool compareValues(const float a1, const float a2) {
 
 }
 
+#define compareFloats(a1, a2) std::abs(a2 - a1) <= 0.01
 
 
  // TODO: Test parameter changes
@@ -102,15 +103,15 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
 		//Test for gain at low freuquency
-		REQUIRE(compareValues(gain, fftBuffer[0]));
+		REQUIRE(compareFloats(gain, fftBuffer[0]));
 
 		//Test for gain at high frequency
-		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
+		REQUIRE(compareFloats(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
 
 		//Test for cut-off frequency
 		int cutOffIndex = (int)std::round(freq / freqRes);
 
-		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
+		REQUIRE(compareFloats(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing high-shelf filter") {
@@ -124,15 +125,15 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
 		//Test for gain at low frequency
-		REQUIRE(compareValues(1, fftBuffer[0]));
+		REQUIRE(compareFloats(1, fftBuffer[0]));
 
 		//Test for gain at high frequency
-		REQUIRE(compareValues(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
+		REQUIRE(compareFloats(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
 
 		//Test for cut-off frequency
 		int cutOffIndex = (int)std::round(freq / freqRes);
 
-		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
+		REQUIRE(compareFloats(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing peaking filter") {
@@ -148,11 +149,11 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		int peakIndex = (int)std::round(centerFreq / freqRes);
 
 		//Test for gain at center frequency
-		REQUIRE(compareValues(gain, fftBuffer[peakIndex]));
+		REQUIRE(compareFloats(gain, fftBuffer[peakIndex]));
 
 		//Test for gain at both ends of the spectrum
-		REQUIRE(compareValues(1, fftBuffer[0]));
-		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
+		REQUIRE(compareFloats(1, fftBuffer[0]));
+		REQUIRE(compareFloats(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
 	}
 
     /*

@@ -32,6 +32,7 @@ TEST_CASE("Mixer class is tested", "[Mixer]")
 	constexpr int numberChannel = 1;
 	constexpr std::chrono::milliseconds audioDurationMs (300);
 	const int audioNumSample = (int)std::ceil ((audioDurationMs.count () / 1000.0) * sampleRate);
+
 	// Create Mixer object
 	reverb::AudioProcessor processor;
 	processor.setPlayConfigDetails (numberChannel, numberChannel,

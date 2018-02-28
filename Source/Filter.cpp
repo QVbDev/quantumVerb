@@ -9,6 +9,8 @@
 #include "Filter.h"
 #include "PluginProcessor.h"
 
+#include "Logger.h"
+
 namespace reverb
 {
 
@@ -97,82 +99,82 @@ namespace reverb
      */
     void Filter::exec(juce::AudioSampleBuffer& ir)
     {
-		if (ir.getNumChannels() != 1)
-			throw ChannelNumberException();
+        buildFilter();
 
-		if (!assertValues())
-			throw WrongParameterException();
+        if (ir.getNumChannels() != 1)
+        {
+            logger.dualPrint(Logger::Level::Warning, "Filter: AudioBuffer channel count is not 1");
+            return;
+        }
 		
-		if (isOn) {
-
-			buildFilter();
+		if (isOn)
+        {
 			juce::dsp::AudioBlock<float> block(ir);
 
 			juce::dsp::ProcessContextReplacing<float> context(block);
 			juce::dsp::IIR::Filter<float>::process(context);
 		}
-		
     }
 
+    //==============================================================================
+    /**
+    * @brief (TODO) Brief description
+    *
+    * (TODO) Detailed description
+    */
 	bool Filter::isEnabled() {
 		return isOn;
 	}
 
+    /**
+    * @brief (TODO) Brief description
+    *
+    * (TODO) Detailed description
+    */
 	void Filter::enable() {
 		isOn = true;
 	}
 
+    /**
+    * @brief (TODO) Brief description
+    *
+    * (TODO) Detailed description
+    */
 	void Filter::disable() {
 		isOn = false;
 
 	}
 
-	bool Filter::assertValues() {
-		if (frequency > 0 && frequency <= FMAX && Q >= QMIN && Q <= QMAX && gainFactor >= invdB(GMIN) && gainFactor <= invdB(GMAX))
-			return true;
-		else
-			return false;
-	}
-
     //==============================================================================
     /**
-    * @brief Brief description
+    * @brief (TODO) Brief description
     *
-    * Detailed description
+    * (TODO) Detailed description
     */
     void LowShelfFilter::buildFilter()
     {
-		if (!assertValues())
-			throw WrongParameterException();
-
 		coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(processor->getSampleRate(), frequency, Q, gainFactor);
     }
 
     //==============================================================================
     /**
-    * @brief Brief description
+    * @brief (TODO) Brief description
     *
-    * Detailed description
+    * (TODO) Detailed description
     */
     void HighShelfFilter::buildFilter()
     {
-		if (!assertValues())
-			throw WrongParameterException();
-
 		coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), frequency, Q, gainFactor);
     }
 
     //==============================================================================
     /**
-    * @brief Brief description
+    * @brief (TODO) Brief description
     *
-    * Detailed description
+    * (TODO) Detailed description
     */
     void PeakFilter::buildFilter()
     {
-		if (!assertValues())
-			throw WrongParameterException();
-
 		coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(processor->getSampleRate(), frequency, Q, gainFactor);
     }
 

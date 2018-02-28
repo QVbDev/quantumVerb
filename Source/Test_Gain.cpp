@@ -11,6 +11,7 @@
 #include "Gain.h"
 #include <chrono>
 
+#define compareFloats(a1, a2) std::abs(a2 - a1) <= 0.01
 
 /**
  * How to write tests with Catch:
@@ -31,8 +32,10 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
 	constexpr int numberChannel = 1;
 	constexpr std::chrono::milliseconds audioDurationMs (300);
 	const int audioNumSample = (int)std::ceil ((audioDurationMs.count () / 1000.0) * sampleRate);
+
 	// Create Mixer object
 	reverb::AudioProcessor processor;
+
 	processor.setPlayConfigDetails (numberChannel, numberChannel,
 		sampleRate, audioNumSample);
 
@@ -53,6 +56,7 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
 		{
 			audio.setSample (0, i, 1);
 		}
+
 		float rmsAudio, rmsAudioGain;
 		rmsAudio = audio.getRMSLevel (0, 0, audioNumSample);
 
@@ -61,12 +65,15 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
 
 		REQUIRE (audioGain.getNumChannels () == 1);
 		REQUIRE (audioGain.getNumSamples () == audioNumSample);
+
 		for(int i = 0; i < audioNumSample; i++)
 		{
 			audioGain.setSample (0, i, 1);
 		}
 
 		gain.setGainFactor(GAIN_TEST);
+
+        REQUIRE(compareFloats(gain.getGainFactor(), GAIN_TEST));
 
 		//juce::Decibels decibelsToGain(float gain, float gainDb);
 		gain.exec (audioGain);

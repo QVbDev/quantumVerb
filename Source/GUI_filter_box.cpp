@@ -5,9 +5,13 @@ namespace reverb {
     GUI_filter_box::GUI_filter_box(AudioProcessor& processor, int index)
     {
         // Sliders
-        freq.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-        q.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-        gain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        freq.setSliderStyle(juce::Slider::Rotary);
+        q.setSliderStyle(juce::Slider::Rotary);
+        gain.setSliderStyle(juce::Slider::Rotary);
+
+        freq.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        q.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        gain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 
         juce::String filterIDPrefix = processor.PID_FILTER_PREFIX + std::to_string(index);
 

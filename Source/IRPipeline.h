@@ -45,13 +45,13 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
+        virtual bool needsToRun() const override;
+
+        //==============================================================================
         bool updateSampleRate(double sampleRate);
 
         //==============================================================================
         void loadIR(const std::string& irNameOrFilePath);
-
-        //==============================================================================
-        bool needsToRun() const { return mustExec; }
 
     protected:
         //==============================================================================
@@ -65,7 +65,6 @@ namespace reverb
 
         //==============================================================================
         double lastSampleRate = 0;
-        bool mustExec = true;
 
         //==============================================================================
         void loadIRFromBank(const std::string& irBuffer);

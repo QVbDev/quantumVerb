@@ -112,6 +112,48 @@ namespace reverb
 
     //==============================================================================
     /**
+     * @brief Check if this or any subtasks needs to be executed
+     *
+     * Pipeline must be executed if any IR-related parameters were changed since the
+     * last run.
+     *
+     * @returns True if IRPipeline must be executed
+     */
+    bool IRPipeline::needsToRun() const
+    {
+        if (mustExec)
+        {
+            return true;
+        }
+
+        for (auto& filter : filters)
+        {
+            if (filter->needsToRun())
+            {
+                return true;
+            }
+        }
+
+        if (timeStretch->needsToRun())
+        {
+            return true;
+        }
+
+        if (gain->needsToRun())
+        {
+            return true;
+        }
+
+        if (preDelay->needsToRun())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    //==============================================================================
+    /**
      * @brief Manipulate the input IR file and place it in the given buffer
      *
      * Applies filtering (EQ), time stretching (sample rate conversion) and gain to
@@ -124,6 +166,8 @@ namespace reverb
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& irChannelOut)
     {
+        loadIR(currentIR.toStdString());
+
         // Execute pipeline on IR channel
         for (auto& filter : filters)
         {

@@ -38,9 +38,11 @@ namespace reverb
 
     protected:
         //==============================================================================
-        float wetRatio;
-		juce::AudioSampleBuffer dryAudio;
+        juce::AudioSampleBuffer dryAudio;
 
+
+        //==============================================================================
+        float wetRatio = 0.0f;
     };
 
 }

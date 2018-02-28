@@ -7,7 +7,8 @@
 */
 
 #include "Gain.h"
-#include "PluginProcessor.h"
+
+#include "Logger.h"
 
 namespace reverb
 {
@@ -53,15 +54,6 @@ namespace reverb
 
         return changedConfig;
     }
-
-	//==============================================================================
-	/**
-	* @brief Destroys a Gain object
-
-	*/
-	Gain::~Gain()
-	{
-	}
 
     //==============================================================================
     /**

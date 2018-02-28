@@ -15,11 +15,11 @@ namespace reverb
 
 	//==============================================================================
 	/**
-	* @brief Derives from JUCE's Convolution base class. Computes the convolution
-	*        algorithm between the audio signal and the IR buffer.
-	*/
+	 * Derives from JUCE's Convolution base class. Computes the convolution
+	 * algorithm between the audio signal and the IR buffer.
+	 */
 	class Convolution : public Task,
-		public juce::dsp::Convolution
+		                protected juce::dsp::Convolution
 	{
 	public:
 		//==============================================================================

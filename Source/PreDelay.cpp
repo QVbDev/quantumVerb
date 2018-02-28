@@ -10,6 +10,8 @@
 
 #include "PreDelay.h"
 
+#include "Logger.h"
+
 #include <algorithm>
 
 namespace reverb

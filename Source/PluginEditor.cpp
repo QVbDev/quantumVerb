@@ -106,7 +106,8 @@ namespace reverb
         addAndMakeVisible(highShelf);
 
         // predelay slider config
-        preDelay.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        preDelay.setSliderStyle(juce::Slider::Rotary);
+        preDelay.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
         preDelay.setComponentID(p.PID_PREDELAY);
 
         preDelayAttachment.reset(new SliderAttachment(processor.parameters,

@@ -82,6 +82,6 @@ namespace reverb
         // the maximumBufferSize to handle and the sample rate for optional resampling.
         prepare(spec);
         copyAndLoadImpulseResponseFromBuffer(ir, spec.sampleRate,
-            (ir.getNumChannels() == 1 ? false : true), false, 0);
+            (ir.getNumChannels() == 1 ? false : true), false, false, 0);
     }
 }
