@@ -18,21 +18,21 @@ namespace reverb {
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new HighShelfFilter(processor));
 
-		setFilterFrequency(1000, LOW, false);
-		setFilterGain(2, LOW, false);
-		setFilterQ(0.71, LOW, false);
+		setFilterFrequency(1000, LOW);
+		setFilterGain(2, LOW);
+		setFilterQ(0.71, LOW);
 
-		setFilterFrequency(2000, PEAK1, false);
-		setFilterGain(2, PEAK1, false);
-		setFilterQ(4, PEAK1, false);
+		setFilterFrequency(2000, PEAK1);
+		setFilterGain(2, PEAK1);
+		setFilterQ(4, PEAK1);
 
-		setFilterFrequency(3000, PEAK2, false);
-		setFilterGain(2, PEAK2, false);
-		setFilterQ(4, PEAK2, false);
+		setFilterFrequency(3000, PEAK2);
+		setFilterGain(2, PEAK2);
+		setFilterQ(4, PEAK2);
 
-		setFilterFrequency(4000, HIGH, false);
-		setFilterGain(2, HIGH, false);
-		setFilterQ(0.71, HIGH, false);
+		setFilterFrequency(4000, HIGH);
+		setFilterGain(2, HIGH);
+		setFilterQ(0.71, HIGH);
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
@@ -48,12 +48,6 @@ namespace reverb {
 		//Update filter parameters before gain normalization
 
 		const int dim = filterSet.size();
-
-		for (int i = 0; i < filterSet.size(); i++) {
-			filterSet[i]->setFrequency(parameters.frequencySet[i]);
-			filterSet[i]->setGain(parameters.gainSet[i]);
-			filterSet[i]->setQ(parameters.QSet[i]);
-		}
 
 		float * evalFrequencies = new float[dim];
 
@@ -85,7 +79,6 @@ namespace reverb {
 
 		//Set gains to 1 dB for B matrix
 		for (int i = 0; i < filterSet.size(); i++) {
-			parameters.gainSet[i] = Filter::invdB(1.0f);
 			filterSet[i]->setGain(Filter::invdB(1.0f));
 		}
 		
@@ -110,8 +103,7 @@ namespace reverb {
 
 			for (int i = 0; i < dim; i++) {
 
-				parameters.gainSet[i] = Filter::invdB(lambda_data[i] * Filter::todB(parameters.gainSet[i]));
-				filterSet[i]->setGain(parameters.gainSet[i]);
+				filterSet[i]->setGain(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)));
 			}
 		}
 
@@ -131,32 +123,23 @@ namespace reverb {
 
 	}
 
-	void Equalizer::setFilterFrequency(float freq, int num, bool update) {
-		if (num < 0 || num > 3)
+	void Equalizer::setFilterFrequency(float freq, int num) {
+		if (num < 0 || num >= filterSet.size())
 			throw InvalidFilterException();
 
-			parameters.frequencySet[num] = freq;
-
-			if (update)
-				updateFilters();
+			filterSet[num]->setFrequency(freq);
 	}
-	void Equalizer::setFilterGain(float gain, int num, bool update) {
-		if (num < 0 || num > 3)
+	void Equalizer::setFilterGain(float gain, int num) {
+		if (num < 0 || num >= filterSet.size())
 			throw InvalidFilterException();
 
-			parameters.gainSet[num] = gain;
-
-			if (update)
-				updateFilters();
+			filterSet[num]->setGain(gain);
 
 	}
-	void Equalizer::setFilterQ(float Q, int num, bool update) {
-		if (num < 0 || num > 3)
+	void Equalizer::setFilterQ(float Q, int num) {
+		if (num < 0 || num >= filterSet.size())
 			throw InvalidFilterException();
 
-			parameters.QSet[num] = Q;
-			
-			if(update)
-				updateFilters();
+			filterSet[num]->setQ(Q);
 	}
 }

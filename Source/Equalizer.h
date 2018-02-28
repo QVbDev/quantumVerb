@@ -18,12 +18,6 @@ enum{LOW, PEAK1, PEAK2, HIGH};
 
 namespace reverb {
 
-	struct EQParameters {
-		std::array<float, 4> frequencySet;
-		std::array<float, 4> gainSet;
-		std::array<float, 4> QSet;
-	};
-
 	class Equalizer : public Task 
 	{
 
@@ -37,17 +31,15 @@ namespace reverb {
 
 		float getdBAmplitude(float freq);
 
-		void setFilterFrequency(float freq, int num, bool update = true);
-		void setFilterGain(float freq, int num, bool update = true);
-		void setFilterQ(float freq, int num, bool update = true);
+		void setFilterFrequency(float freq, int num);
+		void setFilterGain(float freq, int num);
+		void setFilterQ(float freq, int num);
 
 
 	private:
 
 
 		juce::OwnedArray<Filter> filterSet;
-
-		EQParameters parameters;
 	};
 
 	struct InvalidFilterException : public std::exception {
