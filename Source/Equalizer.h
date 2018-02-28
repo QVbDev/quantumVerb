@@ -54,4 +54,10 @@ namespace reverb {
 			return "Equalizer: Filter ID is invalid";
 		}
 	};
+
+	struct WrongEQFrequency : public std::exception {
+		const char * what() const throw () {
+			return "Equalizer: Filter frequency crosses over another one's ";
+		}
+	};
 }

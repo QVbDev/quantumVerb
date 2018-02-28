@@ -77,12 +77,12 @@ namespace reverb {
 
 		//Compute gamma column
 
-		for (int i = 0; i < filterSet.size(); i++) {
+		for (int i = 0; i < dim; i++) {
 			gamma_data[i] = filterSet[i]->getdBAmplitude(evalFrequencies[i]);
 		}
 
 		//Set gains to 1 dB for B matrix
-		for (int i = 0; i < filterSet.size(); i++) {
+		for (int i = 0; i < dim; i++) {
 			filterSet[i]->setGain(Filter::invdB(1.0f));
 		}
 		
@@ -97,7 +97,7 @@ namespace reverb {
 			//Compute B matrix with new gains
 			for (int i = 0; i < dim; i++) {
 
-				for (int j = 0; j < filterSet.size(); j++) {
+				for (int j = 0; j < dim; j++) {
 
 					B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(evalFrequencies[i]);
 				}
@@ -131,6 +131,23 @@ namespace reverb {
 		if (num < 0 || num >= filterSet.size())
 			throw InvalidFilterException();
 
+		//Check whether filter frequency crosses another one's
+
+		if (num == 0) {
+			if (freq >= filterSet[num + 1]->frequency)
+				throw WrongEQFrequency();
+		}
+
+		if (num == (filterSet.size() - 1)) {
+			if (freq <= filterSet[num - 1]->frequency)
+				throw WrongEQFrequency();
+		}
+
+		else {
+			if (freq <= filterSet[num - 1]->frequency || freq >= filterSet[num + 1]->frequency)
+				throw WrongEQFrequency();
+		}
+
 			filterSet[num]->setFrequency(freq);
 	}
 	void Equalizer::setFilterGain(float gain, int num) {
@@ -150,6 +167,7 @@ namespace reverb {
 	}
 
 	float Equalizer::getFilterFrequency(int num) {
+
 		if (num < 0 || num >= filterSet.size())
 			throw InvalidFilterException();
 
