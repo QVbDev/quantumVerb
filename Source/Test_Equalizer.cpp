@@ -62,7 +62,6 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 
 	// compute the next highest power of 2 of sample number
 	int order = std::ceil((log(sampleBuffer.getNumSamples()) / log(2)));
-
 	juce::dsp::FFT forwardFFT(order);
 
 	float * fftBuffer = new float[2 * forwardFFT.getSize()];

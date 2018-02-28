@@ -16,7 +16,7 @@
 # define M_PI 3.14159265358979323846f
 
 #define QMIN 0.2
-#define QMAX 6
+#define QMAX 6.5
 #define GMIN -24
 #define GMAX 15
 #define FMAX 21000

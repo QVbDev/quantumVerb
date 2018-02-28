@@ -18,20 +18,20 @@ namespace reverb {
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new HighShelfFilter(processor));
 
-		setFilterFrequency(100, LOW, false);
+		setFilterFrequency(1000, LOW, false);
 		setFilterGain(2, LOW, false);
 		setFilterQ(0.71, LOW, false);
 
 		setFilterFrequency(2000, PEAK1, false);
 		setFilterGain(2, PEAK1, false);
-		setFilterQ(0.71, PEAK1, false);
+		setFilterQ(4, PEAK1, false);
 
-		setFilterFrequency(5000, PEAK2, false);
+		setFilterFrequency(3000, PEAK2, false);
 		setFilterGain(2, PEAK2, false);
 		setFilterQ(4, PEAK2, false);
 
-		setFilterFrequency(10000, HIGH, false);
-		setFilterGain(3, HIGH, false);
+		setFilterFrequency(4000, HIGH, false);
+		setFilterGain(2, HIGH, false);
 		setFilterQ(0.71, HIGH, false);
 	}
 
@@ -57,7 +57,7 @@ namespace reverb {
 
 		float * evalFrequencies = new float[dim];
 
-		//Compute evaluation frequencies
+		//Set evaluation frequencies
 
 		evalFrequencies[0] = 0;
 
