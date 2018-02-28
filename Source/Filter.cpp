@@ -36,8 +36,6 @@ namespace reverb
     bool Filter::updateParams(const juce::AudioProcessorValueTreeState& params,
                               const juce::String& blockId)
     {
-        bool changedParams = false;
-
         // Frequency
         auto paramFreq = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_FREQ_SUFFIX);
 
@@ -49,7 +47,7 @@ namespace reverb
         if (*paramFreq != frequency)
         {
             frequency = *paramFreq;
-            changedParams = true;
+            mustExec = true;
         }
 
         // Q factor
@@ -63,7 +61,7 @@ namespace reverb
         if (*paramQ != Q)
         {
             Q = *paramQ;
-            changedParams = true;
+            mustExec = true;
         }
 
         // Gain
@@ -77,16 +75,16 @@ namespace reverb
         if (*paramGain != gainFactor)
         {
             gainFactor = *paramGain;
-            changedParams = true;
+            mustExec = true;
         }
 
         // Rebuild filter if necessary
-        if (changedParams)
+        if (mustExec)
         {
             buildFilter();
         }
 
-        return changedParams;
+        return mustExec;
     }
 
     //==============================================================================
@@ -113,6 +111,9 @@ namespace reverb
 
 			juce::dsp::ProcessContextReplacing<float> context(block);
 			juce::dsp::IIR::Filter<float>::process(context);
+
+            // Reset mustExec flag
+            mustExec = false;
 		}
     }
 

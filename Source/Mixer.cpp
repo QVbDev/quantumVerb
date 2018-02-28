@@ -25,8 +25,7 @@ namespace reverb
      */
     Mixer::Mixer(juce::AudioProcessor * processor)
         : Task(processor)
-    { 
-		wetRatio = 0.0;
+    {
     }
     
     //==============================================================================
@@ -38,8 +37,6 @@ namespace reverb
     bool Mixer::updateParams(const juce::AudioProcessorValueTreeState& params,
                              const juce::String& blockId)
     {
-        bool changedConfig = false;
-
         // Dry/wet ratio
         auto paramWetRatio = params.getRawParameterValue(blockId);
 
@@ -51,20 +48,11 @@ namespace reverb
         if (*paramWetRatio != wetRatio)
         {
             wetRatio = *paramWetRatio;
-            changedConfig = true;
+            mustExec = true;
         }
 
-        return changedConfig;
+        return mustExec;
     }
-
-	//==============================================================================
-	/**
-	* @brief Destroys a Mixer object
-
-	*/
-	Mixer::~Mixer()
-	{
-	}
 
     //==============================================================================
     /**
@@ -81,6 +69,8 @@ namespace reverb
 		dryAudio.applyGain (1 - wetRatio);
 		wetAudio.addFrom(0,0,dryAudio,0,0,wetAudio.getNumSamples(),1.0);
 
+        // Reset mustExec flag
+        mustExec = false;
     }
 
     //==============================================================================

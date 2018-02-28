@@ -161,16 +161,10 @@ namespace reverb
             mainPipelines.emplace_back(new MainPipeline(this));
         }
 
-        // Update parameters across pipelines
+        // Update sample rate across pipelines
         for (auto& pipeline : irPipelines)
         {
-            pipeline->updateParams(parameters);
             pipeline->updateSampleRate(sampleRate);
-        }
-
-        for (auto& pipeline : mainPipelines)
-        {
-            pipeline->updateParams(parameters);
         }
 
         // Add empty buffers to meet channel count if necessary
@@ -300,6 +294,10 @@ namespace reverb
 
         for (int i = 0; i < audio.getNumChannels(); ++i)
         {
+            // Update parameters across pipelines
+            irPipelines[i]->updateParams(parameters);
+            mainPipelines[i]->updateParams(parameters);
+
             channelThreads.emplace_back(&AudioProcessor::processChannel, this, i);
         }
 

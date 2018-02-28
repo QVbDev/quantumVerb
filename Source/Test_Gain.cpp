@@ -28,61 +28,51 @@ public:
 };
 
 TEST_CASE("Gain Class is tested", "[Gain]") {
-	constexpr int sampleRate = 88200;
-	constexpr int numberChannel = 1;
-	constexpr std::chrono::milliseconds audioDurationMs (300);
-	const int audioNumSample = (int)std::ceil ((audioDurationMs.count () / 1000.0) * sampleRate);
+    constexpr int SAMPLE_RATE = 88200;
+    constexpr int NUM_CHANNELS = 1;
+    constexpr std::chrono::milliseconds DURATION_MS(300);
+    const int NUM_SAMPLES = (int)std::ceil((DURATION_MS.count() / 1000.0) * SAMPLE_RATE);
 
-	// Create Mixer object
-	reverb::AudioProcessor processor;
+    // Create Mixer object
+    reverb::AudioProcessor processor;
 
-	processor.setPlayConfigDetails (numberChannel, numberChannel,
-		sampleRate, audioNumSample);
+    processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
+                                   SAMPLE_RATE, NUM_SAMPLES);
 
-	REQUIRE (processor.getSampleRate () == sampleRate);
-	GainMocked gain (&processor);
+    REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
-	SECTION("Apply gain to audio buffer"){
-		constexpr double GAIN_TEST = 2.0;
+    GainMocked gain(&processor);
 
-		// Create audio block
+    SECTION("Apply gain to audio buffer") {
+        constexpr float GAIN = 2.0f;
 
-		juce::AudioSampleBuffer audio (1, audioNumSample);
+        // Create audio block
+        juce::AudioSampleBuffer audio(1, NUM_SAMPLES);
 
-		REQUIRE (audio.getNumChannels () == 1);
-		REQUIRE (audio.getNumSamples () == audioNumSample);
+        REQUIRE(audio.getNumChannels() == NUM_CHANNELS);
+        REQUIRE(audio.getNumSamples() == NUM_SAMPLES);
 
-		for(int i = 0; i < audioNumSample; i++)
-		{
-			audio.setSample (0, i, 1);
-		}
+        for (int i = 0; i < NUM_SAMPLES; i++)
+        {
+            audio.setSample(0, i, 1);
+        }
 
-		float rmsAudio, rmsAudioGain;
-		rmsAudio = audio.getRMSLevel (0, 0, audioNumSample);
+        // Run gain
+        gain.setGainFactor(GAIN);
 
-		// Declare audio to apply gain
-		juce::AudioSampleBuffer audioGain (1, audioNumSample);
+        REQUIRE(compareFloats(gain.getGainFactor(), GAIN));
 
-		REQUIRE (audioGain.getNumChannels () == 1);
-		REQUIRE (audioGain.getNumSamples () == audioNumSample);
+        gain.exec(audio);
 
-		for(int i = 0; i < audioNumSample; i++)
-		{
-			audioGain.setSample (0, i, 1);
-		}
+        CHECK(audio.getNumChannels() == NUM_CHANNELS);
+        CHECK(audio.getNumSamples() == NUM_SAMPLES);
 
-		gain.setGainFactor(GAIN_TEST);
-
-        REQUIRE(compareFloats(gain.getGainFactor(), GAIN_TEST));
-
-		//juce::Decibels decibelsToGain(float gain, float gainDb);
-		gain.exec (audioGain);
-		rmsAudioGain = audioGain.getRMSLevel (0, 0, audioNumSample);
-
-
-		REQUIRE (rmsAudioGain / rmsAudio == GAIN_TEST);
-
-	}
-
+        // Since we started with audio(i) = 1 for all i < NUM_SAMPLES, we
+        // should now have audio(i) = GAIN for all i < NUM_SAMPLES.
+        for (int i = 0; i < NUM_SAMPLES; ++i)
+        {
+            CHECK(compareFloats(audio.getSample(0, i), GAIN));
+        }
+    }
 
 }

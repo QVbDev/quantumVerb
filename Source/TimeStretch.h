@@ -36,9 +36,12 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
+        void setOrigIRSampleRate(double sampleRate);
+
+    protected:
+        //==============================================================================
         double origIRSampleRate;
 
-    private:
         //==============================================================================
         std::unique_ptr<soundtouch::SoundTouch> soundtouch;
     };

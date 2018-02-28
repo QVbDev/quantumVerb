@@ -81,18 +81,18 @@ TEST_CASE("Use a Convolution object to convolve two buffers", "[Convolution]") {
         convolution.exec(audio);
 
         // IR should be unchanged
-        REQUIRE(ir.getNumChannels() == 1);
-        REQUIRE(ir.getNumSamples() == IR_NUM_SAMPLES);
+        CHECK(ir.getNumChannels() == 1);
+        CHECK(ir.getNumSamples() == IR_NUM_SAMPLES);
 
         for (int i = 0; i < IR_NUM_SAMPLES; ++i)
         {
             if (i < IR_NUM_SAMPLES / 2)
             {
-                REQUIRE(ir.getSample(0, i) == 0);
+                CHECK(ir.getSample(0, i) == 0);
             }
             else
             {
-                REQUIRE(ir.getSample(0, i) == 1);
+                CHECK(ir.getSample(0, i) == 1);
             }
         }
 
@@ -117,32 +117,32 @@ TEST_CASE("Use a Convolution object to convolve two buffers", "[Convolution]") {
                                                      IR_STEP_END - IR_STEP_START );
 
         // Validate output signal
-        const int64_t NUM_SAMPLES_EXPECTED = NUM_SAMPLES_PER_BLOCK * IR_NUM_SAMPLES;
+        const int64_t NUM_SAMPLES_EXPECTED = NUM_SAMPLES_PER_BLOCK + IR_NUM_SAMPLES - 1;
 
-        REQUIRE(audio.getNumChannels() == 1);
-        REQUIRE(audio.getNumSamples() == NUM_SAMPLES_EXPECTED);
+        CHECK(audio.getNumChannels() == 1);
+        CHECK(audio.getNumSamples() == NUM_SAMPLES_EXPECTED);
 
-        for (int i = 0; i < NUM_SAMPLES_EXPECTED; ++i)
+        for (int i = 0; i < audio.getNumSamples(); ++i)
         {
             if (i < RESULT_RAMP_UP_START)
             {
-                REQUIRE(audio.getSample(0, i) == 0);
+                CHECK(audio.getSample(0, i) == 0);
             }
             else if (i < RESULT_RAMP_UP_END)
             {
                 const int EXPECTED_VAL = i - RESULT_RAMP_UP_START;
-                REQUIRE(audio.getSample(0, i) == EXPECTED_VAL);
+                CHECK(audio.getSample(0, i) == EXPECTED_VAL);
             }
             else if (i < RESULT_RAMP_DOWN_START)
             {
-                REQUIRE(audio.getSample(0, i) == RESULT_PLATEAU_VAL);
+                CHECK(audio.getSample(0, i) == RESULT_PLATEAU_VAL);
             }
             else
             {
                 const int EXPECTED_VAL = RESULT_PLATEAU_VAL -
                                          (i - RESULT_RAMP_DOWN_START);
 
-                REQUIRE(audio.getSample(0, i) == EXPECTED_VAL);
+                CHECK(audio.getSample(0, i) == EXPECTED_VAL);
             }
         }
     }

@@ -22,6 +22,7 @@ namespace reverb
     public:
         //==============================================================================
         Gain(juce::AudioProcessor * processor);
+        ~Gain() = default;
 
         //==============================================================================
         using Ptr = std::shared_ptr<Gain>;
@@ -34,7 +35,7 @@ namespace reverb
 
     protected:
         //==============================================================================
-        float gainFactor;
+        float gainFactor = 1.0f;
     };
 
 }

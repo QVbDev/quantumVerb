@@ -90,7 +90,7 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
 
         for (int i = 0; i < NUM_CHANNELS; ++i)
         {
-            REQUIRE(!processor.getIRPipeline(i)->needsToRun());
+            CHECK(!processor.getIRPipeline(i)->needsToRun());
         }
 
         // Second exec (no IR pipeline)
@@ -102,16 +102,16 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
         
         for (int i = 0; i < NUM_CHANNELS; ++i)
         {
-            REQUIRE(!processor.getIRPipeline(i)->needsToRun());
+            CHECK(!processor.getIRPipeline(i)->needsToRun());
         }
 
-        REQUIRE(secondExecTime.count() < firstExecTime.count() - 10);
+        CHECK(secondExecTime.count() < firstExecTime.count() - 10);
     }
 
 
     SECTION("Regular processing should be real-time") {
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
-        constexpr int NUM_ITERATIONS = 500;
+        constexpr int NUM_ITERATIONS = 100;
 
         // Prepare impulse response
         processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
@@ -128,8 +128,12 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
             auto end = std::chrono::high_resolution_clock::now();
 
             auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        
-            REQUIRE(execTime.count() < MAX_EXEC_TIME_MS.count());
+            
+#ifdef NDEBUG
+            CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+#else
+            CHECK(execTime.count() < 2 * MAX_EXEC_TIME_MS.count());
+#endif
         }
     }
 }

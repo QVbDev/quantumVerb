@@ -40,13 +40,13 @@ namespace reverb
     bool MainPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
                                     const juce::String&)
     {
-        bool changedConfig = false;
+        bool changedParams = false;
 
         // Update child parameters
-        changedConfig |= gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
-        changedConfig |= dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
+        changedParams |= gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
+        changedParams |= dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
 
-        return changedConfig;
+        return changedParams;
     }
 
     //==============================================================================

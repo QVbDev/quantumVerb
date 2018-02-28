@@ -19,6 +19,14 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
+class TimeStretchMocked : public reverb::TimeStretch
+{
+public:
+    using TimeStretch::TimeStretch;
+
+    double getOrigIRSampleRate() { return origIRSampleRate; }
+};
+
 TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
     constexpr int SAMPLE_RATE = 88200;
     constexpr int NUM_CHANNELS = 2;
@@ -32,7 +40,7 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
 
     REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
-    reverb::TimeStretch timeStretch(&processor);
+    TimeStretchMocked timeStretch(&processor);
 
 
     SECTION("Stretch audio buffer (44.1 kHz -> 88.2 kHz)") {
@@ -48,15 +56,15 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         REQUIRE(ir.getNumSamples() == IR_ORIG_NUM_SAMPLES);
 
         // Prepare TimeStretch
-        timeStretch.origIRSampleRate = IR_ORIG_SAMPLE_RATE;
+        timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
 
-        REQUIRE(timeStretch.origIRSampleRate == IR_ORIG_SAMPLE_RATE);
+        REQUIRE(timeStretch.getOrigIRSampleRate() == IR_ORIG_SAMPLE_RATE);
 
         // Run TimeStretch
         timeStretch.exec(ir);
 
-        REQUIRE(ir.getNumChannels() == NUM_CHANNELS);
-        REQUIRE(ir.getNumSamples() == IR_EXPECTED_NUM_SAMPLES);
+        CHECK(ir.getNumChannels() == NUM_CHANNELS);
+        CHECK(ir.getNumSamples() == IR_EXPECTED_NUM_SAMPLES);
     }
 
 
@@ -73,14 +81,14 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         REQUIRE(ir.getNumSamples() == IR_ORIG_NUM_SAMPLES);
 
         // Prepare TimeStretch
-        timeStretch.origIRSampleRate = IR_ORIG_SAMPLE_RATE;
+        timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
 
-        REQUIRE(timeStretch.origIRSampleRate == (double)IR_ORIG_SAMPLE_RATE);
+        REQUIRE(timeStretch.getOrigIRSampleRate() == (double)IR_ORIG_SAMPLE_RATE);
 
         // Run TimeStretch
         timeStretch.exec(ir);
 
-        REQUIRE(ir.getNumChannels() == NUM_CHANNELS);
-        REQUIRE(ir.getNumSamples() == IR_EXPECTED_NUM_SAMPLES);
+        CHECK(ir.getNumChannels() == NUM_CHANNELS);
+        CHECK(ir.getNumSamples() == IR_EXPECTED_NUM_SAMPLES);
     }
 }

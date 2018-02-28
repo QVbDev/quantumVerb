@@ -17,6 +17,9 @@
 namespace reverb
 {
 
+    // Define static IR mutex for use across IRPipelines
+    std::mutex IRPipeline::irMutex;
+
     //==============================================================================
     /**
      * @brief Constructs an IRPipeline object associated with an AudioProcessor
@@ -40,11 +43,6 @@ namespace reverb
         timeStretch = std::make_shared<TimeStretch>(processor);
         gain = std::make_shared<Gain>(processor);
         preDelay = std::make_shared<PreDelay>(processor);
-
-        // Get default IR from bank
-        auto& firstIRName = irBank.buffers.begin()->first;
-
-        loadIR(firstIRName);
     }
 
     //==============================================================================
@@ -59,8 +57,6 @@ namespace reverb
     bool IRPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String&)
     {
-        bool changedConfig = false;
-
         // Update pipeline parameters
         auto paramIRChoice = params.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE);
 
@@ -70,23 +66,25 @@ namespace reverb
 
             loadIR(currentIR.toStdString());
 
-            changedConfig = true;
+            mustExec = true;
         }
 
         // Update child parameters
         for (int i = 0; i < filters.size(); ++i)
         {
             std::string filterId = AudioProcessor::PID_FILTER_PREFIX + std::to_string(i);
-            changedConfig |= filters[i]->updateParams(params, filterId);
+            mustExec |= filters[i]->updateParams(params, filterId);
         }
 
-        changedConfig |= gain->updateParams(params, AudioProcessor::PID_IR_GAIN);
-        changedConfig |= preDelay->updateParams(params, AudioProcessor::PID_PREDELAY);
+        mustExec |= gain->updateParams(params, AudioProcessor::PID_IR_GAIN);
+        mustExec |= preDelay->updateParams(params, AudioProcessor::PID_PREDELAY);
 
-        // Update mustExec flag
-        mustExec |= changedConfig;
+        if (mustExec)
+        {
+            loadIR(currentIR.toStdString());
+        }
 
-        return changedConfig;
+        return mustExec;
     }
 
     //==============================================================================
@@ -103,8 +101,8 @@ namespace reverb
     {
         if (sampleRate != lastSampleRate)
         {
-            mustExec = true;
             lastSampleRate = sampleRate;
+            mustExec = true;
         }
 
         return mustExec;
@@ -128,7 +126,8 @@ namespace reverb
 
         for (auto& filter : filters)
         {
-            if (filter->needsToRun())
+            if (filter->needsToRun() &&
+                filter->isEnabled())
             {
                 return true;
             }
@@ -166,8 +165,6 @@ namespace reverb
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& irChannelOut)
     {
-        loadIR(currentIR.toStdString());
-
         // Execute pipeline on IR channel
         for (auto& filter : filters)
         {
@@ -192,7 +189,7 @@ namespace reverb
         // Use move semantics to write to output IR channel
         irChannelOut = std::move(irChannel);
 
-        // Disable mustExec flag
+        // Reset mustExec flag
         mustExec = false;
     }
 
@@ -209,6 +206,8 @@ namespace reverb
      */
     void IRPipeline::loadIR(const std::string& irNameOrFilePath)
     {
+        std::lock_guard<std::mutex> lock(irMutex);
+
         if (irNameOrFilePath.empty())
         {
             throw std::invalid_argument("Received invalid IR name/path");
@@ -268,7 +267,7 @@ namespace reverb
         }
 
         // Set parameters based on current impulse response
-        timeStretch->origIRSampleRate = irSampleRate;
+        timeStretch->setOrigIRSampleRate(irSampleRate);
 
         // Resume processing
         processor->suspendProcessing(false);
@@ -317,7 +316,7 @@ namespace reverb
         reader->read(&irChannel, 0, numSamples, 0, channelIdx == 0, channelIdx == 1);
 
         // Set parameters based on current impulse response
-        timeStretch->origIRSampleRate = reader->sampleRate;
+        timeStretch->setOrigIRSampleRate(reader->sampleRate);
 
         // Resume processing
         processor->suspendProcessing(false);

@@ -50,6 +50,19 @@ namespace reverb
 
     //==============================================================================
     /**
+     * @brief Set sample rate for future IR buffer to process
+     *
+     * Informs TimeStretch block of original sample rate for IR buffer that wil be
+     * received. Also sets the mustExec flag.
+     */
+    void TimeStretch::setOrigIRSampleRate(double sampleRate)
+    {
+        origIRSampleRate = sampleRate;
+        mustExec = true;
+    }
+
+    //==============================================================================
+    /**
      * @brief Apply time stretching algorithm to input IR buffer to change sample rate
      *
      * Stretch or compress input buffer by a factor proportional to original and desired
@@ -124,6 +137,9 @@ namespace reverb
                 soundtouch->receiveSamples(curWritePtr, ir.getNumSamples() - curSample);
             }
         }
+
+        // Reset mustExec flag
+        mustExec = false;
     }
 
 }

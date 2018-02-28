@@ -69,12 +69,12 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         preDelay.exec(ir);
 
-        REQUIRE(ir.getNumChannels() == 1);
-        REQUIRE(ir.getNumSamples() == IR_SIZE);
+        CHECK(ir.getNumChannels() == 1);
+        CHECK(ir.getNumSamples() == IR_SIZE);
 
         for (int i = 0; i < IR_SIZE; ++i)
         {
-            REQUIRE(ir.getSample(0, i) == IR_VAL_OFFSET + i);
+            CHECK(ir.getSample(0, i) == IR_VAL_OFFSET + i);
         }
     }
 
@@ -89,17 +89,17 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         preDelay.exec(ir);
 
-        REQUIRE(ir.getNumChannels() == 1);
-        REQUIRE(ir.getNumSamples() == IR_SIZE + EXPECTED_NUM_SAMPLES);
+        CHECK(ir.getNumChannels() == 1);
+        CHECK(ir.getNumSamples() == IR_SIZE + EXPECTED_NUM_SAMPLES);
 
         for (int i = 0; i < EXPECTED_NUM_SAMPLES; ++i)
         {
-            REQUIRE(ir.getSample(0, i) == 0);
+            CHECK(ir.getSample(0, i) == 0);
         }
 
         for (int i = EXPECTED_NUM_SAMPLES; i < ir.getNumSamples(); ++i)
         {
-            REQUIRE(ir.getSample(0, i) == IR_VAL_OFFSET + (i - EXPECTED_NUM_SAMPLES));
+            CHECK(ir.getSample(0, i) == IR_VAL_OFFSET + (i - EXPECTED_NUM_SAMPLES));
         }
     }
 
@@ -120,6 +120,6 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
             gotException = true;
         }
 
-        REQUIRE(gotException);
+        CHECK(gotException);
     }
 }

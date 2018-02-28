@@ -37,8 +37,6 @@ namespace reverb
     bool PreDelay::updateParams(const juce::AudioProcessorValueTreeState& params,
                                 const juce::String& blockId)
     {
-        bool changedConfig = false;
-
         // Delay (ms)
         auto paramDelayMs = params.getRawParameterValue(blockId);
 
@@ -50,10 +48,10 @@ namespace reverb
         if (*paramDelayMs != delayMs)
         {
             delayMs = *paramDelayMs;
-            changedConfig = true;
+            mustExec = true;
         }
 
-        return changedConfig;
+        return mustExec;
     }
 
     //==============================================================================
@@ -99,8 +97,11 @@ namespace reverb
                irReadPtr,
                ir.getNumSamples() * sizeof(irReadPtr[0]));
 
-        // Use move semantics to replace IR buffer with created buffer
-        ir = std::move(irCopy);
+        // Copy delayed IR to output buffer
+        ir = irCopy;
+
+        // Reset mustExec flag
+        mustExec = false;
     }
 
 }

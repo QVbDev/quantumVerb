@@ -22,7 +22,7 @@ namespace reverb
     public:
         //==============================================================================
         Mixer(juce::AudioProcessor * processor);
-		~Mixer ();
+        ~Mixer() = default;
 
         //==============================================================================
         using Ptr = std::shared_ptr<Mixer>;

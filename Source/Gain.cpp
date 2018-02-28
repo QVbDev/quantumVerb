@@ -24,7 +24,6 @@ namespace reverb
     Gain::Gain(juce::AudioProcessor * processor)
         : Task(processor)
     {
-		gainFactor = 1.0;
     }
     
     //==============================================================================
@@ -36,8 +35,6 @@ namespace reverb
     bool Gain::updateParams(const juce::AudioProcessorValueTreeState& params,
                             const juce::String& blockId)
     {
-        bool changedConfig = false;
-
         // Gain factor
         auto paramGain = params.getRawParameterValue(blockId);
 
@@ -49,10 +46,10 @@ namespace reverb
         if (*paramGain != gainFactor)
         {
             gainFactor = *paramGain;
-            changedConfig = true;
+            mustExec = true;
         }
 
-        return changedConfig;
+        return mustExec;
     }
 
     //==============================================================================
@@ -66,7 +63,9 @@ namespace reverb
     void Gain::exec(juce::AudioSampleBuffer& buffer)
     {
 		buffer.applyGain (gainFactor);
-		
+
+        // Reset mustExec flag
+        mustExec = false;
     }
 
 }

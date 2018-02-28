@@ -117,7 +117,7 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
 
         auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-        REQUIRE(execTime.count() < MAX_EXEC_TIME_MS.count());
+        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
     }
 
 
@@ -138,6 +138,6 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
 
         irPipeline.exec(irOut);
 
-        REQUIRE(irOut.getNumSamples() == MAX_NUM_SAMPLES);
+        CHECK(irOut.getNumSamples() == MAX_NUM_SAMPLES);
     }
 }

@@ -17,6 +17,7 @@
 #include "TimeStretch.h"
 
 #include <array>
+#include <mutex>
 #include <string>
 
 namespace reverb
@@ -67,6 +68,8 @@ namespace reverb
         double lastSampleRate = 0;
 
         //==============================================================================
+        static std::mutex irMutex;
+
         void loadIRFromBank(const std::string& irBuffer);
         void loadIRFromDisk(const std::string& irFilePath);
 
