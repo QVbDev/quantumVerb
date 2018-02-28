@@ -4334,13 +4334,13 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Equalizer.h">
-      <Filter>QuantumReverb\source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\GUI_filter_box.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\GUI_reverb_box.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Equalizer.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
   </ItemGroup>

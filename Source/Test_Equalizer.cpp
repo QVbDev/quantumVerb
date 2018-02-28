@@ -62,13 +62,17 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 
 	// compute the next highest power of 2 of sample number
 	int order = std::ceil((log(sampleBuffer.getNumSamples()) / log(2)));
+
 	juce::dsp::FFT forwardFFT(order);
+
 	float * fftBuffer = new float[2 * forwardFFT.getSize()];
 
 	memset(fftBuffer, 0, 2 * forwardFFT.getSize() * sizeof(*fftBuffer));
 
 	//Compute frequency resolution
 	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
+
+	float * dBPlot = new float[numSamples];
 
 
 	SECTION("Testing equalizer") {
@@ -80,9 +84,13 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
-
+		for (int i = 0; i < numSamples; i++) {
+			dBPlot[i] = reverb::Filter::todB(fftBuffer[i]);
+		}
 
 	REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000)));
 
 	}
+
+	delete[] fftBuffer;
 }
