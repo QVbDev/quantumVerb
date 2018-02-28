@@ -18,12 +18,12 @@ namespace reverb {
 		filterSet.add(new PeakFilter(processor));
 		filterSet.add(new HighShelfFilter(processor));
 
-		setFilterFrequency(1000, LOW, false);
+		setFilterFrequency(100, LOW, false);
 		setFilterGain(2, LOW, false);
 		setFilterQ(0.71, LOW, false);
 
 		setFilterFrequency(2000, PEAK1, false);
-		setFilterGain(0.5, PEAK1, false);
+		setFilterGain(2, PEAK1, false);
 		setFilterQ(0.71, PEAK1, false);
 
 		setFilterFrequency(5000, PEAK2, false);
@@ -85,30 +85,9 @@ namespace reverb {
 
 		//Set gains to 1 dB for B matrix
 		for (int i = 0; i < filterSet.size(); i++) {
+			parameters.gainSet[i] = Filter::invdB(1.0f);
 			filterSet[i]->setGain(Filter::invdB(1.0f));
 		}
-
-		
-		//Compute B matrix
-		for (int i = 0; i < dim; i++) {
-
-			for (int j = 0; j < dim; j++) {
-
-				B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(evalFrequencies[i]);
-			}
-		}
-
-		memcpy(lambda_data, gamma_data, filterSet.size() * sizeof(float));
-
-		//Solve equation
-		B.solve(lambda);
-
-		//Set computed gains
-		for (int i = 0; i < dim; i++) {
-			parameters.gainSet[i] = Filter::invdB(lambda_data[i]);
-			filterSet[i]->setGain(parameters.gainSet[i]);
-		}
-
 		
 
 

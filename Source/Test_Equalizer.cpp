@@ -88,7 +88,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 			dBPlot[i] = reverb::Filter::todB(fftBuffer[i]);
 		}
 
-	REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000)));
+	REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000), 15));
 
 	}
 
