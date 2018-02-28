@@ -30,9 +30,9 @@ namespace reverb {
 		setFilterGain(2, PEAK2, false);
 		setFilterQ(4, PEAK2, false);
 
-		setFilterFrequency(15000, HIGH, false);
+		setFilterFrequency(10000, HIGH, false);
 		setFilterGain(3, HIGH, false);
-		setFilterQ(0.5, HIGH, false);
+		setFilterQ(0.71, HIGH, false);
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
@@ -47,7 +47,7 @@ namespace reverb {
 
 		//Update filter parameters before gain normalization
 
-		
+		const int dim = filterSet.size();
 
 		for (int i = 0; i < filterSet.size(); i++) {
 			filterSet[i]->setFrequency(parameters.frequencySet[i]);
@@ -55,9 +55,23 @@ namespace reverb {
 			filterSet[i]->setQ(parameters.QSet[i]);
 		}
 
-		juce::dsp::Matrix<float> B(filterSet.size(), filterSet.size());
-		juce::dsp::Matrix<float> gamma(filterSet.size(), 1);
-		juce::dsp::Matrix<float> lambda(filterSet.size(), 1);
+		float * evalFrequencies = new float[dim];
+
+		//Compute evaluation frequencies
+
+		evalFrequencies[0] = 0;
+
+		for (int i = 1; i < dim - 1; i++) {
+			evalFrequencies[i] = filterSet[i]->frequency;
+		}
+
+		evalFrequencies[(dim - 1)] = FMAX;
+
+		//Create Matrix objects
+
+		juce::dsp::Matrix<float> B(dim, dim);
+		juce::dsp::Matrix<float> gamma(dim, 1);
+		juce::dsp::Matrix<float> lambda(dim, 1);
 
 		float * B_data = B.getRawDataPointer();
 		float * gamma_data = gamma.getRawDataPointer();
@@ -66,7 +80,7 @@ namespace reverb {
 		//Compute gamma column
 
 		for (int i = 0; i < filterSet.size(); i++) {
-			gamma_data[i] = filterSet[i]->getdBAmplitude(filterSet[i]->frequency);
+			gamma_data[i] = filterSet[i]->getdBAmplitude(evalFrequencies[i]);
 		}
 
 		//Set gains to 1 dB for B matrix
@@ -74,13 +88,13 @@ namespace reverb {
 			filterSet[i]->setGain(Filter::invdB(1.0f));
 		}
 
-
+		
 		//Compute B matrix
-		for (int i = 0; i < filterSet.size(); i++) {
+		for (int i = 0; i < dim; i++) {
 
-			for (int j = 0; j < filterSet.size(); j++) {
+			for (int j = 0; j < dim; j++) {
 
-				B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(filterSet[i]->frequency);
+				B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(evalFrequencies[i]);
 			}
 		}
 
@@ -90,36 +104,39 @@ namespace reverb {
 		B.solve(lambda);
 
 		//Set computed gains
-		for (int i = 0; i < filterSet.size(); i++) {
+		for (int i = 0; i < dim; i++) {
 			parameters.gainSet[i] = Filter::invdB(lambda_data[i]);
 			filterSet[i]->setGain(parameters.gainSet[i]);
 		}
 
+		
 
-		//Correction algorithm (3 iterations)
+
+		//Correction algorithm (5 iterations)
 
 		for (int k = 0; k < 5; k++) {
 
-			memcpy(lambda_data, gamma_data, filterSet.size() * sizeof(float));
+			memcpy(lambda_data, gamma_data, dim * sizeof(float));
 
 			//Compute B matrix with new gains
-			for (int i = 0; i < filterSet.size(); i++) {
+			for (int i = 0; i < dim; i++) {
 
 				for (int j = 0; j < filterSet.size(); j++) {
 
-					B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(filterSet[i]->frequency);
+					B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(evalFrequencies[i]);
 				}
 			}
 
 			B.solve(lambda);
 
-			for (int i = 0; i < filterSet.size(); i++) {
+			for (int i = 0; i < dim; i++) {
 
 				parameters.gainSet[i] = Filter::invdB(lambda_data[i] * Filter::todB(parameters.gainSet[i]));
 				filterSet[i]->setGain(parameters.gainSet[i]);
 			}
 		}
 
+		delete[] evalFrequencies;
 
 
 	}
