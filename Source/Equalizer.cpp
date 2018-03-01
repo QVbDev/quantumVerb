@@ -41,17 +41,19 @@ namespace reverb {
 		setFilterQ(0.71, HIGH);
 	}
 
-	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
-		updateFilters();
+	void Equalizer::exec(juce::AudioSampleBuffer& ir) 
+	
+	{
+		calibrateFilters();
 
 		for (int i = 0; i < filterSet.size(); i++) {
 			filterSet[i]->exec(ir);
 		}
 	}
 
-	void Equalizer::updateFilters() {
-
-		//Update filter parameters before gain normalization
+	void Equalizer::calibrateFilters() 
+	
+	{
 
 		const int dim = filterSet.size();
 
@@ -124,7 +126,9 @@ namespace reverb {
 	* @param [in] freq   Frequency at which the filter magnitude is evaluated
 	*/
 
-	float Equalizer::getdBAmplitude(float freq) {
+	float Equalizer::getdBAmplitude(float freq) 
+	
+	{
 		float dBAmplitude = 0;
 
 		for (int i = 0; i < filterSet.size(); i++) {
@@ -135,75 +139,89 @@ namespace reverb {
 
 	}
 
-	void Equalizer::setFilterFrequency(float freq, int num) {
-		if (num < 0 || num >= filterSet.size())
-			throw InvalidFilterException();
+	void Equalizer::setFilterFrequency(float freq, int num) 
+	
+	{
+		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
 		//Check whether filter frequency crosses another one's
 
-		if (num == 0) {
-			if (freq >= filterSet[num + 1]->frequency)
-				throw WrongEQFrequency();
+		if (num == 0)
+		
+		{
+			if (freq >= filterSet[num + 1]->frequency) throw WrongEQFrequency();
 		}
 
-		if (num == (filterSet.size() - 1)) {
-			if (freq <= filterSet[num - 1]->frequency)
-				throw WrongEQFrequency();
+		if (num == (filterSet.size() - 1)) 
+		
+		{
+			if (freq <= filterSet[num - 1]->frequency) throw WrongEQFrequency();
 		}
 
-		else {
-			if (freq <= filterSet[num - 1]->frequency || freq >= filterSet[num + 1]->frequency)
+		else 
+		
+		{
+			if (freq <= filterSet[num - 1]->frequency || freq >= filterSet[num + 1]->frequency) 
 				throw WrongEQFrequency();
 		}
 
 			filterSet[num]->setFrequency(freq);
 	}
-	void Equalizer::setFilterGain(float gain, int num) {
-		if (num < 0 || num >= filterSet.size())
-			throw InvalidFilterException();
+	void Equalizer::setFilterGain(float gain, int num) 
+	
+	{
+		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
 			EQGains[num] = gain;
 
 			filterSet[num]->setGain(gain);
 
 	}
-	void Equalizer::setFilterQ(float Q, int num) {
-		if (num < 0 || num >= filterSet.size())
-			throw InvalidFilterException();
+
+	void Equalizer::setFilterQ(float Q, int num) 
+	
+	{
+		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
 			filterSet[num]->setQ(Q);
 	}
 
-	float Equalizer::getFilterFrequency(int num) {
+	float Equalizer::getFilterFrequency(int num) 
+	
+	{
 
-		if (num < 0 || num >= filterSet.size())
-			throw InvalidFilterException();
+		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
 		return filterSet[num]->frequency;
 	}
 
-	float Equalizer::getFilterGain(int num) {
-		if (num < 0 || num >= filterSet.size())
-			throw InvalidFilterException();
+	float Equalizer::getFilterGain(int num) 
+	
+	{
+		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
 		return filterSet[num]->gainFactor;
 	}
 
-	float Equalizer::getFilterQ(int num) {
-		if (num < 0 || num >= filterSet.size())
-			throw InvalidFilterException();
+	float Equalizer::getFilterQ(int num) 
+	
+	{
+		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
 		return filterSet[num]->gainFactor;
 	}
 
-	float Equalizer::getEQGain(int num) {
-		if (num < 0 || num >= filterSet.size())
-			throw InvalidFilterException();
+	float Equalizer::getEQGain(int num) 
+	
+	{
+		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
 		return EQGains[num];
 	}
 
-	int Equalizer::getNumFilters() {
+	int Equalizer::getNumFilters() 
+	
+	{
 		return filterSet.size();
 	}
 }

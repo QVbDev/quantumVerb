@@ -28,16 +28,16 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	/**
 	* Processor preparation
 	*/
-	constexpr int sampleRate = 44100;
-	constexpr int channelNumber = 1;
+	constexpr int SAMPLE_RATE = 44100;
+	constexpr int CHANNEL_NUM = 1;
 	constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
-	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * sampleRate;
+	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE;
 
 
 	reverb::AudioProcessor processor;
-	processor.setPlayConfigDetails(channelNumber, channelNumber, sampleRate, std::ceil(NUM_SAMPLES_PER_BLOCK));
+	processor.setPlayConfigDetails(CHANNEL_NUM, CHANNEL_NUM, SAMPLE_RATE, std::ceil(NUM_SAMPLES_PER_BLOCK));
 
-	REQUIRE(processor.getSampleRate() == sampleRate);
+	REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
 	//Test invdB function
 	REQUIRE((int)reverb::Filter::invdB(0) == 1);
@@ -51,7 +51,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 	int numSamples = 44100;
 
-	juce::AudioBuffer<float> sampleBuffer(channelNumber, numSamples);
+	juce::AudioBuffer<float> sampleBuffer(CHANNEL_NUM, numSamples);
 
 	float * const buffer = sampleBuffer.getWritePointer(0);
 
@@ -76,11 +76,11 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	memset(fftBuffer, 0, 2*forwardFFT.getSize()*sizeof(*fftBuffer));
 
 	//Compute frequency resolution
-	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
+	float freqRes = (float)SAMPLE_RATE / (float)forwardFFT.getSize();
 
 
 	SECTION("Testing low-shelf filter") {
-		float gain = reverb::Filter::invdB(-10);
+		float gain = reverb::Filter::invdB(10);
 		float freq = 1000;
 
 		reverb::LowShelfFilter filter(&processor, freq, 0.71, gain);
@@ -116,7 +116,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	}
 
 	SECTION("Testing high-shelf filter") {
-		float gain = reverb::Filter::invdB(-10);
+		float gain = reverb::Filter::invdB(10);
 		float freq = 1000;
 
 		reverb::HighShelfFilter filter(&processor, freq, 0.71, gain);
@@ -144,7 +144,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	}
 
 	SECTION("Testing peaking filter") {
-		float gain = reverb::Filter::invdB(-10);
+		float gain = reverb::Filter::invdB(10);
 		float centerFreq = 5000;
 
 		reverb::PeakFilter filter(&processor, centerFreq, 0.71, gain);

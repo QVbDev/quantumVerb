@@ -88,7 +88,8 @@ namespace reverb
     {
     public:
         //==============================================================================
-        using Filter::Filter;   // Inherit constructor
+        using Filter::Filter;
+		// Inherit constructor
         
         //==============================================================================
         virtual void buildFilter() override;

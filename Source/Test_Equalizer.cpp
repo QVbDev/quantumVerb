@@ -25,16 +25,16 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 	/**
 	* Processor preparation
 	*/
-	constexpr int sampleRate = 44100;
-	constexpr int channelNumber = 1;
+	constexpr int SAMPLE_RATE = 44100;
+	constexpr int CHANNEL_NUM = 1;
 	constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
-	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * sampleRate;
+	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE;
 
 
 	reverb::AudioProcessor processor;
-	processor.setPlayConfigDetails(channelNumber, channelNumber, sampleRate, std::ceil(NUM_SAMPLES_PER_BLOCK));
+	processor.setPlayConfigDetails(CHANNEL_NUM, CHANNEL_NUM, SAMPLE_RATE, std::ceil(NUM_SAMPLES_PER_BLOCK));
 
-	REQUIRE(processor.getSampleRate() == sampleRate);
+	REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
 	//==============================================================================
 	/**
@@ -43,7 +43,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 
 	int numSamples = 44100;
 
-	juce::AudioBuffer<float> sampleBuffer(channelNumber, numSamples);
+	juce::AudioBuffer<float> sampleBuffer(CHANNEL_NUM, numSamples);
 
 	float * const buffer = sampleBuffer.getWritePointer(0);
 
@@ -69,7 +69,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 	memset(fftBuffer, 0, 2 * forwardFFT.getSize() * sizeof(*fftBuffer));
 
 	//Compute frequency resolution
-	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
+	float freqRes = (float)SAMPLE_RATE / (float)forwardFFT.getSize();
 
 	float * dBPlot = new float[numSamples];
 
