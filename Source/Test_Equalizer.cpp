@@ -73,10 +73,10 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 
 	float * dBPlot = new float[numSamples];
 
+	reverb::Equalizer EQ(&processor);
+
 
 	SECTION("Testing equalizer") {
-
-		reverb::Equalizer EQ(&processor);
 
 		EQ.exec(sampleBuffer);
 
