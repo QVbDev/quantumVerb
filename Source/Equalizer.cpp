@@ -141,21 +141,6 @@ namespace reverb {
 
 		//Check whether filter frequency crosses another one's
 
-		if (num == 0) {
-			if (freq >= filterSet[num + 1]->frequency)
-				throw WrongEQFrequency();
-		}
-
-		if (num == (filterSet.size() - 1)) {
-			if (freq <= filterSet[num - 1]->frequency)
-				throw WrongEQFrequency();
-		}
-
-		else {
-			if (freq <= filterSet[num - 1]->frequency || freq >= filterSet[num + 1]->frequency)
-				throw WrongEQFrequency();
-		}
-
 			filterSet[num]->setFrequency(freq);
 	}
 	void Equalizer::setFilterGain(float gain, int num) {
