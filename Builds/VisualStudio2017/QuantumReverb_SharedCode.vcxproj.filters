@@ -2,6 +2,9 @@
 
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="QuantumReverb\resources\Fonts">
+      <UniqueIdentifier>{BF23B655-3DC6-22D4-67B8-7FA8AD8747D8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="QuantumReverb\resources\ImpulseResponses">
       <UniqueIdentifier>{A40FE052-788C-C8C2-765E-AC42E43A766B}</UniqueIdentifier>
     </Filter>
@@ -442,6 +445,12 @@
     <ClCompile Include="..\..\Source\IRPipeline.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Logger.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\LookAndFeel.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\MainPipeline.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
@@ -458,9 +467,6 @@
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TimeStretch.cpp">
-      <Filter>QuantumReverb\source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Logger.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
@@ -2427,6 +2433,12 @@
     <ClInclude Include="..\..\Source\IRPipeline.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Logger.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LookAndFeel.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\MainPipeline.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
@@ -2448,7 +2460,7 @@
     <ClInclude Include="..\..\Source\TimeStretch.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Logger.h">
+    <ClInclude Include="..\..\Source\UIBlock.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
@@ -4544,8 +4556,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Resources\ImpulseResponses\CREDITS.md">
-      <Filter>QuantumReverb\resources\ImpulseResponses</Filter>
+    <None Include="..\..\Resources\UbuntuFont\Ubuntu-Bold.ttf">
+      <Filter>QuantumReverb\resources\Fonts</Filter>
+    </None>
+    <None Include="..\..\Resources\UbuntuFont\Ubuntu-Light.ttf">
+      <Filter>QuantumReverb\resources\Fonts</Filter>
     </None>
     <None Include="..\..\Resources\ImpulseResponses\large_church.wav">
       <Filter>QuantumReverb\resources\ImpulseResponses</Filter>

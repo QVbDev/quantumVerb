@@ -1,8 +1,11 @@
 #include "GUI_filter_box.h"
+#include "PluginEditor.h"
 
-namespace reverb {
+namespace reverb
+{
 
     GUI_filter_box::GUI_filter_box(AudioProcessor& processor, int index)
+        : UIBlock(3)
     {
         // Sliders
         freq.setSliderStyle(juce::Slider::Rotary);
@@ -20,10 +23,10 @@ namespace reverb {
         gain.setComponentID(filterIDPrefix + processor.PID_FILTER_GAIN_SUFFIX);
 
         // Labels
-        qLabel.setText("Q", juce::NotificationType::dontSendNotification);
+        qLabel.setText("q factor", juce::NotificationType::dontSendNotification);
         qLabel.setJustificationType(juce::Justification::centredBottom);
 
-        freqLabel.setText("freq", juce::NotificationType::dontSendNotification);
+        freqLabel.setText("frequency", juce::NotificationType::dontSendNotification);
         freqLabel.setJustificationType(juce::Justification::centredBottom);
 
         gainLabel.setText("amplitude", juce::NotificationType::dontSendNotification);
@@ -52,7 +55,7 @@ namespace reverb {
         addAndMakeVisible(gain);
     }
 
-    void reverb::GUI_filter_box::paint(juce::Graphics& g)
+    void GUI_filter_box::paint(juce::Graphics& g)
     {
         g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 
@@ -60,14 +63,17 @@ namespace reverb {
         g.setFont(15.0f);
     }
 
-    void reverb::GUI_filter_box::resized()
+    void GUI_filter_box::resized()
     {
-        juce::Rectangle<int> currentBox(getLocalBounds());
-        auto emptyHeader = currentBox.removeFromTop(currentBox.getHeight()*0.1);
-        juce::Rectangle<int> footer(currentBox.removeFromBottom(currentBox.getHeight() / 2));
+        juce::Rectangle<int> bounds(getLocalBounds());
 
-        q.setBounds(footer);
-        gain.setBounds(currentBox.removeFromLeft(currentBox.getWidth() / 2));
-        freq.setBounds(currentBox);
+        auto cells = getComponentCells(bounds,
+                                       AudioProcessorEditor::getLayout().padding);
+
+        // Distribute elements in columns
+        freq.setBounds(cells[0]);
+        q.setBounds(cells[1]);
+        gain.setBounds(cells[2]);
     }
+
 }

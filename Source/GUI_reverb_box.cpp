@@ -1,39 +1,49 @@
 #include "GUI_reverb_box.h"
+#include "PluginEditor.h"
 
-namespace reverb {
+namespace reverb
+{
 
     GUI_reverb_box::GUI_reverb_box(AudioProcessor& processor)
+        : UIBlock(5)
     {
         // Sliders
         irLength.setSliderStyle(juce::Slider::Rotary);
+        preDelay.setSliderStyle(juce::Slider::Rotary);
         irGain.setSliderStyle(juce::Slider::Rotary);
         outGain.setSliderStyle(juce::Slider::Rotary);
         wetRatio.setSliderStyle(juce::Slider::Rotary);
 
         irLength.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        preDelay.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
         irGain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
         outGain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
         wetRatio.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
 
         irLength.setComponentID(processor.PID_IR_LENGTH);
+        preDelay.setComponentID(processor.PID_PREDELAY);
         irGain.setComponentID(processor.PID_IR_GAIN);
         outGain.setComponentID(processor.PID_AUDIO_OUT_GAIN);
         wetRatio.setComponentID(processor.PID_WETRATIO);
 
         // Labels
-        irLengthLabel.setText("Reverb length", juce::NotificationType::dontSendNotification);
+        irLengthLabel.setText("reverb length", juce::NotificationType::dontSendNotification);
         irLengthLabel.setJustificationType(juce::Justification::centredBottom);
 
-        irGainLabel.setText("Reverb volume", juce::NotificationType::dontSendNotification);
+        preDelayLabel.setText("predelay", juce::NotificationType::dontSendNotification);
+        preDelayLabel.setJustificationType(juce::Justification::centredBottom);
+
+        irGainLabel.setText("reverb volume", juce::NotificationType::dontSendNotification);
         irGainLabel.setJustificationType(juce::Justification::centredBottom);
 
-        outGainLabel.setText("Output volume", juce::NotificationType::dontSendNotification);
+        outGainLabel.setText("output volume", juce::NotificationType::dontSendNotification);
         outGainLabel.setJustificationType(juce::Justification::centredBottom);
 
-        wetRatioLabel.setText("Wet ratio", juce::NotificationType::dontSendNotification);
+        wetRatioLabel.setText("wet ratio", juce::NotificationType::dontSendNotification);
         wetRatioLabel.setJustificationType(juce::Justification::centredBottom);
 
         irLengthLabel.attachToComponent(&irLength, false);
+        preDelayLabel.attachToComponent(&preDelay, false);
         irGainLabel.attachToComponent(&irGain, false);
         outGainLabel.attachToComponent(&outGain, false);
         wetRatioLabel.attachToComponent(&wetRatio, false);
@@ -42,6 +52,10 @@ namespace reverb {
         irLengthAttachment.reset(new SliderAttachment(processor.parameters,
                                                       irLength.getComponentID(),
                                                       irLength));
+        
+        preDelayAttachment.reset(new SliderAttachment(processor.parameters,
+                                                      preDelay.getComponentID(),
+                                                      preDelay));
 
         irGainAttachment.reset(new SliderAttachment(processor.parameters,
                                                     irGain.getComponentID(),
@@ -57,6 +71,7 @@ namespace reverb {
 
         // Add sliders
         addAndMakeVisible(irLength);
+        addAndMakeVisible(preDelay);
         addAndMakeVisible(irGain);
         addAndMakeVisible(outGain);
         addAndMakeVisible(wetRatio);
@@ -77,14 +92,17 @@ namespace reverb {
 
     void reverb::GUI_reverb_box::resized()
     {
-        juce::Rectangle<int> currentBox(getLocalBounds());
-        auto emptyHeader = currentBox.removeFromTop(currentBox.getHeight()*0.1);
-        int sliderHeight = currentBox.getHeight() / 4;
+        juce::Rectangle<int> bounds(getLocalBounds());
 
-        irLength.setBounds(currentBox.removeFromTop(sliderHeight));
-        irGain.setBounds(currentBox.removeFromTop(sliderHeight));
-        outGain.setBounds(currentBox.removeFromTop(sliderHeight));
-        wetRatio.setBounds(currentBox);
+        auto cells = getComponentCells(bounds,
+                                       AudioProcessorEditor::getLayout().padding);
 
+        // Distribute elements in columns
+        irLength.setBounds(cells[0]);
+        preDelay.setBounds(cells[1]);
+        irGain.setBounds(cells[2]);
+        outGain.setBounds(cells[3]);
+        wetRatio.setBounds(cells[4]);
     }
+
 }

@@ -172,13 +172,14 @@
     <ClCompile Include="..\..\Source\GUI_reverb_box.cpp"/>
     <ClCompile Include="..\..\Source\IRBank.cpp"/>
     <ClCompile Include="..\..\Source\IRPipeline.cpp"/>
+    <ClCompile Include="..\..\Source\Logger.cpp"/>
+    <ClCompile Include="..\..\Source\LookAndFeel.cpp"/>
     <ClCompile Include="..\..\Source\MainPipeline.cpp"/>
     <ClCompile Include="..\..\Source\Mixer.cpp"/>
     <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PreDelay.cpp"/>
     <ClCompile Include="..\..\Source\TimeStretch.cpp"/>
-    <ClCompile Include="..\..\Source\Logger.cpp"/>
     <ClCompile Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1962,6 +1963,8 @@
     <ClInclude Include="..\..\Source\GUI_reverb_box.h"/>
     <ClInclude Include="..\..\Source\IRBank.h"/>
     <ClInclude Include="..\..\Source\IRPipeline.h"/>
+    <ClInclude Include="..\..\Source\Logger.h"/>
+    <ClInclude Include="..\..\Source\LookAndFeel.h"/>
     <ClInclude Include="..\..\Source\MainPipeline.h"/>
     <ClInclude Include="..\..\Source\Mixer.h"/>
     <ClInclude Include="..\..\Source\PluginEditor.h"/>
@@ -1969,7 +1972,7 @@
     <ClInclude Include="..\..\Source\PreDelay.h"/>
     <ClInclude Include="..\..\Source\Task.h"/>
     <ClInclude Include="..\..\Source\TimeStretch.h"/>
-    <ClInclude Include="..\..\Source\Logger.h"/>
+    <ClInclude Include="..\..\Source\UIBlock.h"/>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h"/>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>
@@ -2669,7 +2672,8 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Resources\ImpulseResponses\CREDITS.md"/>
+    <None Include="..\..\Resources\UbuntuFont\Ubuntu-Bold.ttf"/>
+    <None Include="..\..\Resources\UbuntuFont\Ubuntu-Light.ttf"/>
     <None Include="..\..\Resources\ImpulseResponses\large_church.wav"/>
     <None Include="..\..\Resources\ImpulseResponses\large_hall.wav"/>
     <None Include="..\..\Resources\ImpulseResponses\medium_chamber.wav"/>

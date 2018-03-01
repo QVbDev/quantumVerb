@@ -8,8 +8,11 @@
 
 namespace BinaryData
 {
-    extern const char*   CREDITS_md;
-    const int            CREDITS_mdSize = 1712;
+    extern const char*   UbuntuBold_ttf;
+    const int            UbuntuBold_ttfSize = 331612;
+
+    extern const char*   UbuntuLight_ttf;
+    const int            UbuntuLight_ttfSize = 413600;
 
     extern const char*   large_church_wav;
     const int            large_church_wavSize = 768044;
@@ -33,7 +36,7 @@ namespace BinaryData
     extern const char* namedResourceList[];
 
     // Number of elements in the namedResourceList array.
-    const int namedResourceListSize = 7;
+    const int namedResourceListSize = 8;
 
     // If you provide the name of one of the binary resource variables above, this function will
     // return the corresponding data and its size (or a null pointer if the name isn't found).

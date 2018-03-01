@@ -8,93 +8,106 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
+
+#include "PluginProcessor.h"
+
 #include <string.h>
-
-using namespace juce;
-
-const float FILTER_BOX_RELATIVE_WIDTH = 0.2f;
-const float FILTER_BOX_RELATIVE_HEIGHT = 0.35f;
-const float HEADER_BOX_RELATIVE_HEIGHT = 0.10f;
-const float SAMPLE_RATE_BOX_RELATIVE_WIDTH = 0.35f;
-const float ON_BUTTON_RELATIVE_WIDTH = 0.15f;
-const float INFO_BUTTON_RELATIVE_WIDTH = 0.5f;
-const float REVERB_BOX_RELATIVE_HEIGHT = 0.55F;
-const float IR_LENGTH_MIN = 0.1f;
-const float IR_LENGTH_MAX = 5.0f;
-const float IR_LENGTH_DEFAULT = 2.55f;
-const float IR_VOL_MIN = 0.0f;
-const float IR_VOL_MAX = 1.0f;
-const float IR_VOL_DEFAULT = 0.5f;
-
-// TODO: check float/dB conversion required or not
-const float OUT_GAIN_MIN = -50.0f;
-const float OUT_GAIN_MAX = 0.0f;
-const float OUT_GAIN_DEFAULT = -25.0f;
-
-const float DRY_WET_MIN = 0.0f;
-const float DRY_WET_MAX = 1.0f;
-const float DRY_WET_DEFAULT = 0.5f;
-
-// TODO: check float/dB conversion 
-// conversion used: Db to amplitude
-const float PARAM_A_MIN = 0.063f;
-const float PARAM_A_MAX = 3.97f;
-const float PARAM_A_DEFAULT = 0.5f;
-
-const float PARAM_F_LOW_MIN = 16.0f;
-const float PARAM_F_LOW_MAX = 1600.0f;
-const float PARAM_F_LOW_DEFAULT = 808.0f;
-const float PARAM_F_HIGH_MIN = 1000.0f;
-const float PARAM_F_HIGH_MAX = 21000.0f;
-const float PARAM_F_HIGH_DEFAULT = 11000.0f;
-const float PARAM_Q_SHELF_MIN = 0.71f;
-const float PARAM_Q_SHELF_MAX = 1.41f;
-const float PARAM_Q_SHELF_DEFAULT = 1.06f;
-const float PARAM_Q_PEAK_MIN = 0.26f;
-const float PARAM_Q_PEAK_MAX = 6.50f;
-
-// TODO default back to 1/2 range = 3.38f
-const float PARAM_Q_PEAK_DEFAULT = 1.9f;
-
-const float PREDELAY_MIN = 0.0f;
-const float PREDELAY_MAX = 1000.0f;
-const float PREDELAY_DEFAULT = 500.0f;
 
 namespace reverb
 {
+    const AudioProcessorEditor::Layout& AudioProcessorEditor::getLayout()
+    {
+        static Layout layout;
+
+        if (!layout.rows.empty())
+        {
+            return layout;
+        }
+
+        // Build layout
+        layout.padding = 0.02;
+
+        // Row 1: Header
+        layout.rows.emplace_back(0.05f * (1 - 5 * layout.padding),
+                                    std::vector<Cell>(3));
+
+        layout.rows[0].cells[0].widthPercent = 0.10f * (1 - 3 * layout.padding);
+        layout.rows[0].cells[1].widthPercent = 0.50f * (1 - 3 * layout.padding);
+        layout.rows[0].cells[2].widthPercent = 0.40f * (1 - 3 * layout.padding);
+
+        // Row 2: Graph & reverb parameters
+        layout.rows.emplace_back(0.5f * (1 - 5 * layout.padding),
+                                    std::vector<Cell>(2));
+
+        layout.rows[1].cells[0].widthPercent = 0.60f * (1 - 2.5 * layout.padding);
+        layout.rows[1].cells[1].widthPercent = 0.40f * (1 - 2.5 * layout.padding);
+
+        // Row 3: Filter parameters
+        layout.rows.emplace_back(0.45f * (1 - 5 * layout.padding),
+                                    std::vector<Cell>(4));
+
+        layout.rows[2].cells[0].widthPercent = 0.25f * (1 - 3.5 * layout.padding);
+        layout.rows[2].cells[1].widthPercent = 0.25f * (1 - 3.5 * layout.padding);
+        layout.rows[2].cells[2].widthPercent = 0.25f * (1 - 3.5 * layout.padding);
+        layout.rows[2].cells[3].widthPercent = 0.25f * (1 - 3.5 * layout.padding);
+
+        return layout;
+    }
+
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
-          lowShelf(p, 0), peakingLow(p, 1), peakingHigh(p, 3), highShelf(p, 4),
+          lowShelf(p, 0), peakingLow(p, 1), peakingHigh(p, 2), highShelf(p, 3),
           reverbParam(p)
 	{
 		// Make sure that before the constructor has finished, you've set the
 		// editor's size to whatever you need it to be.
         setResizable(true, true);
-        setResizeLimits(400, 300, 1920, 1080);
+        setResizeLimits(600, 600, 1920, 1080);
+
+        // Look and feel
+        setLookAndFeel(&lookAndFeel);
 
         // on/off button config
-        isOn.setColour(isOn.tickColourId, juce::Colour(3, 169, 244));
-        isOn.setColour(isOn.tickDisabledColourId, juce::Colour(204, 204, 204));
-        isOn.setButtonText("On");
-        isOn.addListener(this);        
+        isOn.setButtonText("STATE");
+        isOn.setComponentID(p.PID_ACTIVE);
+        isOn.setClickingTogglesState(true);
+
         addAndMakeVisible(isOn);
+
+        isOnLabel.setText("reverb", juce::NotificationType::dontSendNotification);
+        isOnLabel.setJustificationType(juce::Justification::topLeft);
+        isOnLabel.attachToComponent(&isOn, false);
+
+        isOnAttachment.reset(new ButtonAttachment(processor.parameters,
+                                                  isOn.getComponentID(),
+                                                  isOn));
+
+        // IR file box config
+        juce::String currentIR = p.parameters.state
+                                             .getChildWithName(p.PID_IR_FILE_CHOICE)
+                                             .getProperty("value");
+
+        irChoice.setButtonText(currentIR);
+        addAndMakeVisible(irChoice);
+
+        irChoiceLabel.setText("impulse response", juce::NotificationType::dontSendNotification);
+        irChoiceLabel.setJustificationType(juce::Justification::topLeft);
+        irChoiceLabel.attachToComponent(&irChoice, false);
 
         // sample rate box config
         auto sampleRateTemp = std::to_string(p.getSampleRate() / 1000);
-        sampleRate.setText("Sample Rate: " + sampleRateTemp.substr(0,4) + "k");
-        sampleRate.setJustification(Justification::centred);
+        sampleRate.setText(sampleRateTemp.substr(0, 4) + " kHz");
+        sampleRate.setJustification(juce::Justification::centredLeft);
         sampleRate.setReadOnly(true);
+
+        sampleRate.setFont(lookAndFeel.getTypefaceForFont(juce::Font()));
+
         addAndMakeVisible(sampleRate);
 
-        // TODO: display IR file
-        // IR file box config
-        //std::size_t pos = 0;
-        //std::string path = p.irPipeline->irFilePath;
-        //genInfo.setButtonText("IR file: " + path );
-        genInfo.addListener(this);
-        addAndMakeVisible(genInfo);
+        sampleRateLabel.setText("sample rate", juce::NotificationType::dontSendNotification);
+        sampleRateLabel.setJustificationType(juce::Justification::topLeft);
+        sampleRateLabel.attachToComponent(&sampleRate, false);
 
         // display right-side sliders
         addAndMakeVisible(reverbParam);
@@ -105,28 +118,13 @@ namespace reverb
         addAndMakeVisible(peakingHigh);
         addAndMakeVisible(highShelf);
 
-        // predelay slider config
-        preDelay.setSliderStyle(juce::Slider::Rotary);
-        preDelay.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        preDelay.setComponentID(p.PID_PREDELAY);
-
-        preDelayAttachment.reset(new SliderAttachment(processor.parameters,
-                                                      preDelay.getComponentID(),
-                                                      preDelay));
-
-        addAndMakeVisible(preDelay);
-
-        // predelay label config
-        preDelayLabel.setText("Predelay", juce::NotificationType::dontSendNotification);
-        preDelayLabel.setJustificationType(juce::Justification::centredBottom);
-        preDelayLabel.attachToComponent(&preDelay,false);
-
         // Calls resized when creating UI to position all the elements as if window was resized.
         this->resized();
 	}
 
 	AudioProcessorEditor::~AudioProcessorEditor()
 	{
+        setLookAndFeel(nullptr);
 	}
 
 	void AudioProcessorEditor::paint(juce::Graphics& g)
@@ -136,8 +134,7 @@ namespace reverb
 
 		g.setColour(juce::Colours::white);
 		g.setFont(15.0f);
-		//g.drawFittedText("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
-		
+
         //headerBox.drawAt(g, 0, 0, 100);
 		//g.drawRoundedRectangle(0, 15, 300, 175, 2, 1);
 
@@ -146,38 +143,90 @@ namespace reverb
     // sets the layout of displayed components
 	void AudioProcessorEditor::resized()
 	{
-        isOn.setBoundsRelative(0, 0, ON_BUTTON_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
-        isOn.setTopLeftPosition(0, 0);
-        
-        genInfo.setBoundsRelative(0, 0, INFO_BUTTON_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
-        genInfo.setTopLeftPosition(isOn.getRight(), 0);
-        
-        sampleRate.setBoundsRelative(0, 0, SAMPLE_RATE_BOX_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
-        sampleRate.setTopLeftPosition(genInfo.getRight(), 0);        
+        const Layout& layout = getLayout();
 
-        reverbParam.setBoundsRelative(0, 0, SAMPLE_RATE_BOX_RELATIVE_WIDTH, REVERB_BOX_RELATIVE_HEIGHT);
-        reverbParam.setTopRightPosition(sampleRate.getRight(),sampleRate.getBottom());
-        
-        preDelay.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        preDelay.setTopLeftPosition(0, reverbParam.getBottom());
+        // Get relative label height
+        float labelHeight = isOnLabel.getFont().getHeight();
+        float relLabelHeight = (labelHeight / getHeight());
 
-        lowShelf.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        lowShelf.setTopLeftPosition(preDelay.getRight(), reverbParam.getBottom());
+        float offsetY = layout.padding;
 
-        peakingLow.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        peakingLow.setTopLeftPosition(lowShelf.getRight(), reverbParam.getBottom());
+        // Row 1: Header
+        {
+            offsetY += 2 * relLabelHeight;
 
-        peakingHigh.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        peakingHigh.setTopLeftPosition(peakingLow.getRight(), reverbParam.getBottom());
+            float offsetX = layout.padding;
 
-        highShelf.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        highShelf.setTopLeftPosition(peakingHigh.getRight(), reverbParam.getBottom());
+            isOn.setBoundsRelative(offsetX, offsetY,
+                                   layout.rows[0].cells[0].widthPercent,
+                                   layout.rows[0].heightPercent);
+
+            offsetX += layout.rows[0].cells[0].widthPercent;
+            offsetX += layout.padding / 2;
+
+            irChoice.setBoundsRelative(offsetX, offsetY,
+                                       layout.rows[0].cells[1].widthPercent,
+                                       layout.rows[0].heightPercent);
+
+            offsetX += layout.rows[0].cells[1].widthPercent;
+            offsetX += layout.padding / 2;
+
+            sampleRate.setBoundsRelative(offsetX, offsetY,
+                                         layout.rows[0].cells[2].widthPercent,
+                                         layout.rows[0].heightPercent);
+        }
+
+        // Row 2: Graph & reverb parameters
+        {
+            offsetY += layout.rows[0].heightPercent;
+            offsetY += layout.padding;
+
+            float offsetX = layout.padding;
+
+            // TODO: Add graph
+
+            offsetX += layout.rows[1].cells[0].widthPercent;
+            offsetX += layout.padding / 2;
+
+            reverbParam.setBoundsRelative(offsetX, offsetY,
+                                          layout.rows[1].cells[1].widthPercent,
+                                          layout.rows[1].heightPercent);
+        }
+
+        // Row 3: EQ parameters
+        {
+            offsetY += layout.rows[1].heightPercent;
+            offsetY += layout.padding;
+
+            float offsetX = layout.padding;
+
+            lowShelf.setBoundsRelative(offsetX, offsetY,
+                                       layout.rows[2].cells[0].widthPercent,
+                                       layout.rows[2].heightPercent);
+
+            offsetX += layout.rows[2].cells[0].widthPercent;
+            offsetX += layout.padding / 2;
+
+            peakingLow.setBoundsRelative(offsetX, offsetY,
+                                         layout.rows[2].cells[1].widthPercent, layout.rows[2].heightPercent);
+
+            offsetX += layout.rows[2].cells[1].widthPercent;
+            offsetX += layout.padding / 2;
+
+            peakingHigh.setBoundsRelative(offsetX, offsetY,
+                                          layout.rows[2].cells[2].widthPercent, layout.rows[2].heightPercent);
+
+            offsetX += layout.rows[2].cells[2].widthPercent;
+            offsetX += layout.padding / 2;
+
+            highShelf.setBoundsRelative(offsetX, offsetY,
+                                          layout.rows[2].cells[3].widthPercent, layout.rows[2].heightPercent);
+        }
 	}
 
     // handler for button clicks
-    void AudioProcessorEditor::buttonClicked (juce::Button* button) 
-    {
-        /*
+    void AudioProcessorEditor::buttonClicked(juce::Button* button) 
+    {/*
         if (button == &isOn)
         {
             if (isOn.getToggleState()) {
@@ -195,8 +244,7 @@ namespace reverb
 
             //IRmenu.showMenuAsync(juce::PopupMenu::Options(), ModalCallbackFunction::create(menuCallback));
         }
-        */
-    }
+    */}
 
     // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
     /** Pops up a dialog letting the user re-load the processor's state from a file. */

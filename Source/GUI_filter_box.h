@@ -3,10 +3,11 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "PluginProcessor.h"
+#include "UIBlock.h"
 
 namespace reverb {
 
-    class GUI_filter_box : public juce::Component
+    class GUI_filter_box : public UIBlock
     {
     public:
         GUI_filter_box(AudioProcessor& processor, int index);
@@ -17,7 +18,6 @@ namespace reverb {
     protected:
         using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
-    public:
         juce::Slider q;
         juce::Label qLabel;
         std::unique_ptr<SliderAttachment> qAttachment;

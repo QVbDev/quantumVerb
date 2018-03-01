@@ -17,8 +17,12 @@
               defines="DONT_SET_USING_JUCE_NAMESPACE=1&#10;REVERB_MULTITHREADED=1">
   <MAINGROUP id="wAf2hM" name="QuantumReverb">
     <GROUP id="{CE63C67B-47F3-3300-2737-C141D0918050}" name="resources">
+      <GROUP id="{DADDC6F5-7CD1-0848-0A89-A86F5B754680}" name="Fonts">
+        <FILE id="qVf50v" name="Ubuntu-Bold.ttf" compile="0" resource="1" file="Resources/UbuntuFont/Ubuntu-Bold.ttf"/>
+        <FILE id="SnP3zz" name="Ubuntu-Light.ttf" compile="0" resource="1"
+              file="Resources/UbuntuFont/Ubuntu-Light.ttf"/>
+      </GROUP>
       <GROUP id="{E0A3342D-EF01-0D67-E03E-FE0F65621DA8}" name="ImpulseResponses">
-        <FILE id="yItpGA" name="CREDITS.md" compile="0" resource="1" file="Resources/ImpulseResponses/CREDITS.md"/>
         <FILE id="KfuSfO" name="large_church.wav" compile="0" resource="1"
               file="Resources/ImpulseResponses/large_church.wav"/>
         <FILE id="yXfeov" name="large_hall.wav" compile="0" resource="1" file="Resources/ImpulseResponses/large_hall.wav"/>
@@ -39,6 +43,8 @@
             file="Source/GUI_reverb_box.h"/>
       <FILE id="HauXtr" name="IRBank.h" compile="0" resource="0" file="Source/IRBank.h"/>
       <FILE id="G0uyVb" name="IRPipeline.h" compile="0" resource="0" file="Source/IRPipeline.h"/>
+      <FILE id="RlqKqT" name="Logger.h" compile="0" resource="0" file="Source/Logger.h"/>
+      <FILE id="vbK1ys" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
       <FILE id="PY5ljl" name="MainPipeline.h" compile="0" resource="0" file="Source/MainPipeline.h"/>
       <FILE id="Tv11hP" name="Mixer.h" compile="0" resource="0" file="Source/Mixer.h"/>
       <FILE id="rhRhM8" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
@@ -47,7 +53,7 @@
       <FILE id="UiHVxO" name="PreDelay.h" compile="0" resource="0" file="Source/PreDelay.h"/>
       <FILE id="Ml2EHl" name="Task.h" compile="0" resource="0" file="Source/Task.h"/>
       <FILE id="ZbZKE4" name="TimeStretch.h" compile="0" resource="0" file="Source/TimeStretch.h"/>
-      <FILE id="RlqKqT" name="Logger.h" compile="0" resource="0" file="Source/Logger.h"/>
+      <FILE id="StXbHw" name="UIBlock.h" compile="0" resource="0" file="Source/UIBlock.h"/>
     </GROUP>
     <GROUP id="{DD9F08D3-896A-69D7-4B5C-1C9A13F59FFB}" name="source">
       <FILE id="ovcHFj" name="Convolution.cpp" compile="1" resource="0" file="Source/Convolution.cpp"/>
@@ -59,6 +65,8 @@
             file="Source/GUI_reverb_box.cpp"/>
       <FILE id="cXaEak" name="IRBank.cpp" compile="1" resource="0" file="Source/IRBank.cpp"/>
       <FILE id="noghEt" name="IRPipeline.cpp" compile="1" resource="0" file="Source/IRPipeline.cpp"/>
+      <FILE id="uQllGP" name="Logger.cpp" compile="1" resource="0" file="Source/Logger.cpp"/>
+      <FILE id="Vlnd62" name="LookAndFeel.cpp" compile="1" resource="0" file="Source/LookAndFeel.cpp"/>
       <FILE id="F42Bk9" name="MainPipeline.cpp" compile="1" resource="0"
             file="Source/MainPipeline.cpp"/>
       <FILE id="wNFPWG" name="Mixer.cpp" compile="1" resource="0" file="Source/Mixer.cpp"/>
@@ -68,7 +76,6 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="FZ4wVp" name="PreDelay.cpp" compile="1" resource="0" file="Source/PreDelay.cpp"/>
       <FILE id="t35Mb5" name="TimeStretch.cpp" compile="1" resource="0" file="Source/TimeStretch.cpp"/>
-      <FILE id="uQllGP" name="Logger.cpp" compile="1" resource="0" file="Source/Logger.cpp"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

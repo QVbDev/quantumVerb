@@ -10,9 +10,10 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#include "PluginProcessor.h"
 #include "GUI_filter_box.h"
 #include "GUI_reverb_box.h"
+#include "LookAndFeel.h"
+#include "PluginProcessor.h"
 
 namespace reverb
 {
@@ -41,13 +42,65 @@ namespace reverb
         void menuCallback(int result);*/
         void sliderValueChanged(juce::Slider *changedSlider) override;
 
-	private:
+        struct Cell
+        {
+            //==============================================================================
+            Cell(float w = 1.0f) : widthPercent(w) {}
+
+            //==============================================================================
+            double widthPercent;
+
+            //==============================================================================
+            double offsetX = 0;
+        };
+
+        struct Row
+        {
+            //==============================================================================
+            Row(float h = 1.0f, std::vector<Cell> c = {}) : heightPercent(h), cells(c) {}
+
+            //==============================================================================
+            double heightPercent;
+            std::vector<Cell> cells;
+
+            //==============================================================================
+            double offsetY = 0;
+        };
+
+        struct Layout
+        {
+            //==============================================================================
+            double padding;
+            std::vector<Row> rows;
+        };
+
+        static const Layout& getLayout();
+
+	protected:
         //==============================================================================
 		AudioProcessor& processor;
         juce::AudioProcessorValueTreeState& parameters;
 
+        //==============================================================================
+        LookAndFeel lookAndFeel;
+
+        //==============================================================================
         using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
         using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+
+        //==============================================================================
+        juce::TextButton isOn;
+        juce::Label isOnLabel;
+        std::unique_ptr<ButtonAttachment> isOnAttachment;
+
+        juce::TextButton irChoice;
+        juce::Label irChoiceLabel;
+
+        juce::TextEditor sampleRate;
+        juce::Label sampleRateLabel;
+
+        //==============================================================================
+        GUI_reverb_box reverbParam;
 
         //==============================================================================
         GUI_filter_box lowShelf;
@@ -55,18 +108,7 @@ namespace reverb
         GUI_filter_box peakingHigh;
         GUI_filter_box highShelf;
 
-        GUI_reverb_box reverbParam;
-
-        //==============================================================================
-        juce::ToggleButton isOn;
-
-        juce::TextButton genInfo;
-        juce::TextEditor sampleRate;
-
-        juce::Slider preDelay;
-        juce::Label preDelayLabel;
-        std::unique_ptr<SliderAttachment> preDelayAttachment;
-
+    private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};
 

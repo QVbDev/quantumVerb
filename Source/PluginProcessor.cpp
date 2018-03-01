@@ -249,27 +249,35 @@ namespace reverb
             audio.clear(i, 0, audio.getNumSamples());
         }
 
+        // If processor is inactive, skip processing
+        float * activeParam = parameters.getRawParameterValue(PID_ACTIVE);
+        if (activeParam &&
+            *activeParam < 0.5f)
+        {
+            return;
+        }
+
         // We should have the right number of pipelines and channel buffers from
         // a previous call to prepareToPlay(), but just to be safe let's check
         // these values here.
         for (size_t i = irPipelines.size(); i < audio.getNumChannels(); ++i)
         {
-            irPipelines.emplace_back();
+            irPipelines.emplace_back(new IRPipeline(this, irBank, i));
         }
 
         for (size_t i = mainPipelines.size(); i < audio.getNumChannels(); ++i)
         {
-            mainPipelines.emplace_back();
+            mainPipelines.emplace_back(new MainPipeline(this));
         }
 
         for (size_t i = irChannels.size(); i < audio.getNumChannels(); ++i)
         {
-            irChannels.emplace_back();
+            irChannels.emplace_back(1, 0);
         }
 
         for (size_t i = audioChannels.size(); i < audio.getNumChannels(); ++i)
         {
-            audioChannels.emplace_back();
+            audioChannels.emplace_back(1, audio.getNumSamples());
         }
 
         // Split input buffer into one buffer per channel
@@ -372,6 +380,15 @@ namespace reverb
         mainPipelines[channelIdx]->exec(audioChannels[channelIdx]);
     }
 
+    //==============================================================================
+    void AudioProcessor::processBlockBypassed(juce::AudioSampleBuffer& audio, juce::MidiBuffer& midi)
+    {
+        // Set the isBypassed parameter
+
+        // Run JUCE's regular implementation
+        this->juce::AudioProcessor::processBlockBypassed(audio, midi);
+    }
+
 	//==============================================================================
 	bool AudioProcessor::hasEditor() const
 	{
@@ -436,8 +453,8 @@ namespace reverb
 
         // TODO: Upper limit on Q factor?
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Low-shelf Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          "EQ: Low-shelf Q factor", "<0.7-100>",
+                                          juce::NormalisableRange<float>(0.7f, 1e2f),
                                           0.707f,
                                           nullptr, nullptr );
         
@@ -461,8 +478,8 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 1 Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          "EQ: Peak filter 1 Q factor", "<0.7-100>",
+                                          juce::NormalisableRange<float>(0.7f, 1e2f),
                                           0.707f,
                                           nullptr, nullptr );
 
@@ -487,8 +504,8 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 2 Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          "EQ: Peak filter 2 Q factor", "<0.7-100>",
+                                          juce::NormalisableRange<float>(0.7f, 1e2f),
                                           0.707f,
                                           nullptr, nullptr );
 
@@ -513,8 +530,8 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: High-shelf Q factor", "<0.7-10000>",
-                                          juce::NormalisableRange<float>(0.7f, 1e4f),
+                                          "EQ: High-shelf Q factor", "<0.7-100>",
+                                          juce::NormalisableRange<float>(0.7f, 1e2f),
                                           0.707f,
                                           nullptr, nullptr );
 
@@ -569,8 +586,29 @@ namespace reverb
                                           nullptr, nullptr );
 
 
-        parameters.state = juce::ValueTree(juce::Identifier(JucePlugin_Name));
+        /**
+        * Meta: Bypass flag
+        */
+        static auto bypassValueToText = [](float f)
+        {
+            return f > 0.5f ? juce::String("ON")
+                            : juce::String("OFF");
+        };
 
+        static auto bypassTextToValue = [](const juce::String& s)
+        {
+            return s == "ON" ? 1.0f
+                             : 0.0f;
+        };
+
+        parameters.createAndAddParameter( PID_ACTIVE, "Active", "",
+                                          juce::NormalisableRange<float>(0, 1),
+                                          1.0f,
+                                          bypassValueToText,
+                                          bypassTextToValue );
+
+
+        parameters.state = juce::ValueTree(juce::Identifier(JucePlugin_Name));
         
         /**
          * Impulse responses
