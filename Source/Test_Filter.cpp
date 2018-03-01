@@ -9,6 +9,7 @@ Test_Filter.cpp
 #include "catch.hpp"
 
 #include "Filter.h"
+#include "Test_Util.h"
 #include "PluginProcessor.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -19,17 +20,6 @@ Test_Filter.cpp
 */
 
 
-bool compareValues(const float a1, const float a2) {
-	float ratio = a1 / a2;
-
-	if (ratio >= 0.999 && ratio <= 1.001)
-		return true;
-
-	else
-		return false;
-
-}
-
 
 
 TEST_CASE("Filter class is tested", "[filters]") {
@@ -38,21 +28,21 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	/**
 	* Processor preparation
 	*/
-	constexpr int sampleRate = 44100;
-	constexpr int channelNumber = 1;
+	constexpr int SAMPLE_RATE = 44100;
+	constexpr int CHANNEL_NUM = 1;
 	constexpr std::chrono::milliseconds BLOCK_DURATION_MS(20);
-	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * sampleRate;
+	constexpr double NUM_SAMPLES_PER_BLOCK = (BLOCK_DURATION_MS.count() / 1000.0) * SAMPLE_RATE;
 
 
 	reverb::AudioProcessor processor;
-	processor.setPlayConfigDetails(channelNumber, channelNumber, sampleRate, std::ceil(NUM_SAMPLES_PER_BLOCK));
+	processor.setPlayConfigDetails(CHANNEL_NUM, CHANNEL_NUM, SAMPLE_RATE, std::ceil(NUM_SAMPLES_PER_BLOCK));
 
-	REQUIRE(processor.getSampleRate() == sampleRate);
+	REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
 	//Test invdB function
 	REQUIRE((int)reverb::Filter::invdB(0) == 1);
-	REQUIRE((int)reverb::Filter::invdB(10) == 10);
-	REQUIRE((int)reverb::Filter::invdB(20) == 100);
+	REQUIRE((int)reverb::Filter::invdB(20) == 10);
+	REQUIRE((int)reverb::Filter::invdB(40) == 100);
 
 	//==============================================================================
 	/**
@@ -61,7 +51,7 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 	int numSamples = 44100;
 
-	juce::AudioBuffer<float> sampleBuffer(channelNumber, numSamples);
+	juce::AudioBuffer<float> sampleBuffer(CHANNEL_NUM, numSamples);
 
 	float * const buffer = sampleBuffer.getWritePointer(0);
 
@@ -86,12 +76,12 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	memset(fftBuffer, 0, 2*forwardFFT.getSize()*sizeof(*fftBuffer));
 
 	//Compute frequency resolution
-	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
+	float freqRes = (float)SAMPLE_RATE / (float)forwardFFT.getSize();
 
 
 	SECTION("Testing low-shelf filter") {
-		float gain = reverb::Filter::invdB(14);
-		float freq = 5000;
+		float gain = reverb::Filter::invdB(10);
+		float freq = 1000;
 
 		reverb::LowShelfFilter filter(&processor, freq, 0.71, gain);
 		filter.exec(sampleBuffer);
@@ -99,21 +89,35 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
-		//Test for gain at low freuquency
+		//Test for gain at low frequency
 		REQUIRE(compareValues(gain, fftBuffer[0]));
 
 		//Test for gain at high frequency
 		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
 
-		//Test for cut-off frequency
+		//Test for gain at cut-off frequency
 		int cutOffIndex = (int)std::round(freq / freqRes);
 
 		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
+
+		//Test for getAmplitude()
+		float amplitude = filter.getAmplitude(30000);
+		REQUIRE(compareValues(filter.getAmplitude(freq), std::sqrt(gain)));
+		REQUIRE(compareValues(filter.getAmplitude(0), gain));
+		REQUIRE(compareValues(filter.getAmplitude(30000), 1.0f));
+
+		float probe1 = filter.getdBAmplitude(32000);
+		float probe2 = reverb::Filter::todB(1.0f);
+
+		//Test for getdBAmplitude()
+		REQUIRE(compareValues(filter.getdBAmplitude(freq), reverb::Filter::todB(std::sqrt(gain))));
+		REQUIRE(compareValues(filter.getdBAmplitude(0), reverb::Filter::todB(gain)));
+		REQUIRE(compareValues(filter.getdBAmplitude(32000), reverb::Filter::todB(1.0f)));
 	}
 
 	SECTION("Testing high-shelf filter") {
 		float gain = reverb::Filter::invdB(10);
-		float freq = 20000;
+		float freq = 1000;
 
 		reverb::HighShelfFilter filter(&processor, freq, 0.71, gain);
 		filter.exec(sampleBuffer);
@@ -127,10 +131,16 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		//Test for gain at high frequency
 		REQUIRE(compareValues(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
 
-		//Test for cut-off frequency
+		//Test for gain at cut-off frequency
 		int cutOffIndex = (int)std::round(freq / freqRes);
 
 		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
+
+		//Test for getAmplitude()
+		float amplitude = filter.getAmplitude(freq);
+		REQUIRE(compareValues(filter.getAmplitude(freq), std::sqrt(gain)));
+		REQUIRE(compareValues(filter.getAmplitude(0), 1.0f));
+		REQUIRE(compareValues(filter.getAmplitude(30000), gain));
 	}
 
 	SECTION("Testing peaking filter") {
@@ -151,6 +161,10 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		//Test for gain at both ends of the spectrum
 		REQUIRE(compareValues(1, fftBuffer[0]));
 		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
+
+		//Test for getAmplitude()
+		REQUIRE(compareValues(filter.getAmplitude(centerFreq), gain));
+		REQUIRE(compareValues(filter.getAmplitude(0), 1.0f));
 	}
 
 
