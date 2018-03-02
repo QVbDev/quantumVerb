@@ -23,7 +23,7 @@ namespace reverb {
 
 	public:
 
-		Equalizer(juce::AudioProcessor * processor);
+		Equalizer(juce::AudioProcessor * processor, int numFilters = 4);
 
 		virtual void exec(juce::AudioSampleBuffer& ir) override;
 
@@ -58,6 +58,12 @@ namespace reverb {
 	struct WrongEQFrequency : public std::exception {
 		const char * what() const throw () {
 			return "Equalizer: Filter frequency crosses over another one's ";
+		}
+	};
+
+	struct WrongFilterNumber : public std::exception {
+		const char * what() const throw () {
+			return "Equalizer: Filter number must be at least 3 ";
 		}
 	};
 }

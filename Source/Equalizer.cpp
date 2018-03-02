@@ -10,35 +10,39 @@ Equalizer.cpp
 
 namespace reverb {
 
-	Equalizer::Equalizer(juce::AudioProcessor * processor)
+	Equalizer::Equalizer(juce::AudioProcessor * processor, int numFilters)
 		: Task(processor) {
 
+		if (numFilters < 3) throw WrongFilterNumber();
+
 		filterSet.add(new LowShelfFilter(processor));
-		filterSet.add(new PeakFilter(processor));
-		filterSet.add(new PeakFilter(processor));
+		
+		for (int i = 0; i < numFilters - 2; i++) {
+			filterSet.add(new PeakFilter(processor));
+		}
+
 		filterSet.add(new HighShelfFilter(processor));
 
-		for (int i = 0; i < filterSet.size(); i++) {
+		for (int i = 0; i < numFilters; i++) {
 			EQGains.push_back(1.0f);
 		}
 
 		//These constructor setters will likely need to be updated in the very near future.
 
-		setFilterFrequency(1000, LOW);
-		setFilterGain(2, LOW);
-		setFilterQ(0.71, LOW);
+		filterSet[0]->setQ(0.71);
+		filterSet[numFilters - 1]->setQ(0.71);
 
-		setFilterFrequency(2000, PEAK1);
-		setFilterGain(2, PEAK1);
-		setFilterQ(4, PEAK1);
+		for (int i = 0; i < numFilters; i++) {
+			EQGains[i] = 2;
+			filterSet[i]->setGain(2);
+			filterSet[i]->setFrequency((i + 1) * 10000 / numFilters);
 
-		setFilterFrequency(3000, PEAK2);
-		setFilterGain(2, PEAK2);
-		setFilterQ(4, PEAK2);
+			if (i != 0 && i != numFilters - 1) filterSet[i]->setQ(4);
+		}
 
-		setFilterFrequency(4000, HIGH);
-		setFilterGain(2, HIGH);
-		setFilterQ(0.71, HIGH);
+		
+
+		
 	}
 
 	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
@@ -140,6 +144,21 @@ namespace reverb {
 			throw InvalidFilterException();
 
 		//Check whether filter frequency crosses another one's
+
+		if (num == 0) {
+			if (freq >= filterSet[num + 1]->frequency)
+				throw WrongEQFrequency();
+		}
+
+		if (num == (filterSet.size() - 1)) {
+			if (freq <= filterSet[num - 1]->frequency)
+				throw WrongEQFrequency();
+		}
+
+		else {
+			if (freq <= filterSet[num - 1]->frequency || freq >= filterSet[num + 1]->frequency)
+				throw WrongEQFrequency();
+		}
 
 			filterSet[num]->setFrequency(freq);
 	}
