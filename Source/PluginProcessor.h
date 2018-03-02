@@ -80,7 +80,7 @@ namespace reverb
         juce::AudioProcessorValueTreeState parameters;
         
         // Unique parameter IDs
-        static constexpr const char * PID_ACTIVE             = "active";
+        static constexpr const char * PID_ACTIVE             = "is_active";
 
         static constexpr const char * PID_IR_FILE_CHOICE     = "ir_file_choice";
         static constexpr const char * PID_IR_LENGTH          = "ir_length";

@@ -31,7 +31,7 @@ namespace reverb
 
         //==============================================================================
         virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
-                                  const juce::String& = "") override;
+                                  const juce::String& blockID) override;
 
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
@@ -40,6 +40,13 @@ namespace reverb
 
     protected:
         //==============================================================================
+        static constexpr double MAX_IR_LENGTH_S = 5.0f;
+
+        float irLengthS = 3.0f;
+
+        //==============================================================================
+        // TODO: Do we need to keep this information? Or is TimeStretch linear (i.e.
+        //       same result if sample rate differential is constant)?
         double origIRSampleRate;
 
         //==============================================================================

@@ -31,8 +31,6 @@ public:
     using IRPipeline::IRPipeline;
 
     //==============================================================================
-    constexpr int getMaxIRLengthS() { return MAX_IR_LENGTH_S; }
-
     juce::String getCurrentIR() { return currentIR; }
 
     //==============================================================================
@@ -118,26 +116,5 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
         auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
         CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
-    }
-
-
-    SECTION("IR should be limited to MAX_IR_LENGTH_MS") {
-        constexpr int MAX_NUM_SAMPLES = IR_SAMPLE_RATE * irPipeline.getMaxIRLengthS();
-
-        juce::AudioSampleBuffer irIn(1, MAX_NUM_SAMPLES + 1);
-
-        REQUIRE(irIn.getNumChannels() == 1);
-        REQUIRE(irIn.getNumSamples() > MAX_NUM_SAMPLES);
-
-        irPipeline.loadIRBuffer(irIn, IR_SAMPLE_RATE);
-
-        juce::AudioSampleBuffer irOut(1, 0);
-
-        REQUIRE(irOut.getNumChannels() == 1);
-        REQUIRE(irOut.getNumSamples() == 0);
-
-        irPipeline.exec(irOut);
-
-        CHECK(irOut.getNumSamples() == MAX_NUM_SAMPLES);
     }
 }

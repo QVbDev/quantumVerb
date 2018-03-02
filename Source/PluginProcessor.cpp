@@ -235,6 +235,16 @@ namespace reverb
         // Lock processor during use
         std::lock_guard<std::mutex> guard(lock);
 
+        // Reset the bypass detection parameter
+        auto activeParam = parameters.getParameter(PID_ACTIVE);
+
+        if (activeParam->getValue() < 0.5f)
+        {
+            activeParam->beginChangeGesture();
+            activeParam->setValueNotifyingHost(1.0f);
+            activeParam->endChangeGesture();
+        }
+
         // Disable denormals for performance
 		juce::ScopedNoDenormals noDenormals;
 
@@ -247,14 +257,6 @@ namespace reverb
         for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         {
             audio.clear(i, 0, audio.getNumSamples());
-        }
-
-        // If processor is inactive, skip processing
-        float * activeParam = parameters.getRawParameterValue(PID_ACTIVE);
-        if (activeParam &&
-            *activeParam < 0.5f)
-        {
-            return;
         }
 
         // We should have the right number of pipelines and channel buffers from
@@ -383,7 +385,19 @@ namespace reverb
     //==============================================================================
     void AudioProcessor::processBlockBypassed(juce::AudioSampleBuffer& audio, juce::MidiBuffer& midi)
     {
-        // Set the isBypassed parameter
+        // Lock processor during use
+        std::lock_guard<std::mutex> guard(lock);
+
+        // Set the bypass detection parameter
+        auto activeParam = parameters.getParameter(PID_ACTIVE);
+
+        if (activeParam->getValue() > 0.5f)
+        {
+            activeParam->beginChangeGesture();
+            activeParam->setValueNotifyingHost(0.0f);
+            activeParam->endChangeGesture();
+        }
+
 
         // Run JUCE's regular implementation
         this->juce::AudioProcessor::processBlockBypassed(audio, midi);
@@ -453,8 +467,8 @@ namespace reverb
 
         // TODO: Upper limit on Q factor?
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Low-shelf Q factor", "<0.7-100>",
-                                          juce::NormalisableRange<float>(0.7f, 1e2f),
+                                          "EQ: Low-shelf Q factor", "<0.1-5>",
+                                          juce::NormalisableRange<float>(0.1f, 5.0f),
                                           0.707f,
                                           nullptr, nullptr );
         
@@ -478,8 +492,8 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 1 Q factor", "<0.7-100>",
-                                          juce::NormalisableRange<float>(0.7f, 1e2f),
+                                          "EQ: Peak filter 1 Q factor", "<0.1-5>",
+                                          juce::NormalisableRange<float>(0.1f, 5.0f),
                                           0.707f,
                                           nullptr, nullptr );
 
@@ -504,8 +518,8 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 2 Q factor", "<0.7-100>",
-                                          juce::NormalisableRange<float>(0.7f, 1e2f),
+                                          "EQ: Peak filter 2 Q factor", "<0.1-5>",
+                                          juce::NormalisableRange<float>(0.1f, 5.0f),
                                           0.707f,
                                           nullptr, nullptr );
 
@@ -530,8 +544,8 @@ namespace reverb
         // TODO: Upper limit on Q factor?
         // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: High-shelf Q factor", "<0.7-100>",
-                                          juce::NormalisableRange<float>(0.7f, 1e2f),
+                                          "EQ: High-shelf Q factor", "<0.1-5>",
+                                          juce::NormalisableRange<float>(0.1f, 5),
                                           0.707f,
                                           nullptr, nullptr );
 
@@ -550,9 +564,17 @@ namespace reverb
         parameters.createAndAddParameter( PID_IR_GAIN,
                                           "Impulse response gain", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(0.0f, gain15dB),
-                                          1.0f,
+                                          0.5f,
                                           nullptr, nullptr );
 
+        /**
+         * IR length
+         */
+        parameters.createAndAddParameter( PID_IR_LENGTH,
+                                          "Reverb length", "<s>",
+                                          juce::NormalisableRange<float>(0.0f, 5.0f),
+                                          3.0f,
+                                          nullptr, nullptr);
 
         /**
          * Pre-delay
@@ -587,25 +609,13 @@ namespace reverb
 
 
         /**
-        * Meta: Bypass flag
+        * Meta: Bypass detection flag
         */
-        static auto bypassValueToText = [](float f)
-        {
-            return f > 0.5f ? juce::String("ON")
-                            : juce::String("OFF");
-        };
-
-        static auto bypassTextToValue = [](const juce::String& s)
-        {
-            return s == "ON" ? 1.0f
-                             : 0.0f;
-        };
-
-        parameters.createAndAddParameter( PID_ACTIVE, "Active", "",
-                                          juce::NormalisableRange<float>(0, 1),
+        parameters.createAndAddParameter( PID_ACTIVE, "Active", "<y/n>",
+                                          juce::NormalisableRange<float>(0.0f, 1.0f),
                                           1.0f,
-                                          bypassValueToText,
-                                          bypassTextToValue );
+                                          nullptr, nullptr,
+                                          false, true, true );
 
 
         parameters.state = juce::ValueTree(juce::Identifier(JucePlugin_Name));

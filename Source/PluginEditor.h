@@ -96,7 +96,7 @@ namespace reverb
         juce::TextButton irChoice;
         juce::Label irChoiceLabel;
 
-        juce::TextEditor sampleRate;
+        juce::TextButton sampleRate;
         juce::Label sampleRateLabel;
 
         //==============================================================================

@@ -33,8 +33,8 @@ namespace reverb
                                     std::vector<Cell>(3));
 
         layout.rows[0].cells[0].widthPercent = 0.10f * (1 - 3 * layout.padding);
-        layout.rows[0].cells[1].widthPercent = 0.50f * (1 - 3 * layout.padding);
-        layout.rows[0].cells[2].widthPercent = 0.40f * (1 - 3 * layout.padding);
+        layout.rows[0].cells[1].widthPercent = 0.70f * (1 - 3 * layout.padding);
+        layout.rows[0].cells[2].widthPercent = 0.20f * (1 - 3 * layout.padding);
 
         // Row 2: Graph & reverb parameters
         layout.rows.emplace_back(0.5f * (1 - 5 * layout.padding),
@@ -71,7 +71,10 @@ namespace reverb
         // on/off button config
         isOn.setButtonText("STATE");
         isOn.setComponentID(p.PID_ACTIVE);
-        isOn.setClickingTogglesState(true);
+        isOn.setClickingTogglesState(false);
+        isOn.setInterceptsMouseClicks(false, false);
+
+        isOn.getToggleStateValue().referTo(p.parameters.getParameterAsValue(p.PID_ACTIVE));
 
         addAndMakeVisible(isOn);
 
@@ -79,9 +82,9 @@ namespace reverb
         isOnLabel.setJustificationType(juce::Justification::topLeft);
         isOnLabel.attachToComponent(&isOn, false);
 
-        isOnAttachment.reset(new ButtonAttachment(processor.parameters,
+        /*isOnAttachment.reset(new ButtonAttachment(processor.parameters,
                                                   isOn.getComponentID(),
-                                                  isOn));
+                                                  isOn));*/
 
         // IR file box config
         juce::String currentIR = p.parameters.state
@@ -97,11 +100,9 @@ namespace reverb
 
         // sample rate box config
         auto sampleRateTemp = std::to_string(p.getSampleRate() / 1000);
-        sampleRate.setText(sampleRateTemp.substr(0, 4) + " kHz");
-        sampleRate.setJustification(juce::Justification::centredLeft);
-        sampleRate.setReadOnly(true);
-
-        sampleRate.setFont(lookAndFeel.getTypefaceForFont(juce::Font()));
+        sampleRate.setButtonText(sampleRateTemp.substr(0, 4) + " kHz");
+        sampleRate.setClickingTogglesState(false);
+        sampleRate.setInterceptsMouseClicks(false, false);
 
         addAndMakeVisible(sampleRate);
 
@@ -226,25 +227,11 @@ namespace reverb
 
     // handler for button clicks
     void AudioProcessorEditor::buttonClicked(juce::Button* button) 
-    {/*
-        if (button == &isOn)
-        {
-            if (isOn.getToggleState()) {
-                processor.mainPipeline->gain->gainFactor = 0.5;
-                sampleRate.setText("gain is: " + std::to_string(processor.mainPipeline->gain->gainFactor));
-            }
-            else {
-                processor.mainPipeline->gain->gainFactor = 0.01;
-                sampleRate.setText("gain is: " + std::to_string(processor.mainPipeline->gain->gainFactor));
-            }
-        }
-        else if (button == &genInfo) {
-            juce::PopupMenu IRmenu;
-            IRmenu.addItem(1, "Load IR");
+    {
+        // Most buttons are handled by parameter tree attachments
 
-            //IRmenu.showMenuAsync(juce::PopupMenu::Options(), ModalCallbackFunction::create(menuCallback));
-        }
-    */}
+        // TODO: Handler for IR selection?
+    }
 
     // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
     /** Pops up a dialog letting the user re-load the processor's state from a file. */
@@ -283,136 +270,7 @@ namespace reverb
     // TODO: add predelay handling
     void AudioProcessorEditor::sliderValueChanged(juce::Slider * changedSlider)
     {
-        /*juce::Slider* reverbSlider = reverbParam.getSlider(changedSlider);
-        juce::Slider* lowShelfSlider = lowShelf.getSlider(changedSlider);
-        juce::Slider* peakingLowSlider = peakingLow.getSlider(changedSlider);
-        juce::Slider* peakingHighSlider = peakingHigh.getSlider(changedSlider);
-        juce::Slider* highShelfSlider = highShelf.getSlider(changedSlider);
-
-        if(reverbSlider)
-        {
-            if (reverbSlider->getComponentID() == "lenIR")
-            {/*
-                /* TODO: find what param to change changetempo? originalSampleRate?
-                genInfo.setText("bro toggled IR volume");
-                processor.irPipeline->gain->gainFactor = reverbSlider->getValue();
-                sampleRate.setText("ir volume is: " + std::to_string(processor.irPipeline->gain->gainFactor));
-                */
-            /*}            
-            else if (reverbSlider->getComponentID() == "volIR")
-            {
-                auto param = processor.parameters.getParameter(processor.PID_IR_GAIN);
-
-                if (!param)
-                {
-                    throw std::invalid_argument("Received non-float parameter for gain in Gain block");
-                }
-
-                param->beginChangeGesture();
-                param->setValueNotifyingHost(reverbSlider->getValue());
-                param->endChangeGesture();
-            }
-            else if (reverbSlider->getComponentID() == "gainOut")
-            {
-                auto param = processor.parameters.getParameter(processor.PID_AUDIO_OUT_GAIN);
-
-                if (!param)
-                {
-                    throw std::invalid_argument("Received non-float parameter for gain in Gain block");
-                }
-
-                param->beginChangeGesture();
-                param->setValueNotifyingHost(reverbSlider->getValue());
-                param->endChangeGesture();
-            }
-            else if (reverbSlider->getComponentID() == "dryWet")
-            {
-                // TODO: check if value to provide is in range [0 - 100] or [0.00 - 1]
-                processor.mainPipeline->dryWetMixer->wetRatio = reverbSlider->getValue();
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (lowShelfSlider)
-        {
-            if (lowShelfSlider->getComponentID() == "paramQ")
-            {
-                processor.irPipeline->filters[0]->setQ(lowShelfSlider->getValue());
-            }
-            else if (lowShelfSlider->getComponentID() == "paramf")
-            {
-                processor.irPipeline->filters[0]->setFrequency(lowShelfSlider->getValue());
-            }
-            else if (lowShelfSlider->getComponentID() == "paramA")
-            {
-                processor.irPipeline->filters[0]->setGain(lowShelfSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (peakingLowSlider) {
-            if (peakingLowSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[1]->setQ(peakingLowSlider->getValue());
-            }
-            else if (peakingLowSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[1]->setFrequency(peakingLowSlider->getValue());
-            }
-            else if (peakingLowSlider->getComponentID() == "paramA") {
-                processor.irPipeline->filters[1]->setGain(peakingLowSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (peakingHighSlider) {
-            if (peakingHighSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[2]->setQ(peakingHighSlider->getValue());
-            }
-            else if (peakingHighSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[2]->setFrequency(peakingHighSlider->getValue());
-            }
-            else if (peakingHighSlider->getComponentID() == "paramA") {
-                processor.irPipeline->filters[2]->setGain(peakingHighSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (highShelfSlider) {
-            if (highShelfSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[3]->setQ(highShelfSlider->getValue());
-            }
-            else if (highShelfSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[3]->setFrequency(highShelfSlider->getValue());
-            }
-            else if (highShelfSlider->getComponentID() == "paramA") {
-                processor.irPipeline->filters[3]->setGain(highShelfSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-
-        else if( changedSlider == &preDelay)
-        {
-            processor.irPipeline->preDelay->delayMs = changedSlider->getValue();
-        }
-
-        else {
-            // TODO: add warning / exception / error due to lack of handling
-        }*/
-
+        // All sliders are handled by parameter tree attachments
     }
 
 }

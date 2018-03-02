@@ -78,6 +78,7 @@ namespace reverb
 
         mustExec |= gain->updateParams(params, AudioProcessor::PID_IR_GAIN);
         mustExec |= preDelay->updateParams(params, AudioProcessor::PID_PREDELAY);
+        mustExec |= timeStretch->updateParams(params, AudioProcessor::PID_IR_LENGTH);
 
         if (mustExec)
         {
@@ -253,9 +254,8 @@ namespace reverb
         const juce::AudioSampleBuffer& ir = irIter->second;
         double irSampleRate = sampleRateIter->second;
 
-        // Read samples (limit to max. MAX_IR_LENGTH_S) into separate buffers for each channel
-        int numSamples = std::min(ir.getNumSamples(),
-                                  (int)std::ceil(irSampleRate * MAX_IR_LENGTH_S));
+        // Read samples into separate buffers for each channel
+        int numSamples = ir.getNumSamples();
 
         irChannel.clear();
 
@@ -303,9 +303,8 @@ namespace reverb
             throw std::invalid_argument("Failed to create reader for IR file: " + irFilePath);
         }
 
-        // Read samples (limit to max. MAX_IR_LENGTH_S) into separate buffers for each channel
-        int numSamples = (int)std::min(reader->lengthInSamples,
-                                       (juce::int64)std::ceil(reader->sampleRate * MAX_IR_LENGTH_S));
+        // Read samples into separate buffers for each channel
+        int numSamples = reader->lengthInSamples;
 
         irChannel.clear();
 
