@@ -95,7 +95,8 @@ namespace reverb
 	* @param [in] freq   Frequency at which the filter magnitude is evaluated
 	*/
 
-	float Filter::getdBAmplitude(float freq) {
+	float Filter::getdBAmplitude(float freq) 
+	{
 		return 20 * std::log10(getAmplitude(freq));
 	}
 
@@ -107,7 +108,8 @@ namespace reverb
 	*/
 	
 
-	void Filter::setFrequency(float freq) {
+	void Filter::setFrequency(float freq) 
+	{
 
 		if (freq <= 0 || freq > FMAX)
 		    throw WrongParameterException();
@@ -124,7 +126,8 @@ namespace reverb
 	* @param [in] freq   Q factor to be set
 	*/
 
-	void Filter::setQ(float q) {
+	void Filter::setQ(float q) 
+	{
 
 		if(q < QMIN || q > QMAX)
 		    throw WrongParameterException();
@@ -141,7 +144,8 @@ namespace reverb
 	* @param [in] freq   Band gain to be set
 	*/
 
-	void Filter::setGain(float gain) {
+	void Filter::setGain(float gain) 
+	{
 
 		if(gain < invdB(GMIN) || gain > invdB(GMAX))
 		    throw WrongParameterException();
@@ -158,7 +162,8 @@ namespace reverb
 	* @param [out] bool   True if filter is enabled or false if filter is disabled
 	*/
 
-	bool Filter::isEnabled() {
+	bool Filter::isEnabled() 
+	{
 		return isOn;
 	}
 
@@ -168,7 +173,8 @@ namespace reverb
 	*
 	*/
 
-	void Filter::enable() {
+	void Filter::enable() 
+	{
 		isOn = true;
 	}
 
@@ -178,12 +184,14 @@ namespace reverb
 	*
 	*/
 
-	void Filter::disable() {
+	void Filter::disable() 
+	{
 		isOn = false;
 
 	}
 
-	bool Filter::assertValues() {
+	bool Filter::assertValues() 
+	{
 		if (frequency > 0 && frequency <= FMAX && Q >= QMIN && Q <= QMAX && gainFactor >= invdB(GMIN) && gainFactor <= invdB(GMAX))
 			return true;
 		else

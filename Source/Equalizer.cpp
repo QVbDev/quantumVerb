@@ -49,7 +49,8 @@ namespace reverb {
 		
 	}
 
-	void Equalizer::exec(juce::AudioSampleBuffer& ir) {
+	void Equalizer::exec(juce::AudioSampleBuffer& ir) 
+	{
 		updateFilters();
 
 		for (int i = 0; i < filterSet.size(); i++) 
@@ -58,13 +59,14 @@ namespace reverb {
 		}
 	}
 
-	void Equalizer::updateFilters() {
+	void Equalizer::updateFilters() 
+	{
 
 		//Update filter parameters before gain normalization
 
 		const int dim = filterSet.size();
 
-		float * evalFrequencies = new float[dim];
+		std::vector<float> evalFrequencies(dim);
 
 		//Set evaluation frequencies
 
@@ -128,8 +130,6 @@ namespace reverb {
 				filterSet[i]->setGain(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)));
 			}
 		}
-
-		delete[] evalFrequencies;
 
 
 	}

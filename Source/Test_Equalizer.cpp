@@ -20,7 +20,8 @@ Test_Equalizer.cpp
 */
 
 
-TEST_CASE("Equalizer class is tested", "[equalizer]") {
+TEST_CASE("Equalizer class is tested", "[equalizer]") 
+{
 	//==============================================================================
 	/**
 	* Processor preparation
@@ -74,7 +75,8 @@ TEST_CASE("Equalizer class is tested", "[equalizer]") {
 	float * dBPlot = new float[numSamples];
 
 
-	SECTION("Testing equalizer") {
+	SECTION("Testing equalizer") 
+	{
 
 		reverb::Equalizer EQ(&processor);
 

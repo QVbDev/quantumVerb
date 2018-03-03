@@ -49,19 +49,24 @@ namespace reverb {
 		std::vector<float> EQGains;
 	};
 
-	struct InvalidFilterException : public std::exception {
-		const char * what() const throw () {
+	struct InvalidFilterException : public std::exception 
+	{
+		const char * what() const throw () 
+		{
 			return "Equalizer: Filter ID is invalid";
 		}
 	};
 
-	struct WrongEQFrequency : public std::exception {
-		const char * what() const throw () {
+	struct WrongEQFrequency : public std::exception 
+	{
+		const char * what() const throw () 
+		{
 			return "Equalizer: Filter frequency crosses over another one's ";
 		}
 	};
 
-	struct WrongFilterNumber : public std::exception {
+	struct WrongFilterNumber : public std::exception 
+	{
 		const char * what() const throw () {
 			return "Equalizer: Filter number must be at least 3 ";
 		}

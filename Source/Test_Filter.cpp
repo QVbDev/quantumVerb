@@ -22,7 +22,8 @@ Test_Filter.cpp
 
 
 
-TEST_CASE("Filter class is tested", "[filters]") {
+TEST_CASE("Filter class is tested", "[filters]") 
+{
 
 	//==============================================================================
 	/**
@@ -79,8 +80,9 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	float freqRes = (float)sampleRate / (float)forwardFFT.getSize();
 
 
-	SECTION("Testing low-shelf filter") {
-		float gain = reverb::Filter::invdB(-10);
+	SECTION("Testing low-shelf filter") 
+	{
+		float gain = reverb::Filter::invdB(10);
 		float freq = 1000;
 
 		reverb::LowShelfFilter filter(&processor, freq, 0.71, gain);
@@ -106,17 +108,15 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		REQUIRE(compareValues(filter.getAmplitude(0), gain));
 		REQUIRE(compareValues(filter.getAmplitude(30000), 1.0f));
 
-		float probe1 = filter.getdBAmplitude(32000);
-		float probe2 = reverb::Filter::todB(1.0f);
-
 		//Test for getdBAmplitude()
 		REQUIRE(compareValues(filter.getdBAmplitude(freq), reverb::Filter::todB(std::sqrt(gain))));
 		REQUIRE(compareValues(filter.getdBAmplitude(0), reverb::Filter::todB(gain)));
 		REQUIRE(compareValues(filter.getdBAmplitude(32000), reverb::Filter::todB(1.0f)));
 	}
 
-	SECTION("Testing high-shelf filter") {
-		float gain = reverb::Filter::invdB(-10);
+	SECTION("Testing high-shelf filter") 
+	{
+		float gain = reverb::Filter::invdB(10);
 		float freq = 1000;
 
 		reverb::HighShelfFilter filter(&processor, freq, 0.71, gain);
@@ -143,8 +143,9 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		REQUIRE(compareValues(filter.getAmplitude(30000), gain));
 	}
 
-	SECTION("Testing peaking filter") {
-		float gain = reverb::Filter::invdB(-10);
+	SECTION("Testing peaking filter") 
+	{
+		float gain = reverb::Filter::invdB(10);
 		float centerFreq = 5000;
 
 		reverb::PeakFilter filter(&processor, centerFreq, 0.71, gain);
@@ -168,7 +169,8 @@ TEST_CASE("Filter class is tested", "[filters]") {
 	}
 
 
-	SECTION("Testing filter toggle") {
+	SECTION("Testing filter toggle") 
+	{
 		reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
 		filter.disable();
 		filter.exec(sampleBuffer);

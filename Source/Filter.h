@@ -13,7 +13,9 @@
 #include <memory>
 #include <exception>
 
-# define M_PI 3.14159265358979323846f
+#ifndef M_PI
+#define M_PI 3.14159265358979323846f
+#endif
 
 #define QMIN 0.2
 #define QMAX 6.5
@@ -45,12 +47,14 @@ namespace reverb
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
 		//==============================================================================
-		static float todB(float m) {
+		static float todB(float m) 
+		{
 			return 20 * std::log10(m);
 		}
 
         //==============================================================================
-        static float invdB(float dB) {
+        static float invdB(float dB) 
+		{
 			return pow(10, dB / 20);
         }
 
@@ -128,14 +132,18 @@ namespace reverb
 	/**
 	* Exceptions for Filter class
 	*/
-	struct ChannelNumberException : public std::exception {
-		const char * what() const throw () {
+	struct ChannelNumberException : public std::exception 
+	{
+		const char * what() const throw () 
+		{
 			return "Filter: AudioBuffer channel number is not 1";
 		}
 	};
 
-	struct WrongParameterException : public std::exception {
-		const char * what() const throw () {
+	struct WrongParameterException : public std::exception 
+	{
+		const char * what() const throw () 
+		{
 			return "Filter: Parameter(s) is out of bounds";
 		}
 	};
