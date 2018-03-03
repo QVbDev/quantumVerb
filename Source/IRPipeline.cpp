@@ -304,7 +304,7 @@ namespace reverb
         }
 
         // Read samples into separate buffers for each channel
-        int numSamples = reader->lengthInSamples;
+        int numSamples = (int)reader->lengthInSamples;
 
         irChannel.clear();
 

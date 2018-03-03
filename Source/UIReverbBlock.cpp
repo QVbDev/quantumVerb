@@ -1,11 +1,20 @@
-#include "GUI_reverb_box.h"
+/*
+  ==============================================================================
+
+    UIReverbBlock.cpp
+
+  ==============================================================================
+*/
+
+#include "UIReverbBlock.h"
 #include "PluginEditor.h"
 
 namespace reverb
 {
 
-    GUI_reverb_box::GUI_reverb_box(AudioProcessor& processor)
-        : UIBlock(5)
+    //==============================================================================
+    UIReverbBlock::UIReverbBlock(AudioProcessor& processor)
+        : UIBlock(5, 2)
     {
         // Sliders
         irLength.setSliderStyle(juce::Slider::Rotary);
@@ -77,12 +86,8 @@ namespace reverb
         addAndMakeVisible(wetRatio);
     }
 
-
-    GUI_reverb_box::~GUI_reverb_box()
-    {
-    }
-
-    void reverb::GUI_reverb_box::paint(juce::Graphics& g)
+    //==============================================================================
+    void reverb::UIReverbBlock::paint(juce::Graphics& g)
     {
         g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 
@@ -90,14 +95,17 @@ namespace reverb
         g.setFont(15.0f);
     }
 
-    void reverb::GUI_reverb_box::resized()
+    //==============================================================================
+    void reverb::UIReverbBlock::resized()
     {
         juce::Rectangle<int> bounds(getLocalBounds());
 
-        auto cells = getComponentCells(bounds,
-                                       AudioProcessorEditor::getLayout().padding);
+        // Draw frame
+        // TODO: Make this look nice
 
-        // Distribute elements in columns
+        // Distribute child elements in columns
+        auto cells = getComponentCells(bounds);
+
         irLength.setBounds(cells[0]);
         preDelay.setBounds(cells[1]);
         irGain.setBounds(cells[2]);

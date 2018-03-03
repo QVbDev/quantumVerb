@@ -1,11 +1,20 @@
-#include "GUI_filter_box.h"
+/*
+  ==============================================================================
+
+    UIFilterBlock.cpp
+
+  ==============================================================================
+*/
+
+#include "UIFilterBlock.h"
 #include "PluginEditor.h"
 
 namespace reverb
 {
 
-    GUI_filter_box::GUI_filter_box(AudioProcessor& processor, int index)
-        : UIBlock(3)
+    //==============================================================================
+    UIFilterBlock::UIFilterBlock(AudioProcessor& processor, int index)
+        : UIBlock(3, 2)
     {
         // Sliders
         freq.setSliderStyle(juce::Slider::Rotary);
@@ -55,7 +64,8 @@ namespace reverb
         addAndMakeVisible(gain);
     }
 
-    void GUI_filter_box::paint(juce::Graphics& g)
+    //==============================================================================
+    void UIFilterBlock::paint(juce::Graphics& g)
     {
         g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 
@@ -63,14 +73,17 @@ namespace reverb
         g.setFont(15.0f);
     }
 
-    void GUI_filter_box::resized()
+    //==============================================================================
+    void UIFilterBlock::resized()
     {
         juce::Rectangle<int> bounds(getLocalBounds());
 
-        auto cells = getComponentCells(bounds,
-                                       AudioProcessorEditor::getLayout().padding);
+        // Draw frame
+        // TODO: Make this look nice
 
         // Distribute elements in columns
+        auto cells = getComponentCells(bounds);
+
         freq.setBounds(cells[0]);
         q.setBounds(cells[1]);
         gain.setBounds(cells[2]);

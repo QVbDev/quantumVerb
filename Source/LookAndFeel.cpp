@@ -60,7 +60,7 @@ namespace reverb
         }
     }
 
-    juce::Font LookAndFeel::getTextButtonFont(juce::TextButton& button, int buttonHeight)
+    juce::Font LookAndFeel::getTextButtonFont(juce::TextButton&, int buttonHeight)
     {
         static juce::Font tmp(15.0f, juce::Font::bold);
         
@@ -74,7 +74,7 @@ namespace reverb
         return font;
     }
 
-    juce::Font LookAndFeel::getLabelFont(juce::Label& label)
+    juce::Font LookAndFeel::getLabelFont(juce::Label&)
     {
         static juce::Font tmp;
         

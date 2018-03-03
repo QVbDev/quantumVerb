@@ -1,3 +1,11 @@
+/*
+  ==============================================================================
+
+    UIReverbBlock.h
+
+  ==============================================================================
+*/
+
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -10,18 +18,24 @@
 
 namespace reverb {
 
-    class GUI_reverb_box : public UIBlock
+    class UIReverbBlock : public UIBlock
     {
     public:
-        GUI_reverb_box(AudioProcessor& processor);
-        ~GUI_reverb_box();
+        //==============================================================================
+        UIReverbBlock(AudioProcessor& processor);
 
+        //==============================================================================
+        using Ptr = std::unique_ptr<UIReverbBlock>;
+
+        //==============================================================================
         void paint(juce::Graphics&) override;
         void resized() override;
 
     protected:
+        //==============================================================================
         using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
+        //==============================================================================
         juce::Slider irLength;
         juce::Label irLengthLabel;
         std::unique_ptr<SliderAttachment> irLengthAttachment;
@@ -43,7 +57,8 @@ namespace reverb {
         std::unique_ptr<SliderAttachment> wetRatioAttachment;
 
     private:
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GUI_reverb_box)
+        //==============================================================================
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(UIReverbBlock)
     };
 
 }

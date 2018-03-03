@@ -18,19 +18,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuantumReverb_VST3", "Quant
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuantumReverb_SharedCode", "QuantumReverb_SharedCode.vcxproj", "{57C8BC74-B084-1E41-A6B0-E8CD20A8C968}"
-	ProjectSection(ProjectDependencies) = postProject
-		{68A5DD20-7057-448B-8FE0-B6AC8D205509} = {68A5DD20-7057-448B-8FE0-B6AC8D205509}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoundTouch", "..\SoundTouch\SoundTouch.vcxproj", "{68A5DD20-7057-448B-8FE0-B6AC8D205509}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "..\Tests\Tests.vcxproj", "{B3E33977-312C-4CA8-8919-DB260B6E4BE7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{57C8BC74-B084-1E41-A6B0-E8CD20A8C968} = {57C8BC74-B084-1E41-A6B0-E8CD20A8C968}
-		{39681AA5-8792-D84C-830E-96B68D8B89C9} = {39681AA5-8792-D84C-830E-96B68D8B89C9}
-		{CB1C78C7-C393-2466-3BAB-560BD7C25654} = {CB1C78C7-C393-2466-3BAB-560BD7C25654}
-		{9B476EDF-F84B-10A4-8A4B-894CD34FC81D} = {9B476EDF-F84B-10A4-8A4B-894CD34FC81D}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +76,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BCAB303A-5445-4F84-BBBF-0495108FEDF3}
+		SolutionGuid = {383430EC-074A-4CD4-94A0-4D35C9939560}
 	EndGlobalSection
 EndGlobal

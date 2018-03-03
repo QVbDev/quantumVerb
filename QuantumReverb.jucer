@@ -37,10 +37,9 @@
       <FILE id="ZRYgLa" name="Convolution.h" compile="0" resource="0" file="Source/Convolution.h"/>
       <FILE id="NiupXX" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="d86bmX" name="Gain.h" compile="0" resource="0" file="Source/Gain.h"/>
-      <FILE id="z8cMdJ" name="GUI_filter_box.h" compile="0" resource="0"
-            file="Source/GUI_filter_box.h"/>
-      <FILE id="hOdS1U" name="GUI_reverb_box.h" compile="0" resource="0"
-            file="Source/GUI_reverb_box.h"/>
+      <FILE id="z8cMdJ" name="UIFilterBlock.h" compile="0" resource="0" file="Source/UIFilterBlock.h"/>
+      <FILE id="hOdS1U" name="UIReverbBlock.h" compile="0" resource="0" file="Source/UIReverbBlock.h"/>
+      <FILE id="HdXyPO" name="UIHeaderBlock.h" compile="0" resource="0" file="Source/UIHeaderBlock.h"/>
       <FILE id="HauXtr" name="IRBank.h" compile="0" resource="0" file="Source/IRBank.h"/>
       <FILE id="G0uyVb" name="IRPipeline.h" compile="0" resource="0" file="Source/IRPipeline.h"/>
       <FILE id="RlqKqT" name="Logger.h" compile="0" resource="0" file="Source/Logger.h"/>
@@ -59,10 +58,6 @@
       <FILE id="ovcHFj" name="Convolution.cpp" compile="1" resource="0" file="Source/Convolution.cpp"/>
       <FILE id="FSa5IZ" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
       <FILE id="MMwaIE" name="Gain.cpp" compile="1" resource="0" file="Source/Gain.cpp"/>
-      <FILE id="nALbRD" name="GUI_filter_box.cpp" compile="1" resource="0"
-            file="Source/GUI_filter_box.cpp"/>
-      <FILE id="yvMPMr" name="GUI_reverb_box.cpp" compile="1" resource="0"
-            file="Source/GUI_reverb_box.cpp"/>
       <FILE id="cXaEak" name="IRBank.cpp" compile="1" resource="0" file="Source/IRBank.cpp"/>
       <FILE id="noghEt" name="IRPipeline.cpp" compile="1" resource="0" file="Source/IRPipeline.cpp"/>
       <FILE id="uQllGP" name="Logger.cpp" compile="1" resource="0" file="Source/Logger.cpp"/>
@@ -76,6 +71,13 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="FZ4wVp" name="PreDelay.cpp" compile="1" resource="0" file="Source/PreDelay.cpp"/>
       <FILE id="t35Mb5" name="TimeStretch.cpp" compile="1" resource="0" file="Source/TimeStretch.cpp"/>
+      <FILE id="izuFdU" name="UIBlock.cpp" compile="1" resource="0" file="Source/UIBlock.cpp"/>
+      <FILE id="nALbRD" name="UIFilterBlock.cpp" compile="1" resource="0"
+            file="Source/UIFilterBlock.cpp"/>
+      <FILE id="eKzRpF" name="UIHeaderBlock.cpp" compile="1" resource="0"
+            file="Source/UIHeaderBlock.cpp"/>
+      <FILE id="yvMPMr" name="UIReverbBlock.cpp" compile="1" resource="0"
+            file="Source/UIReverbBlock.cpp"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

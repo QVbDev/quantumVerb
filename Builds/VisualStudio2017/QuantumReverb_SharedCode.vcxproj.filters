@@ -433,12 +433,6 @@
     <ClCompile Include="..\..\Source\Gain.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\GUI_filter_box.cpp">
-      <Filter>QuantumReverb\source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\GUI_reverb_box.cpp">
-      <Filter>QuantumReverb\source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\IRBank.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
@@ -467,6 +461,18 @@
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TimeStretch.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\UIBlock.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\UIFilterBlock.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\UIHeaderBlock.cpp">
+      <Filter>QuantumReverb\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\UIReverbBlock.cpp">
       <Filter>QuantumReverb\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
@@ -2421,10 +2427,13 @@
     <ClInclude Include="..\..\Source\Gain.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\GUI_filter_box.h">
+    <ClInclude Include="..\..\Source\UIFilterBlock.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\GUI_reverb_box.h">
+    <ClInclude Include="..\..\Source\UIReverbBlock.h">
+      <Filter>QuantumReverb\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\UIHeaderBlock.h">
       <Filter>QuantumReverb\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\IRBank.h">

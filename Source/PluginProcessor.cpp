@@ -264,7 +264,7 @@ namespace reverb
         // these values here.
         for (size_t i = irPipelines.size(); i < audio.getNumChannels(); ++i)
         {
-            irPipelines.emplace_back(new IRPipeline(this, irBank, i));
+            irPipelines.emplace_back(new IRPipeline(this, irBank, (int)i));
         }
 
         for (size_t i = mainPipelines.size(); i < audio.getNumChannels(); ++i)

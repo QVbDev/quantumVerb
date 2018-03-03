@@ -10,8 +10,9 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#include "GUI_filter_box.h"
-#include "GUI_reverb_box.h"
+#include "UIFilterBlock.h"
+#include "UIHeaderBlock.h"
+#include "UIReverbBlock.h"
 #include "LookAndFeel.h"
 #include "PluginProcessor.h"
 
@@ -36,45 +37,15 @@ namespace reverb
 		void paint(juce::Graphics&) override;
 		void resized() override;
 
+        //==============================================================================
         void buttonClicked(juce::Button * button) override;
         /*void loadIR(int num);
         void handleMenuResult(int result);
         void menuCallback(int result);*/
         void sliderValueChanged(juce::Slider *changedSlider) override;
 
-        struct Cell
-        {
-            //==============================================================================
-            Cell(float w = 1.0f) : widthPercent(w) {}
-
-            //==============================================================================
-            double widthPercent;
-
-            //==============================================================================
-            double offsetX = 0;
-        };
-
-        struct Row
-        {
-            //==============================================================================
-            Row(float h = 1.0f, std::vector<Cell> c = {}) : heightPercent(h), cells(c) {}
-
-            //==============================================================================
-            double heightPercent;
-            std::vector<Cell> cells;
-
-            //==============================================================================
-            double offsetY = 0;
-        };
-
-        struct Layout
-        {
-            //==============================================================================
-            double padding;
-            std::vector<Row> rows;
-        };
-
-        static const Layout& getLayout();
+        //==============================================================================
+        static constexpr double PADDING_REL = 0.03;   // 3% padding
 
 	protected:
         //==============================================================================
@@ -89,24 +60,16 @@ namespace reverb
         using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
 
         //==============================================================================
-        juce::TextButton isOn;
-        juce::Label isOnLabel;
-        std::unique_ptr<ButtonAttachment> isOnAttachment;
-
-        juce::TextButton irChoice;
-        juce::Label irChoiceLabel;
-
-        juce::TextButton sampleRate;
-        juce::Label sampleRateLabel;
+        UIHeaderBlock headerBlock;
 
         //==============================================================================
-        GUI_reverb_box reverbParam;
+        UIReverbBlock reverbBlock;
 
         //==============================================================================
-        GUI_filter_box lowShelf;
-        GUI_filter_box peakingLow;
-        GUI_filter_box peakingHigh;
-        GUI_filter_box highShelf;
+        UIFilterBlock lowShelfFilterBlock;
+        UIFilterBlock peakLowFilterBlock;
+        UIFilterBlock peakHighFilterBlock;
+        UIFilterBlock highShelfFilterBlock;
 
     private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
