@@ -22,21 +22,27 @@ namespace reverb
     public:
         //==============================================================================
         Mixer(juce::AudioProcessor * processor);
-		~Mixer ();
+        ~Mixer() = default;
 
         //==============================================================================
         using Ptr = std::shared_ptr<Mixer>;
 
         //==============================================================================
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& blockId) override;
+
         virtual void exec(juce::AudioSampleBuffer& wetAudio) override;
 
         //==============================================================================
         void loadDry(const juce::AudioSampleBuffer dryAudio);
 
+    protected:
         //==============================================================================
-        double wetRatio;
-		juce::AudioSampleBuffer dryAudio;
+        juce::AudioSampleBuffer dryAudio;
 
+
+        //==============================================================================
+        float wetRatio = 0.0f;
     };
 
 }

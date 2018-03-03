@@ -15,8 +15,8 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
-    */
+     * TODO: Description
+     */
     class Task
     {
     public:
@@ -27,10 +27,19 @@ namespace reverb
         using Ptr = std::shared_ptr<Task>;
 
         //==============================================================================
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& blockId) = 0;
+
         virtual void exec(juce::AudioSampleBuffer&) = 0;
 
+        virtual bool needsToRun() const { return mustExec; }
+
     protected:
+        //==============================================================================
         juce::AudioProcessor * processor;
+
+        //==============================================================================
+        bool mustExec = true;
     };
 
 }

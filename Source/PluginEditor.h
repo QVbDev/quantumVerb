@@ -1,9 +1,7 @@
 /*
   ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
+  
+    PluginEditor.cpp
 
   ==============================================================================
 */
@@ -12,9 +10,11 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#include "UIFilterBlock.h"
+#include "UIHeaderBlock.h"
+#include "UIReverbBlock.h"
+#include "LookAndFeel.h"
 #include "PluginProcessor.h"
-#include "GUI_filter_box.h"
-#include "GUI_reverb_box.h"
 
 namespace reverb
 {
@@ -37,32 +37,41 @@ namespace reverb
 		void paint(juce::Graphics&) override;
 		void resized() override;
 
+        //==============================================================================
         void buttonClicked(juce::Button * button) override;
         /*void loadIR(int num);
         void handleMenuResult(int result);
         void menuCallback(int result);*/
         void sliderValueChanged(juce::Slider *changedSlider) override;
 
-	private:
-		// This reference is provided as a quick way for your editor to
-		// access the processor object that created it.
+        //==============================================================================
+        static constexpr double PADDING_REL = 0.03;   // 3% padding
+
+	protected:
+        //==============================================================================
 		AudioProcessor& processor;
+        juce::AudioProcessorValueTreeState& parameters;
 
-        GUI_filter_box lowShelf;
-        GUI_filter_box peakingLow;
-        GUI_filter_box peakingHigh;
-        GUI_filter_box highShelf;
+        //==============================================================================
+        LookAndFeel lookAndFeel;
 
-        GUI_reverb_box reverbParam;
+        //==============================================================================
+        using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+        using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
 
-        juce::ToggleButton isOn;
+        //==============================================================================
+        UIHeaderBlock headerBlock;
 
-        juce::TextButton genInfo;
-        juce::TextEditor sampleRate;
+        //==============================================================================
+        UIReverbBlock reverbBlock;
 
-        juce::Slider preDelay;
-        juce::Label preDelayLabel;
+        //==============================================================================
+        UIFilterBlock lowShelfFilterBlock;
+        UIFilterBlock peakLowFilterBlock;
+        UIFilterBlock peakHighFilterBlock;
+        UIFilterBlock highShelfFilterBlock;
 
+    private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};
 

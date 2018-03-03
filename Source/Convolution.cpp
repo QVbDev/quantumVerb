@@ -26,16 +26,28 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Main function of the Convolution class. Executes the convolution of
-    *        the audio buffer with the IR.
-    *
-    * @details Creates a ProcessContext object that specifies the audio buffer to
-    *          convolve and the buffer to contain the resulted signal. Calls the
-    *          juce::dsp::Convolution::process() function to compute the
-    *          convolution.
-    *
-    * @param [in,out] audio    The audio buffer to be convolved with the IR.
-    */
+     * @brief No parameters to update, do nothing
+     *
+     * @returns False
+     */
+    bool Convolution::updateParams(const juce::AudioProcessorValueTreeState&,
+                                   const juce::String&)
+    {
+        return false;
+    }
+
+    //==============================================================================
+    /**
+     * @brief Main function of the Convolution class. Executes the convolution of
+     *        the audio buffer with the IR.
+     *
+     * @details Creates a ProcessContext object that specifies the audio buffer to
+     *          convolve and the buffer to contain the resulted signal. Calls the
+     *          juce::dsp::Convolution::process() function to compute the
+     *          convolution.
+     *
+     * @param [in,out] audio    The audio buffer to be convolved with the IR.
+     */
     void Convolution::exec(juce::AudioSampleBuffer& audio)
     {
         juce::dsp::AudioBlock<float> audioBlock(audio);
@@ -70,6 +82,6 @@ namespace reverb
         // the maximumBufferSize to handle and the sample rate for optional resampling.
         prepare(spec);
         copyAndLoadImpulseResponseFromBuffer(ir, spec.sampleRate,
-            (ir.getNumChannels() == 1 ? false : true), false, 0);
+            (ir.getNumChannels() == 1 ? false : true), false, false, 0);
     }
 }

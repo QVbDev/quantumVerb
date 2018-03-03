@@ -29,12 +29,17 @@ namespace reverb
         using Ptr = std::shared_ptr<PreDelay>;
 
         //==============================================================================
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& blockId) override;
+
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
+    protected:
         //==============================================================================
         static constexpr int MAX_DELAY_MS = 1000;
 
-        double delayMs = 0;
+        //==============================================================================
+        float delayMs = 0;
     };
 
 }

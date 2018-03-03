@@ -10,6 +10,8 @@
 
 #include "PreDelay.h"
 
+#include "Logger.h"
+
 #include <algorithm>
 
 namespace reverb
@@ -24,6 +26,32 @@ namespace reverb
     PreDelay::PreDelay(juce::AudioProcessor * processor)
         : Task(processor)
     {
+    }
+    
+    //==============================================================================
+    /**
+     * @brief Read processor parameters and update block parameters as necessary
+     *
+     * @returns True if any parameters were changed, false otherwise.
+     */
+    bool PreDelay::updateParams(const juce::AudioProcessorValueTreeState& params,
+                                const juce::String& blockId)
+    {
+        // Delay (ms)
+        auto paramDelayMs = params.getRawParameterValue(blockId);
+
+        if (!paramDelayMs)
+        {
+            throw std::invalid_argument("Parameter not found for pre-delay in PreDelay block");
+        }
+
+        if (*paramDelayMs != delayMs)
+        {
+            delayMs = *paramDelayMs;
+            mustExec = true;
+        }
+
+        return mustExec;
     }
 
     //==============================================================================
@@ -69,8 +97,11 @@ namespace reverb
                irReadPtr,
                ir.getNumSamples() * sizeof(irReadPtr[0]));
 
-        // Use move semantics to replace IR buffer with created buffer
-        ir = std::move(irCopy);
+        // Copy delayed IR to output buffer
+        ir = irCopy;
+
+        // Reset mustExec flag
+        mustExec = false;
     }
 
 }

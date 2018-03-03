@@ -9,6 +9,7 @@
 */
 
 #include "MainPipeline.h"
+#include "PluginProcessor.h"
 
 namespace reverb
 {
@@ -28,6 +29,24 @@ namespace reverb
         convolution = std::make_shared<Convolution>(processor);
         gain = std::make_shared<Gain>(processor);
         dryWetMixer = std::make_shared<Mixer>(processor);
+    }
+
+    //==============================================================================
+    /**
+     * @brief Read processor parameters and update child parameters as necessary
+     *
+     * @returns True if any parameters were changed, false otherwise.
+     */
+    bool MainPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
+                                    const juce::String&)
+    {
+        bool changedParams = false;
+
+        // Update child parameters
+        changedParams |= gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
+        changedParams |= dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
+
+        return changedParams;
     }
 
     //==============================================================================

@@ -10,6 +10,8 @@
 
 #include "Mixer.h"
 
+#include "Logger.h"
+
 namespace reverb
 {
 
@@ -23,18 +25,34 @@ namespace reverb
      */
     Mixer::Mixer(juce::AudioProcessor * processor)
         : Task(processor)
-    { 
-		wetRatio = 0.0;
+    {
     }
+    
+    //==============================================================================
+    /**
+     * @brief Read processor parameters and update block parameters as necessary
+     *
+     * @returns True if any parameters were changed, false otherwise.
+     */
+    bool Mixer::updateParams(const juce::AudioProcessorValueTreeState& params,
+                             const juce::String& blockId)
+    {
+        // Dry/wet ratio
+        auto paramWetRatio = params.getRawParameterValue(blockId);
 
-	//==============================================================================
-	/**
-	* @brief Destroys a Mixer object
+        if (!paramWetRatio)
+        {
+            throw std::invalid_argument("Parameter not found for wet ratio in Mixer block");
+        }
 
-	*/
-	Mixer::~Mixer()
-	{
-	}
+        if (*paramWetRatio != wetRatio)
+        {
+            wetRatio = *paramWetRatio;
+            mustExec = true;
+        }
+
+        return mustExec;
+    }
 
     //==============================================================================
     /**
@@ -51,6 +69,8 @@ namespace reverb
 		dryAudio.applyGain (1 - wetRatio);
 		wetAudio.addFrom(0,0,dryAudio,0,0,wetAudio.getNumSamples(),1.0);
 
+        // Reset mustExec flag
+        mustExec = false;
     }
 
     //==============================================================================

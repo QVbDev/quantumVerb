@@ -17,74 +17,72 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
-TEST_CASE("Mixer class is tested", "[Mixer]") {
+#define compareFloats(a1, a2) std::abs(a2 - a1) <= 0.01
 
-	constexpr int sampleRate = 88200;
-	constexpr int numberChannel = 1;
-	constexpr std::chrono::milliseconds audioDurationMs (300);
-	const int audioNumSample = (int)std::ceil ((audioDurationMs.count () / 1000.0) * sampleRate);
+class MixerMocked : public reverb::Mixer
+{
+public:
+    using Mixer::Mixer;
+
+    float getWetRatio() { return wetRatio; }
+    void setWetRatio(float r) { wetRatio = r; }
+};
+
+TEST_CASE("Mixer class is tested", "[Mixer]")
+{
+	constexpr int SAMPLE_RATE = 88200;
+	constexpr int NUM_CHANNELS = 1;
+    constexpr std::chrono::milliseconds DURATION_MS(300);
+    const int NUM_SAMPLES = (int)std::ceil((DURATION_MS.count() / 1000.0) * SAMPLE_RATE);
+
 	// Create Mixer object
 	reverb::AudioProcessor processor;
-	processor.setPlayConfigDetails (numberChannel, numberChannel,
-		sampleRate, audioNumSample);
+	processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
+		                           SAMPLE_RATE, NUM_SAMPLES);
 
-	REQUIRE (processor.getSampleRate () == sampleRate);
-	reverb::Mixer mixerObj (&processor);
+    REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
+    MixerMocked mixer(&processor);
 
-	SECTION ("Mix two audio buffer") {
-		constexpr double RATIO_WET = 0.5;
+    SECTION("Mix two audio buffers") {
+        constexpr float WET_RATIO = 0.5f;
 
-		// Create one audio block 
-		juce::AudioSampleBuffer wetAudio (1, audioNumSample);
+        // Wet audio buffer: all ones
+        juce::AudioSampleBuffer wetAudio(1, NUM_SAMPLES);
 
-		REQUIRE (wetAudio.getNumChannels () == 1);
-		REQUIRE (wetAudio.getNumSamples () == audioNumSample);
+        REQUIRE(wetAudio.getNumChannels() == NUM_CHANNELS);
+        REQUIRE(wetAudio.getNumSamples() == NUM_SAMPLES);
 
-		for(int i = 0; i < audioNumSample; i++)
-		{
-			wetAudio.setSample (0, i, 1);
-		}
+        for (int i = 0; i < NUM_SAMPLES; i++)
+        {
+            wetAudio.setSample(0, i, 1);
+        }
 
-		// Create other audio block 
-		juce::AudioSampleBuffer dryAudio (1, audioNumSample);
+        // Dry audio buffer: all zeros
+        juce::AudioSampleBuffer dryAudio(1, NUM_SAMPLES);
 
-		REQUIRE (dryAudio.getNumChannels () == 1);
-		REQUIRE (dryAudio.getNumSamples () == audioNumSample);
-		
-		for(int i = 0; i < audioNumSample; i++)
-		{
-			dryAudio.setSample (0, i, 1);
-		}
+        REQUIRE(dryAudio.getNumChannels() == NUM_CHANNELS);
+        REQUIRE(dryAudio.getNumSamples() == NUM_SAMPLES);
 
-		mixerObj.wetRatio = RATIO_WET;
+        for (int i = 0; i < NUM_SAMPLES; i++)
+        {
+            dryAudio.setSample(0, i, 0);
+        }
 
-		// Mixing
-		mixerObj.loadDry (dryAudio);
-		mixerObj.exec (wetAudio);
+        // Run mixer
+        mixer.setWetRatio(WET_RATIO);
+        mixer.loadDry(dryAudio);
 
-		// Test 
+        mixer.exec(wetAudio);
 
-		juce::AudioSampleBuffer wetAudioT (1, audioNumSample);
+        CHECK(wetAudio.getNumChannels() == NUM_CHANNELS);
+        CHECK(wetAudio.getNumSamples() == NUM_SAMPLES);
 
-		REQUIRE (wetAudioT.getNumChannels () == 1);
-		REQUIRE (wetAudioT.getNumSamples () == audioNumSample);
-
-		for(int i = 0; i < audioNumSample; i++)
-		{
-			wetAudioT.setSample (0, i, 1);
-		}
-
-		wetAudioT.applyGain (RATIO_WET);
-		dryAudio.applyGain (1 - RATIO_WET);
-		wetAudioT.addFrom (0, 0, dryAudio, 0, 0, wetAudioT.getNumSamples (), 1.0);
-
-		for(int i = 1; i < audioNumSample; i++)
-		{
-			REQUIRE ((wetAudioT.getSample (0, i)/wetAudio.getSample (0, i))== 1);
-		}
-
-	}
-
-
+        // Since wet = 1 and dry = 0, all values in output buffer should
+        // be WET_RATIO
+        for (int i = 0; i < NUM_SAMPLES; i++)
+        {
+            CHECK( compareFloats(wetAudio.getSample(0, i), WET_RATIO) );
+        }
+    }
 
 }
