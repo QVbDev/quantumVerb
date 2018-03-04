@@ -25,9 +25,6 @@ namespace reverb
     * and handlers for various events such as slider interaction.
 	*/
 	class AudioProcessorEditor : public juce::AudioProcessorEditor
-                               , public juce::Button::Listener 
-                               , public juce::Slider::Listener
-                               , public juce::TextEditor::Listener
 	{
 	public:
 		AudioProcessorEditor(AudioProcessor&);
@@ -38,7 +35,7 @@ namespace reverb
 		void resized() override;
 
         //==============================================================================
-        void buttonClicked(juce::Button * button) override;
+        //void buttonClicked(juce::Button * button) override;
         /*void loadIR(int num);
         void handleMenuResult(int result);
         void menuCallback(int result);*/

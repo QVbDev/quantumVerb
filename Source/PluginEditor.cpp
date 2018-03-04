@@ -142,12 +142,12 @@ namespace reverb
 	}
 
     // handler for button clicks
-    void AudioProcessorEditor::buttonClicked(juce::Button*) 
+    /*void AudioProcessorEditor::buttonClicked(juce::Button*) 
     {
         // Most buttons are handled by parameter tree attachments
 
         // TODO: Handler for IR selection?
-    }
+    }*/
 
     // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
     /** Pops up a dialog letting the user re-load the processor's state from a file. */
