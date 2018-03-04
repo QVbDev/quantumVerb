@@ -11,7 +11,15 @@
 
 namespace reverb
 {
-
+    /**
+    * @brief Constructs an UIReverbBlock object
+    *
+    * Creates a UIReverbBlock and each of its components. Constructs a
+    * building block for the UI. This block includes all sliders required
+    * for the impulse response parameters and output parammeters. It also
+    * does most of the configuration for these sliders. It also adds its 
+    * parameters to the AudioProcessorValueTreeState.
+    */
     //==============================================================================
     UIReverbBlock::UIReverbBlock(AudioProcessor& processor)
         : UIBlock(5, 2)
@@ -102,6 +110,12 @@ namespace reverb
         g.setFont(15.0f);
     }
 
+    /**
+    * @brief Manages the layout of UIReverbBlock when the block is resized
+    *
+    * This function defines all the relative positioning of the various UIReverbBlock
+    * elements.
+    */
     //==============================================================================
     void reverb::UIReverbBlock::resized()
     {

@@ -21,8 +21,8 @@ namespace reverb
 
 	//==============================================================================
 	/**
-    * Implements the plugins UI. This includes window configuration, placement of UI elements and handlers for 
-    * various events such as slider interaction.
+    * Implements the plugins UI. This includes window configuration, placement of UI elements
+    * and handlers for various events such as slider interaction.
 	*/
 	class AudioProcessorEditor : public juce::AudioProcessorEditor
                                , public juce::Button::Listener 
@@ -42,7 +42,6 @@ namespace reverb
         /*void loadIR(int num);
         void handleMenuResult(int result);
         void menuCallback(int result);*/
-        void sliderValueChanged(juce::Slider *changedSlider) override;
 
         //==============================================================================
         static constexpr double PADDING_REL = 0.03;   // 3% padding

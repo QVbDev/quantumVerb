@@ -16,7 +16,16 @@
 
 namespace reverb
 {
-
+    /**
+    * @brief Constructs an AudioProcessorEditor object associated with an AudioProcessor
+    *
+    * Creates an AudioProcessorEditor and each of its components. Constructs the UI by adding
+    * all the required elements. It handles element placement, plugin window default size and
+    * how to handle the resizing of the window.
+    *
+    * @param [in] processor    Pointer to main processor
+    *
+    */
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
           headerBlock(p), reverbBlock(p),
@@ -67,7 +76,11 @@ namespace reverb
 
 	}    
 
-    // sets the layout of displayed components
+    /**
+    * @brief Manages the layout of AudioProcessorEditor when the window is resized
+    *
+    * This function defines all the relative positioning of the various UI elements.
+    */
 	void AudioProcessorEditor::resized()
 	{
         juce::Rectangle<int> bounds(getLocalBounds());
@@ -168,12 +181,5 @@ namespace reverb
         if (button != nullptr && result != 0)
             button->handleMenuResult(result);
     }*/
-
-    // handler for slider interactions
-    // TODO: add predelay handling
-    void AudioProcessorEditor::sliderValueChanged(juce::Slider*)
-    {
-        // All sliders are handled by parameter tree attachments
-    }
 
 }

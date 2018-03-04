@@ -11,7 +11,14 @@
 
 namespace reverb
 {
-
+    /**
+    * @brief Constructs a UIFilterBlock object
+    *
+    * Creates a UIFilterBlock and each of its components. Constructs a
+    * building block for the UI. This block includes all sliders required
+    * for a filter as well as does most of its configuration. It also adds its 
+    * parameters to the AudioProcessorValueTreeState.
+    */
     //==============================================================================
     UIFilterBlock::UIFilterBlock(AudioProcessor& processor, int index)
         : UIBlock(3, 2)
@@ -77,7 +84,12 @@ namespace reverb
         g.setColour(juce::Colours::white);
         g.setFont(15.0f);
     }
-
+    /**
+    * @brief Manages the layout of UIFilterBlock when the block is resized
+    *
+    * This function defines all the relative positioning of the various UIFilterBlock
+    * elements.
+    */
     //==============================================================================
     void UIFilterBlock::resized()
     {
