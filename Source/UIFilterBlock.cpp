@@ -17,9 +17,9 @@ namespace reverb
         : UIBlock(3, 2)
     {
         // Sliders
-        freq.setSliderStyle(juce::Slider::Rotary);
-        q.setSliderStyle(juce::Slider::Rotary);
-        gain.setSliderStyle(juce::Slider::Rotary);
+        freq.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        q.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        gain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
         freq.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
         q.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
@@ -62,6 +62,11 @@ namespace reverb
         addAndMakeVisible(q);
         addAndMakeVisible(freq);
         addAndMakeVisible(gain);
+
+        // Default Values
+        freq.setValue(808.0f);
+        q.setValue(1.06f);
+        gain.setValue(juce::Decibels::decibelsToGain(-6));
     }
 
     //==============================================================================

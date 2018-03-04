@@ -17,11 +17,11 @@ namespace reverb
         : UIBlock(5, 2)
     {
         // Sliders
-        irLength.setSliderStyle(juce::Slider::Rotary);
-        preDelay.setSliderStyle(juce::Slider::Rotary);
-        irGain.setSliderStyle(juce::Slider::Rotary);
-        outGain.setSliderStyle(juce::Slider::Rotary);
-        wetRatio.setSliderStyle(juce::Slider::Rotary);
+        irLength.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        preDelay.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        irGain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        outGain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        wetRatio.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
         irLength.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
         preDelay.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
@@ -84,6 +84,13 @@ namespace reverb
         addAndMakeVisible(irGain);
         addAndMakeVisible(outGain);
         addAndMakeVisible(wetRatio);
+
+        // Default values
+        irLength.setValue(2.5f);
+        preDelay.setValue(500.0f);
+        irGain.setValue(0.5f);
+        outGain.setValue(0.0f);
+        wetRatio.setValue(0.5f);
     }
 
     //==============================================================================
