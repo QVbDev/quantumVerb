@@ -54,6 +54,14 @@ namespace reverb
         addAndMakeVisible(peakHighFilterBlock);
         addAndMakeVisible(highShelfFilterBlock);
 
+        juce::File graphFile = "C:/Github/QuantumReverb/JuceLibraryCode/EQ_graph.png";
+        juce::Image eqGraph = juce::ImageFileFormat::loadFrom(graphFile);
+        juce::Image blank;
+        graphButton.setImages(false, true, false, eqGraph, 1.0, juce::Colours::transparentWhite, 
+            blank, 1.0, juce::Colours::transparentWhite, blank, 1.0, juce::Colours::transparentWhite, 0);
+
+        addAndMakeVisible(graphButton);
+
         // Calls resized when creating UI to position all the elements as if window was resized.
         this->resized();
 	}
@@ -108,7 +116,7 @@ namespace reverb
 
         graphBounds.reduce(padding, padding);
 
-        // TODO: Place graph component
+        graphButton.setBounds(graphBounds);
 
         // Reverb block
         auto reverbBounds = bounds;
