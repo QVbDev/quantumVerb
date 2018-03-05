@@ -28,9 +28,13 @@ namespace reverb
         q.setSliderStyle(juce::Slider::RotaryVerticalDrag);
         gain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
-        freq.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        q.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        gain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        freq.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        q.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        gain.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+
+        freq.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        q.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        gain.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
 
         juce::String filterIDPrefix = processor.PID_FILTER_PREFIX + std::to_string(index);
 

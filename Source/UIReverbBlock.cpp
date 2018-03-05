@@ -31,11 +31,17 @@ namespace reverb
         outGain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
         wetRatio.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
-        irLength.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        preDelay.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        irGain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        outGain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        wetRatio.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        irLength.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        preDelay.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        irGain.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        outGain.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        wetRatio.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+
+        irLength.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        preDelay.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        irGain.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        outGain.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        wetRatio.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
 
         irLength.setComponentID(processor.PID_IR_LENGTH);
         preDelay.setComponentID(processor.PID_PREDELAY);

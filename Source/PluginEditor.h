@@ -41,7 +41,7 @@ namespace reverb
         void menuCallback(int result);*/
 
         //==============================================================================
-        static constexpr double PADDING_REL = 0.03;   // 3% padding
+        static constexpr double PADDING_REL = 0.02;   // 2% padding
 
 	protected:
         //==============================================================================
