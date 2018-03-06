@@ -10,219 +10,228 @@ Equalizer.cpp
 
 namespace reverb {
 
-	Equalizer::Equalizer(juce::AudioProcessor * processor, int numFilters)
-		: Task(processor) 
-	{
+    Equalizer::Equalizer(juce::AudioProcessor * processor, int numFilters)
+        : Task(processor) 
+    {
 
-		if (numFilters < 3) throw WrongFilterNumber();
+        if (numFilters < 3) throw WrongFilterNumber();
 
-		filterSet.add(new LowShelfFilter(processor));
-		
-		for (int i = 0; i < numFilters - 2; i++) 
-		{
-			filterSet.add(new PeakFilter(processor));
-		}
+        filterSet.add(new LowShelfFilter(processor));
+        
+        for (int i = 0; i < numFilters - 2; i++) 
+        {
+            filterSet.add(new PeakFilter(processor));
+        }
 
-		filterSet.add(new HighShelfFilter(processor));
+        filterSet.add(new HighShelfFilter(processor));
 
-		for (int i = 0; i < numFilters; i++) 
-		{
-			EQGains.push_back(1.0f);
-		}
+        for (int i = 0; i < numFilters; i++) 
+        {
+            EQGains.push_back(1.0f);
+        }
 
-		//These constructor setters will likely need to be updated in the very near future.
+        //These constructor setters will likely need to be updated in the very near future.
 
-		filterSet[0]->setQ(0.71);
-		filterSet[numFilters - 1]->setQ(0.71);
+        filterSet[0]->setQ(0.71);
+        filterSet[numFilters - 1]->setQ(0.71);
 
-		for (int i = 0; i < numFilters; i++)
-		{
-			EQGains[i] = 2;
-			filterSet[i]->setGain(2);
-			filterSet[i]->setFrequency((i + 1) * 10000 / numFilters);
+        for (int i = 0; i < numFilters; i++)
+        {
+            EQGains[i] = 2;
+            filterSet[i]->setGain(2);
+            filterSet[i]->setFrequency((i + 1) * 10000 / numFilters);
 
-			if (i != 0 && i != numFilters - 1) filterSet[i]->setQ(4);
-		}
+            if (i != 0 && i != numFilters - 1) filterSet[i]->setQ(4);
+        }
 
-		
+        
 
-		
-	}
+        
+    }
 
-	void Equalizer::exec(juce::AudioSampleBuffer& ir) 
-	{
-		updateFilters();
+    void Equalizer::exec(juce::AudioSampleBuffer& ir) 
+    {
+        updateFilters();
 
-		for (int i = 0; i < filterSet.size(); i++) 
-		{
-			filterSet[i]->exec(ir);
-		}
-	}
+        for (int i = 0; i < filterSet.size(); i++) 
+        {
+            filterSet[i]->exec(ir);
+        }
+    }
 
-	void Equalizer::updateFilters() 
-	{
+    void Equalizer::updateFilters() 
+    {
 
-		//Update filter parameters before gain normalization
+        //Update filter parameters before gain normalization
 
-		const int dim = filterSet.size();
+        const int dim = filterSet.size();
 
-		std::vector<float> evalFrequencies(dim);
+        std::vector<float> evalFrequencies(dim);
 
-		//Set evaluation frequencies
+        //Set evaluation frequencies
 
-		evalFrequencies[0] = 0;
+        evalFrequencies[0] = 0;
 
-		for (int i = 1; i < dim - 1; i++) 
-		{
-			evalFrequencies[i] = filterSet[i]->frequency;
-		}
+        for (int i = 1; i < dim - 1; i++) 
+        {
+            evalFrequencies[i] = filterSet[i]->frequency;
+        }
 
-		evalFrequencies[(dim - 1)] = FMAX;
+        evalFrequencies[(dim - 1)] = FMAX;
 
-		//Create Matrix objects
+        //Create Matrix objects
 
-		juce::dsp::Matrix<float> B(dim, dim);
-		juce::dsp::Matrix<float> gamma(dim, 1);
-		juce::dsp::Matrix<float> lambda(dim, 1);
+        juce::dsp::Matrix<float> B(dim, dim);
+        juce::dsp::Matrix<float> gamma(dim, 1);
+        juce::dsp::Matrix<float> lambda(dim, 1);
 
-		float * B_data = B.getRawDataPointer();
-		float * gamma_data = gamma.getRawDataPointer();
-		float * lambda_data = lambda.getRawDataPointer();
+        float * B_data = B.getRawDataPointer();
+        float * gamma_data = gamma.getRawDataPointer();
+        float * lambda_data = lambda.getRawDataPointer();
 
-		//Compute gamma column
+        //Compute gamma column
 
-		for (int i = 0; i < dim; i++) 
-		{
-			gamma_data[i] = filterSet[i]->getdBAmplitude(evalFrequencies[i]);
-		}
+        for (int i = 0; i < dim; i++) 
+        {
+            gamma_data[i] = filterSet[i]->getdBAmplitude(evalFrequencies[i]);
+        }
 
-		//Set gains to 1 dB for B matrix
-		for (int i = 0; i < dim; i++) 
-		{
-			filterSet[i]->setGain(Filter::invdB(1.0f));
-		}
-		
-
-
-		//Correction algorithm (5 iterations)
-
-		for (int k = 0; k < 5; k++) 
-		{
-
-			memcpy(lambda_data, gamma_data, dim * sizeof(float));
-
-			//Compute B matrix with new gains
-			for (int i = 0; i < dim; i++) 
-			{
-
-				for (int j = 0; j < dim; j++) 
-				{
-
-					B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(evalFrequencies[i]);
-				}
-			}
-
-			B.solve(lambda);
-
-			for (int i = 0; i < dim; i++) 
-			{
-
-				filterSet[i]->setGain(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)));
-			}
-		}
+        //Set gains to 1 dB for B matrix
+        for (int i = 0; i < dim; i++) 
+        {
+            filterSet[i]->setGain(Filter::invdB(1.0f));
+        }
+        
 
 
-	}
+        //Correction algorithm (5 iterations)
 
-	/**
-	* @brief Gives the Equalizer amplitude response in dB at a given frequency
-	*
-	* @param [in] freq   Frequency at which the filter magnitude is evaluated
-	*/
+        for (int k = 0; k < 5; k++) 
+        {
 
-	float Equalizer::getdBAmplitude(float freq) 
-	{
-		float dBAmplitude = 0;
+            memcpy(lambda_data, gamma_data, dim * sizeof(float));
 
-		for (int i = 0; i < filterSet.size(); i++) 
-		{
-			dBAmplitude += filterSet[i]->getdBAmplitude(freq);
-		}
+            //Compute B matrix with new gains
+            for (int i = 0; i < dim; i++) 
+            {
 
-		return dBAmplitude;
+                for (int j = 0; j < dim; j++) 
+                {
 
-	}
+                    B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(evalFrequencies[i]);
+                }
+            }
 
-	void Equalizer::setFilterFrequency(float freq, int num) 
-	{
-		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+            B.solve(lambda);
 
-		//Check whether filter frequency crosses another one's
+            for (int i = 0; i < dim; i++) 
+            {
 
-		if (num == 0) 
-		{
-			if (freq >= filterSet[num + 1]->frequency) throw WrongEQFrequency();
-		}
+                filterSet[i]->setGain(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)));
+            }
+        }
 
-		if (num == (filterSet.size() - 1))
-		{
-			if (freq <= filterSet[num - 1]->frequency) throw WrongEQFrequency();
-		}
 
-		else 
-		{
-			if (freq <= filterSet[num - 1]->frequency || freq >= filterSet[num + 1]->frequency) throw WrongEQFrequency();
-		}
+    }
 
-			filterSet[num]->setFrequency(freq);
-	}
-	void Equalizer::setFilterGain(float gain, int num) 
-	{
-		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+    /**
+    * @brief Gives the Equalizer amplitude response in dB at a given frequency
+    *
+    * @param [in] freq   Frequency at which the filter magnitude is evaluated
+    */
 
-			EQGains[num] = gain;
+    float Equalizer::getdBAmplitude(float freq) 
+    {
+        float dBAmplitude = 0;
 
-			filterSet[num]->setGain(gain);
+        for (int i = 0; i < filterSet.size(); i++) 
+        {
+            dBAmplitude += filterSet[i]->getdBAmplitude(freq);
+        }
 
-	}
-	void Equalizer::setFilterQ(float Q, int num) 
-	{
-		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+        return dBAmplitude;
 
-			filterSet[num]->setQ(Q);
-	}
+    }
 
-	float Equalizer::getFilterFrequency(int num) 
-	{
+    void Equalizer::setFilterFrequency(float freq, int num) 
+    {
+        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
-		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+        //Check whether filter frequency crosses another one's
 
-		return filterSet[num]->frequency;
-	}
+        if (num == 0) 
+        {
+            if (freq >= filterSet[num + 1]->frequency) throw WrongEQFrequency();
+        }
 
-	float Equalizer::getFilterGain(int num) 
-	{
-		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+        if (num == (filterSet.size() - 1))
+        {
+            if (freq <= filterSet[num - 1]->frequency) throw WrongEQFrequency();
+        }
 
-		return filterSet[num]->gainFactor;
-	}
+        else 
+        {
+            if (freq <= filterSet[num - 1]->frequency || freq >= filterSet[num + 1]->frequency) throw WrongEQFrequency();
+        }
 
-	float Equalizer::getFilterQ(int num) 
-	{
-		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+            filterSet[num]->setFrequency(freq);
+    }
+    void Equalizer::setFilterGain(float gain, int num) 
+    {
+        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
-		return filterSet[num]->gainFactor;
-	}
+            EQGains[num] = gain;
 
-	float Equalizer::getEQGain(int num) 
-	{
-		if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+            filterSet[num]->setGain(gain);
 
-		return EQGains[num];
-	}
+    }
+    void Equalizer::setFilterQ(float Q, int num) 
+    {
+        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
-	int Equalizer::getNumFilters() 
-	{
-		return filterSet.size();
-	}
+            filterSet[num]->setQ(Q);
+    }
+
+    float Equalizer::getFilterFrequency(int num) 
+    {
+
+        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+
+        return filterSet[num]->frequency;
+    }
+
+    float Equalizer::getFilterGain(int num) 
+    {
+        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+
+        return filterSet[num]->gainFactor;
+    }
+
+    float Equalizer::getFilterQ(int num) 
+    {
+        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+
+        return filterSet[num]->gainFactor;
+    }
+
+    void Equalizer::enableFilter(int num) 
+    {
+        filterSet[num]->enable();
+    }
+    void Equalizer::disableFilter(int num)
+    {
+        filterSet[num]->disable();
+    }
+
+    float Equalizer::getEQGain(int num) 
+    {
+        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
+
+        return EQGains[num];
+    }
+
+    int Equalizer::getNumFilters() 
+    {
+        return filterSet.size();
+    }
 }

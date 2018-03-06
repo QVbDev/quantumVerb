@@ -28,13 +28,13 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
+    * The Filter class is the abstract class from which the three filter types of the plugin are derived.
     */
     class Filter : public Task,
                    protected juce::dsp::IIR::Filter<float>
     {
 
-	friend class Equalizer;
+    friend class Equalizer;
 
     public:
         //==============================================================================
@@ -46,47 +46,48 @@ namespace reverb
         //==============================================================================
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
-		//==============================================================================
-		static float todB(float m) 
-		{
-			return 20 * std::log10(m);
-		}
+        //==============================================================================
+        static float todB(float m) 
+        {
+            return 20 * std::log10(m);
+        }
 
         //==============================================================================
         static float invdB(float dB) 
-		{
-			return pow(10, dB / 20);
+        {
+            return pow(10, dB / 20);
         }
 
         //==============================================================================
 
-		float getAmplitude(float freq);
-		float getdBAmplitude(float freq);
+        float getAmplitude(float freq);
+        float getdBAmplitude(float freq);
 
-		void setFrequency(float);
-		void setQ(float);
-		void setGain(float);
+        void setFrequency(float);
+        void setQ(float);
+        void setGain(float);
 
-		bool isEnabled();
-		void enable();
-		void disable();
+        bool isEnabled();
+        void enable();
+        void disable();
 
-	protected:
-		bool assertValues();
-		virtual void buildFilter() = 0;
-		
-		bool isOn;
+    protected:
+        bool assertValues();
+        virtual void buildFilter() = 0;
+        
+        bool isOn;
 
-		float frequency;
-		float Q;
-		float gainFactor;
+        float frequency;
+        float Q;
+        float gainFactor;
 
     };
 
     
     //==============================================================================
     /**
-    * TODO: Description
+    * This LowShelfFilter class implements a low-shelf IIR filter
+    * The inherited exec() function is used to process samples.
     */
     class LowShelfFilter : public Filter
     {
@@ -101,7 +102,8 @@ namespace reverb
     
     //==============================================================================
     /**
-    * TODO: Description
+    * This HighShelfFilter class implements a high-shelf IIR filter
+    * The inherited exec() function is used to process samples.
     */
     class HighShelfFilter : public Filter
     {
@@ -116,7 +118,8 @@ namespace reverb
 
     //==============================================================================
     /**
-    * TODO: Description
+    * This PeakFilter class implements a high-shelf IIR filter
+    * The inherited exec() function is used to process samples.
     */
     class PeakFilter : public Filter
     {
@@ -128,24 +131,24 @@ namespace reverb
         virtual void buildFilter() override;
     };
 
-	//==============================================================================
-	/**
-	* Exceptions for Filter class
-	*/
-	struct ChannelNumberException : public std::exception 
-	{
-		const char * what() const throw () 
-		{
-			return "Filter: AudioBuffer channel number is not 1";
-		}
-	};
+    //==============================================================================
+    /**
+    * Exceptions for Filter class
+    */
+    struct ChannelNumberException : public std::exception 
+    {
+        const char * what() const throw () 
+        {
+            return "Filter: AudioBuffer channel number is not 1";
+        }
+    };
 
-	struct WrongParameterException : public std::exception 
-	{
-		const char * what() const throw () 
-		{
-			return "Filter: Parameter(s) is out of bounds";
-		}
-	};
+    struct WrongParameterException : public std::exception 
+    {
+        const char * what() const throw () 
+        {
+            return "Filter: Parameter(s) is out of bounds";
+        }
+    };
 
 }
