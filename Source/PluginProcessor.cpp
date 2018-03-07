@@ -575,7 +575,7 @@ namespace reverb
          */
         parameters.createAndAddParameter( PID_IR_LENGTH,
                                           "Reverb length", "<s>",
-                                          juce::NormalisableRange<float>(0.0f, 5.0f),
+                                          juce::NormalisableRange<float>(0.1f, 5.0f),
                                           3.0f,
                                           nullptr, nullptr);
 
