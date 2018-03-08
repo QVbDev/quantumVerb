@@ -21,9 +21,13 @@ namespace reverb {
 
     //==============================================================================
     /**
-    * The Equalizer class implements a set of IIR filters
+    * The Equalizer class cimplements by default four Filter class instances -one low-shelf, two peak filters and one high-shelf - 
+    * and calibrates their individual gains to balance out the stacking effect thus making sure that the EQ band gains are equal to the ones set by the user. 
+    *
+    *It acts as an interface between the GUI and the IIR filters.
+    *The class can support one low-shelf filter and one high-shelf with any number of peak filters in between; the total number is equal to the numFilters constructor argument. 
+    *The filter instantiations are done in the class constructor.
     */
-
     class Equalizer : public Task 
     {
 

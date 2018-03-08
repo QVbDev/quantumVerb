@@ -152,6 +152,12 @@ namespace reverb {
         return dBAmplitude;
 
     }
+    /**
+    * @brief Sets the frequency of one of the equalizer's specified filter
+    *
+    * @param [in] freq  new frequency
+    * @param [in] num   Filter ID
+    */
 
     void Equalizer::setFilterFrequency(float freq, int num) 
     {
@@ -176,6 +182,13 @@ namespace reverb {
 
             filterSet[num]->setFrequency(freq);
     }
+
+    /**
+    * @brief Sets the gain of one of the equalizer's specified filter
+    *
+    * @param [in] freq  new gain
+    * @param [in] num   Filter ID
+    */
     void Equalizer::setFilterGain(float gain, int num) 
     {
         if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
@@ -185,12 +198,26 @@ namespace reverb {
             filterSet[num]->setGain(gain);
 
     }
+
+    /**
+    * @brief Sets the Q of one of the equalizer's specified filter
+    *
+    * @param [in] freq  new Q
+    * @param [in] num   Filter ID
+    */
     void Equalizer::setFilterQ(float Q, int num) 
     {
         if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
             filterSet[num]->setQ(Q);
     }
+
+    /**
+    * @brief Returns the cut-off/central frequency of one of the equalizer's specified filter
+    *
+    * @param num    Filter ID
+    * @return       Cut-off/central frequency of the filter
+    */
 
     float Equalizer::getFilterFrequency(int num) 
     {
@@ -200,6 +227,13 @@ namespace reverb {
         return filterSet[num]->frequency;
     }
 
+    /**
+    * @brief Returns the band gain of one of the equalizer's specified filter. Gain will change after calibration.
+    *
+    * @param num    Filter ID
+    * @return       Gain of the filter
+    */
+
     float Equalizer::getFilterGain(int num) 
     {
         if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
@@ -207,12 +241,21 @@ namespace reverb {
         return filterSet[num]->gainFactor;
     }
 
+    /**
+    * @brief Returns the Q of one of the equalizer's specified filter
+    *
+    * @param num    Filter ID
+    * @return       Q of the filter
+    */
+
     float Equalizer::getFilterQ(int num) 
     {
         if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
         return filterSet[num]->gainFactor;
     }
+
+
 
     void Equalizer::enableFilter(int num) 
     {

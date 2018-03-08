@@ -22,7 +22,7 @@ Test_Filter.cpp
 
 
 
-TEST_CASE("Filter class is tested", "[filters]") 
+TEST_CASE("Filter class is tested", "[filters]")
 {
 
     //==============================================================================
