@@ -37,7 +37,7 @@ namespace reverb {
 
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
-        void updateFilters();
+        void calibrateFilters();
 
         float getdBAmplitude(float freq);
 

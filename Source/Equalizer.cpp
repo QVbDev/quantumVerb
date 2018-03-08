@@ -51,7 +51,7 @@ namespace reverb {
 
     void Equalizer::exec(juce::AudioSampleBuffer& ir) 
     {
-        updateFilters();
+        calibrateFilters();
 
         for (int i = 0; i < filterSet.size(); i++) 
         {
@@ -59,7 +59,7 @@ namespace reverb {
         }
     }
 
-    void Equalizer::updateFilters() 
+    void Equalizer::calibrateFilters() 
     {
 
         //Update filter parameters before gain normalization
@@ -184,7 +184,7 @@ namespace reverb {
     }
 
     /**
-    * @brief Sets the gain of one of the equalizer's specified filter
+    * @brief Sets the gain of one of the equalizer's specified filter. The gain will be changed after calibration.
     *
     * @param [in] freq  new gain
     * @param [in] num   Filter ID
@@ -255,23 +255,40 @@ namespace reverb {
         return filterSet[num]->gainFactor;
     }
 
-
-
+    /**
+    * @brief Enables the specified filter
+    */
+    
     void Equalizer::enableFilter(int num) 
     {
         filterSet[num]->enable();
     }
+
+    /**
+    * @brief Disables the specified filter
+    */
     void Equalizer::disableFilter(int num)
     {
         filterSet[num]->disable();
     }
 
+    /**
+    * @brief Returns the EQ gains as specified by the user (differs from actual filter gains after calibration
+    *
+    * @param [in] num   Filter ID
+    * @return           EQ nominal gain
+    */
     float Equalizer::getEQGain(int num) 
     {
         if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
         return EQGains[num];
     }
+
+    /**
+    * @brief Returns the number of filters in the EQ
+    *
+    */
 
     int Equalizer::getNumFilters() 
     {
