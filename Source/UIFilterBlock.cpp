@@ -11,19 +11,30 @@
 
 namespace reverb
 {
-
+    /**
+    * @brief Constructs a UIFilterBlock object
+    *
+    * Creates a UIFilterBlock and each of its components. Constructs a
+    * building block for the UI. This block includes all sliders required
+    * for a filter as well as does most of its configuration. It also adds its 
+    * parameters to the AudioProcessorValueTreeState.
+    */
     //==============================================================================
     UIFilterBlock::UIFilterBlock(AudioProcessor& processor, int index)
         : UIBlock(3, 2)
     {
         // Sliders
-        freq.setSliderStyle(juce::Slider::Rotary);
-        q.setSliderStyle(juce::Slider::Rotary);
-        gain.setSliderStyle(juce::Slider::Rotary);
+        freq.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        q.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+        gain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
-        freq.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        q.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-        gain.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+        freq.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        q.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+        gain.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
+
+        freq.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        q.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        gain.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
 
         juce::String filterIDPrefix = processor.PID_FILTER_PREFIX + std::to_string(index);
 
@@ -62,6 +73,11 @@ namespace reverb
         addAndMakeVisible(q);
         addAndMakeVisible(freq);
         addAndMakeVisible(gain);
+
+        // Default Values
+        freq.setValue(808.0f);
+        q.setValue(1.06f);
+        gain.setValue(juce::Decibels::decibelsToGain(-6));
     }
 
     //==============================================================================
@@ -72,7 +88,12 @@ namespace reverb
         g.setColour(juce::Colours::white);
         g.setFont(15.0f);
     }
-
+    /**
+    * @brief Manages the layout of UIFilterBlock when the block is resized
+    *
+    * This function defines all the relative positioning of the various UIFilterBlock
+    * elements.
+    */
     //==============================================================================
     void UIFilterBlock::resized()
     {

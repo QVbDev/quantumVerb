@@ -4586,6 +4586,9 @@
     <None Include="..\..\Resources\ImpulseResponses\open_air.wav">
       <Filter>QuantumReverb\resources\ImpulseResponses</Filter>
     </None>
+    <None Include="..\..\Resources\graph_placeholder.png">
+      <Filter>QuantumReverb\resources</Filter>
+    </None>
     <None Include="..\..\Resources\logo_dial.png">
       <Filter>QuantumReverb\resources</Filter>
     </None>

@@ -16,7 +16,16 @@
 
 namespace reverb
 {
-
+    /**
+    * @brief Constructs an AudioProcessorEditor object associated with an AudioProcessor
+    *
+    * Creates an AudioProcessorEditor and each of its components. Constructs the UI by adding
+    * all the required elements. It handles element placement, plugin window default size and
+    * how to handle the resizing of the window.
+    *
+    * @param [in] processor    Pointer to main processor
+    *
+    */
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
           headerBlock(p), reverbBlock(p),
@@ -45,6 +54,19 @@ namespace reverb
         addAndMakeVisible(peakHighFilterBlock);
         addAndMakeVisible(highShelfFilterBlock);
 
+        juce::Image eqGraph = juce::ImageFileFormat::loadFrom(BinaryData::graph_placeholder_png,
+                                                              BinaryData::graph_placeholder_pngSize);
+
+        juce::Image blank;
+
+        graphButton.setImages(false, true, false,
+                              eqGraph, 1.0, juce::Colours::transparentWhite, 
+                              blank, 1.0, juce::Colours::transparentWhite,
+                              blank, 1.0, juce::Colours::transparentWhite,
+                              0);
+
+        addAndMakeVisible(graphButton);
+
         // Calls resized when creating UI to position all the elements as if window was resized.
         this->resized();
 	}
@@ -67,7 +89,11 @@ namespace reverb
 
 	}    
 
-    // sets the layout of displayed components
+    /**
+    * @brief Manages the layout of AudioProcessorEditor when the window is resized
+    *
+    * This function defines all the relative positioning of the various UI elements.
+    */
 	void AudioProcessorEditor::resized()
 	{
         juce::Rectangle<int> bounds(getLocalBounds());
@@ -95,7 +121,7 @@ namespace reverb
 
         graphBounds.reduce(padding, padding);
 
-        // TODO: Place graph component
+        graphButton.setBounds(graphBounds);
 
         // Reverb block
         auto reverbBounds = bounds;
@@ -129,12 +155,12 @@ namespace reverb
 	}
 
     // handler for button clicks
-    void AudioProcessorEditor::buttonClicked(juce::Button*) 
+    /*void AudioProcessorEditor::buttonClicked(juce::Button*) 
     {
         // Most buttons are handled by parameter tree attachments
 
         // TODO: Handler for IR selection?
-    }
+    }*/
 
     // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
     /** Pops up a dialog letting the user re-load the processor's state from a file. */
@@ -168,12 +194,5 @@ namespace reverb
         if (button != nullptr && result != 0)
             button->handleMenuResult(result);
     }*/
-
-    // handler for slider interactions
-    // TODO: add predelay handling
-    void AudioProcessorEditor::sliderValueChanged(juce::Slider*)
-    {
-        // All sliders are handled by parameter tree attachments
-    }
 
 }

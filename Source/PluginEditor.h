@@ -21,13 +21,10 @@ namespace reverb
 
 	//==============================================================================
 	/**
-    * Implements the plugins UI. This includes window configuration, placement of UI elements and handlers for 
-    * various events such as slider interaction.
+    * Implements the plugins UI. This includes window configuration, placement of UI elements
+    * and handlers for various events such as slider interaction.
 	*/
 	class AudioProcessorEditor : public juce::AudioProcessorEditor
-                               , public juce::Button::Listener 
-                               , public juce::Slider::Listener
-                               , public juce::TextEditor::Listener
 	{
 	public:
 		AudioProcessorEditor(AudioProcessor&);
@@ -38,14 +35,13 @@ namespace reverb
 		void resized() override;
 
         //==============================================================================
-        void buttonClicked(juce::Button * button) override;
+        //void buttonClicked(juce::Button * button) override;
         /*void loadIR(int num);
         void handleMenuResult(int result);
         void menuCallback(int result);*/
-        void sliderValueChanged(juce::Slider *changedSlider) override;
 
         //==============================================================================
-        static constexpr double PADDING_REL = 0.03;   // 3% padding
+        static constexpr double PADDING_REL = 0.02;   // 2% padding
 
 	protected:
         //==============================================================================
@@ -71,6 +67,7 @@ namespace reverb
         UIFilterBlock peakHighFilterBlock;
         UIFilterBlock highShelfFilterBlock;
 
+        juce::ImageButton graphButton; 
     private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};
