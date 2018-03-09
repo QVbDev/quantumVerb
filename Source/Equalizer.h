@@ -34,6 +34,9 @@ namespace reverb {
     public:
 
         Equalizer(juce::AudioProcessor * processor, int numFilters = 4);
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+            const juce::String& blockId) override;
+
 
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 

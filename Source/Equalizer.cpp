@@ -49,6 +49,32 @@ namespace reverb {
         
     }
 
+    //==============================================================================
+    /**
+    * @brief Read processor parameters and update block parameters as necessary
+    *
+    * @returns True if any parameters were changed, false otherwise.
+    * @throws ChannelNumberException
+    * @throws WrongParameterException
+    */
+
+    bool Equalizer::updateParams(const juce::AudioProcessorValueTreeState& params,
+        const juce::String& blockId) 
+        {
+
+        bool mustExec = false;
+
+        for (int i = 0; i < filterSet.size(); i++) 
+        {
+            if (filterSet[i]->updateParams(params, blockId))
+            {
+                mustExec = true;
+            }
+        }
+
+        return mustExec;
+    }
+
     /**
     * @brief Processes the AudioBuffer input with the EQ filters
     *
@@ -66,7 +92,7 @@ namespace reverb {
     }
 
     /**
-    * @brief Calibrates the individual filter gains so that the stacked gains equal the user specified values at the frequencies of 0, 21000 Hz 
+    * @brief Calibrates the individual filter gains so that the stacked gains are equal to the user specified values at the frequencies of 0, 21000 Hz 
     *  and at every one of the peak filter center frequencies. 
     *
     * This function solves a linear equation system of N variables where N = number of filters.  The use of decibels is necessary for the gain stacks to behave linearly. 

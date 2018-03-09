@@ -29,9 +29,9 @@ namespace reverb
     Filter::Filter(juce::AudioProcessor * processor, float freq, float q, float gain)
         : Task(processor), isOn(true), frequency(freq), Q(q), gainFactor(gain)
     {
-        
+
     }
-    
+
     //==============================================================================
     /**
      * @brief Read processor parameters and update block parameters as necessary
@@ -41,7 +41,7 @@ namespace reverb
      * @throws WrongParameterException
      */
     bool Filter::updateParams(const juce::AudioProcessorValueTreeState& params,
-                              const juce::String& blockId)
+        const juce::String& blockId)
     {
         // Frequency
         auto paramFreq = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_FREQ_SUFFIX);
@@ -56,6 +56,7 @@ namespace reverb
             frequency = *paramFreq;
             mustExec = true;
         }
+
         // Q factor
         auto paramQ = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_Q_SUFFIX);
 
@@ -70,6 +71,63 @@ namespace reverb
             mustExec = true;
         }
 
+        // Gain
+        auto paramGain = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_GAIN_SUFFIX);
+
+        if (!paramGain)
+        {
+            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
+        }
+
+        if (*paramGain != gainFactor)
+        {
+            gainFactor = *paramGain;
+            mustExec = true;
+        }
+
+        // Rebuild filter if necessary
+        if (mustExec)
+        {
+            buildFilter();
+        }
+
+        return mustExec;
+    
+    }
+
+    //==============================================================================
+    /**
+    * @brief Filters the audio in AudioSampleBuffer
+    *
+    * This function filters an AudioBuffer using the IIR filter's coefficients
+    *
+    * @param [in,out] ir   Contains the audio to be filtered, the output is placed in that same buffer
+    * @throws ChannelNumberException
+    * @throws WrongParameterException
+    */
+
+    void Filter::exec(juce::AudioSampleBuffer& ir)
+    {
+        buildFilter();
+
+        if (ir.getNumChannels() != 1)
+        {
+            logger.dualPrint(Logger::Level::Warning, "Filter: AudioBuffer channel count is not 1");
+            return;
+        }
+
+        if (isOn)
+        {
+            juce::dsp::AudioBlock<float> block(ir);
+
+            juce::dsp::ProcessContextReplacing<float> context(block);
+            juce::dsp::IIR::Filter<float>::process(context);
+
+            // Reset mustExec flag
+            mustExec = false;
+        }
+    }
+
     //==============================================================================
     /**
     * @brief Gives the filter absolute amplitude response at a given frequency
@@ -77,7 +135,8 @@ namespace reverb
     * @param [in] freq   Frequency at which the filter magnitude is evaluated
     */
 
-    float Filter::getAmplitude(float freq){
+
+    float Filter::getAmplitude(float freq) {
         // All filters are 2nd order and thus have five coefficients
         float * coeffs = coefficients->getRawCoefficients();
 
@@ -91,10 +150,10 @@ namespace reverb
         std::complex<float> input;
         std::complex<float> output;
 
-        float minus_omega = -(2 * M_PI * freq) / processor->getSampleRate();
+        float minusOmega = -(2 * M_PI * freq) / processor->getSampleRate();
 
-        input.real(std::cos(minus_omega));
-        input.imag(std::sin(minus_omega));
+        input.real(std::cos(minusOmega));
+        input.imag(std::sin(minusOmega));
 
         //Compute and return transfer function amplitude
 
@@ -110,7 +169,7 @@ namespace reverb
     * @return Filter amplitude response in dB
     */
 
-    float Filter::getdBAmplitude(float freq) 
+    float Filter::getdBAmplitude(float freq)
     {
         return 20 * std::log10(getAmplitude(freq));
     }
@@ -121,133 +180,131 @@ namespace reverb
     *
     * @param [in] freq   Frequency to be set
     */
-    
 
-    void Filter::setFrequency(float freq) 
+
+    void Filter::setFrequency(float freq)
     {
 
         if (freq <= 0 || freq > FMAX) throw WrongParameterException();
-        
-        if (*paramGain != gainFactor)
-        {
-            gainFactor = *paramGain;
-            mustExec = true;
-        }
 
-        // Rebuild filter if necessary
-        if (mustExec)
-        {
-            buildFilter();
-        }
-    */
+        frequency = freq;
 
-        return mustExec;
+        buildFilter();
     }
-
-        if(q < QMIN || q > QMAX) throw WrongParameterException();
 
     //==============================================================================
     /**
-     * @brief Brief description
-     *
-     * Detailed description
-     *
-     * @param [in,out] ir   Parameter description
-     */
-    void Filter::exec(juce::AudioSampleBuffer& ir)
-    {
-        buildFilter();
+    * @brief Sets the filter Q factor and updates the IIR filter coefficients
+    *
+    * @param [in] freq   Q factor to be set
+    */
 
-        if (ir.getNumChannels() != 1)
-        {
-            logger.dualPrint(Logger::Level::Warning, "Filter: AudioBuffer channel count is not 1");
-            return;
-        }
+    void Filter::setQ(float q)
+    {
+
+        if (q < QMIN || q > QMAX) throw WrongParameterException();
+
+        Q = q;
+
+        buildFilter();
+    }
     //==============================================================================
     /**
     * @brief Sets the filter band gain and updates the IIR filter coefficients
     *
     * @param [in] freq   Band gain to be set
     */
-		
-		if (isOn)
-        {
-			juce::dsp::AudioBlock<float> block(ir);
 
-			juce::dsp::ProcessContextReplacing<float> context(block);
-			juce::dsp::IIR::Filter<float>::process(context);
+    void Filter::setGain(float gain)
+    {
 
-            // Reset mustExec flag
-            mustExec = false;
-		}
+        if (gain < invdB(GMIN) || gain > invdB(GMAX)) throw WrongParameterException();
+
+        gainFactor = gain;
+
+        buildFilter();
     }
 
     //==============================================================================
     /**
-    * @brief (TODO) Brief description
+    * @brief Indicates whether the filter is enabled or not
     *
-    * (TODO) Detailed description
+    * @return   True if filter is enabled or false if filter is disabled
     */
 
-    bool Filter::isEnabled() 
+    bool Filter::isEnabled()
     {
         return isOn;
     }
 
+    //==============================================================================
     /**
-    * @brief (TODO) Brief description
+    * @brief Enables the filter
     *
-    * (TODO) Detailed description
     */
 
-    void Filter::enable() 
+    void Filter::enable()
     {
         isOn = true;
     }
 
+    //==============================================================================
     /**
-    * @brief (TODO) Brief description
+    * @brief Disables the filter
     *
-    * (TODO) Detailed description
     */
 
-    void Filter::disable() 
+    void Filter::disable()
     {
         isOn = false;
 
     }
 
+    bool Filter::assertValues()
+    {
+        if (frequency > 0 && frequency <= FMAX && Q >= QMIN && Q <= QMAX && 
+            gainFactor >= invdB(GMIN) && gainFactor <= invdB(GMAX)) return true;
+
+        else return false;
+    }
+
     //==============================================================================
     /**
-    * @brief (TODO) Brief description
+    * @brief Generates and sets the low-shelf IIR filter coefficients with the current filter parameters
     *
-    * (TODO) Detailed description
     */
     void LowShelfFilter::buildFilter()
     {
-        coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(processor->getSampleRate(), frequency, Q, gainFactor);
+        if (!assertValues()) throw WrongParameterException();
+
+        coefficients = juce::dsp::IIR::Coefficients<float>::makeLowShelf(processor->getSampleRate(), 
+            frequency, Q, gainFactor);
     }
 
     //==============================================================================
     /**
-    * @brief (TODO) Brief description
+    * @brief Generates and sets the high-shelf IIR filter coefficients with the current filter parameters
     *
-    * (TODO) Detailed description
     */
     void HighShelfFilter::buildFilter()
     {
-        coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), frequency, Q, gainFactor);
+        if (!assertValues()) throw WrongParameterException();
+
+        coefficients = juce::dsp::IIR::Coefficients<float>::makeHighShelf(processor->getSampleRate(), 
+            frequency, Q, gainFactor);
     }
 
     //==============================================================================
     /**
-    * @brief (TODO) Brief description
+    * @brief Generates and sets the peak IIR filter coefficients with the current filter parameters
     *
-    * (TODO) Detailed description
     */
     void PeakFilter::buildFilter()
     {
-        coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(processor->getSampleRate(), frequency, Q, gainFactor);
+        if (!assertValues()) throw WrongParameterException();
+
+        coefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(processor->getSampleRate(), 
+            frequency, Q, gainFactor);
     }
 
 }
