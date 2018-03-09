@@ -49,6 +49,12 @@ namespace reverb {
         
     }
 
+    /**
+    * @brief Processes the AudioBuffer input with the EQ filters
+    *
+    * @param [in] ir   AudioBuffer to be processed
+    */
+
     void Equalizer::exec(juce::AudioSampleBuffer& ir) 
     {
         calibrateFilters();
@@ -59,8 +65,18 @@ namespace reverb {
         }
     }
 
+    /**
+    * @brief Calibrates the individual filter gains so that the stacked gains equal the user specified values at the frequencies of 0, 21000 Hz 
+    *  and at every one of the peak filter center frequencies. 
+    *
+    * This function solves a linear equation system of N variables where N = number of filters.  The use of decibels is necessary for the gain stacks to behave linearly. 
+    *
+    */
+
+
     void Equalizer::calibrateFilters() 
     {
+
 
         //Update filter parameters before gain normalization
 
