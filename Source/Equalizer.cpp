@@ -92,11 +92,12 @@ namespace reverb {
     }
 
     /**
-    * @brief Calibrates the individual filter gains so that the stacked gains are equal to the user specified values at the frequencies of 0, 21000 Hz 
-    *  and at every one of the peak filter center frequencies. 
+    * @brief Calibrates the individual filter gains. 
     *
-    * This function solves a linear equation system of N variables where N = number of filters.  The use of decibels is necessary for the gain stacks to behave linearly. 
-    *
+    * This function solves a linear equation system of N variables where N = number of filters in order to find the individual gains that, when stacked together, 
+    * are equal to the user specified values at the frequencies of 0, 21000 Hzand at every one of the peak filter center frequencies. 
+    * The use of decibels is necessary for the gain stacks to behave linearly. The algorithm can be used iteratively and is detailed
+    * in the Standford University lecture note available at https://ccrma.stanford.edu/courses/424/handouts.2004/424_Handout22_Filters4_LectureNotes.pdf
     */
 
 
