@@ -54,11 +54,16 @@ namespace reverb
         addAndMakeVisible(peakHighFilterBlock);
         addAndMakeVisible(highShelfFilterBlock);
 
-        juce::File graphFile = "C:/Github/QuantumReverb/JuceLibraryCode/EQ_graph.png";
-        juce::Image eqGraph = juce::ImageFileFormat::loadFrom(graphFile);
+        juce::Image eqGraph = juce::ImageFileFormat::loadFrom(BinaryData::graph_placeholder_png,
+                                                              BinaryData::graph_placeholder_pngSize);
+
         juce::Image blank;
-        graphButton.setImages(false, true, false, eqGraph, 1.0, juce::Colours::transparentWhite, 
-            blank, 1.0, juce::Colours::transparentWhite, blank, 1.0, juce::Colours::transparentWhite, 0);
+
+        graphButton.setImages(false, true, false,
+                              eqGraph, 1.0, juce::Colours::transparentWhite, 
+                              blank, 1.0, juce::Colours::transparentWhite,
+                              blank, 1.0, juce::Colours::transparentWhite,
+                              0);
 
         addAndMakeVisible(graphButton);
 

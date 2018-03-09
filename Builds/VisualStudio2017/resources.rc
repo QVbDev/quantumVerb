@@ -7,7 +7,7 @@
 #include <windows.h>
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION  1,0,0,0
+FILEVERSION  0,1,0,0
 BEGIN
   BLOCK "StringFileInfo"
   BEGIN
@@ -15,10 +15,10 @@ BEGIN
     BEGIN
       VALUE "CompanyName",  "Quantum-Music\0"
       VALUE "LegalCopyright",  "Quantum-Music \xc2\xa9 2018, an Audio Mastering Company based in Montreal, QC, Canada.\0"
-      VALUE "FileDescription",  "QuantumReverb\0"
-      VALUE "FileVersion",  "1.0.0\0"
-      VALUE "ProductName",  "QuantumReverb\0"
-      VALUE "ProductVersion",  "1.0.0\0"
+      VALUE "FileDescription",  "quantumVERB\0"
+      VALUE "FileVersion",  "0.1.0\0"
+      VALUE "ProductName",  "quantumVERB\0"
+      VALUE "ProductVersion",  "0.1.0\0"
     END
   END
 

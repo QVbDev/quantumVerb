@@ -2682,6 +2682,7 @@
     <None Include="..\..\Resources\ImpulseResponses\medium_chamber.wav"/>
     <None Include="..\..\Resources\ImpulseResponses\medium_hall.wav"/>
     <None Include="..\..\Resources\ImpulseResponses\open_air.wav"/>
+    <None Include="..\..\Resources\graph_placeholder.png"/>
     <None Include="..\..\Resources\logo_dial.png"/>
     <None Include="..\..\vendor\juce\modules\juce_audio_formats\codecs\flac\Flac Licence.txt"/>
     <None Include="..\..\vendor\juce\modules\juce_audio_formats\codecs\oggvorbis\Ogg Vorbis Licence.txt"/>
