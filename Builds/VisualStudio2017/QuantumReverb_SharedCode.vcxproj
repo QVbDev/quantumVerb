@@ -166,6 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Convolution.cpp"/>
+    <ClCompile Include="..\..\Source\Equalizer.cpp" />
     <ClCompile Include="..\..\Source\Filter.cpp"/>
     <ClCompile Include="..\..\Source\Gain.cpp"/>
     <ClCompile Include="..\..\Source\IRBank.cpp"/>
@@ -1959,6 +1960,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Convolution.h"/>
+    <ClInclude Include="..\..\Source\Equalizer.h" />
     <ClInclude Include="..\..\Source\Filter.h"/>
     <ClInclude Include="..\..\Source\Gain.h"/>
     <ClInclude Include="..\..\Source\UIFilterBlock.h"/>
