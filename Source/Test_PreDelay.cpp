@@ -18,6 +18,23 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
+ // TODO: Test parameter changes
+
+ //==============================================================================
+ /**
+ * Mocked PreDelay class to facilitate accessing protected members in unit tests.
+ */
+class PreDelayMocked : public reverb::PreDelay
+{
+public:
+    using PreDelay::PreDelay;
+
+    void setDelayMs(float delay) { delayMs = delay; }
+    float getDelayMs() { return delayMs; }
+
+    constexpr int getMaxDelayMs() { return MAX_DELAY_MS; }
+};
+
 TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]") {
     constexpr int SAMPLE_RATE = 88200;
     constexpr int NUM_CHANNELS = 1;
@@ -31,7 +48,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
     REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
-    reverb::PreDelay preDelay(&processor);
+    PreDelayMocked preDelay(&processor);
 
     // Prepare dummy IR
     constexpr int IR_SIZE = 2048;
@@ -46,18 +63,18 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
 
     SECTION("When delay is 0, IR buffer should remain unchanged") {
-        preDelay.delayMs = 0;
+        preDelay.setDelayMs(0);
 
-        REQUIRE(preDelay.delayMs == 0);
+        REQUIRE(preDelay.getDelayMs() == 0);
 
         preDelay.exec(ir);
 
-        REQUIRE(ir.getNumChannels() == 1);
-        REQUIRE(ir.getNumSamples() == IR_SIZE);
+        CHECK(ir.getNumChannels() == 1);
+        CHECK(ir.getNumSamples() == IR_SIZE);
 
         for (int i = 0; i < IR_SIZE; ++i)
         {
-            REQUIRE(ir.getSample(0, i) == IR_VAL_OFFSET + i);
+            CHECK(ir.getSample(0, i) == IR_VAL_OFFSET + i);
         }
     }
 
@@ -66,31 +83,31 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
         static constexpr double DELAY_S = 0.001;
         const int EXPECTED_NUM_SAMPLES = (int)std::ceil(SAMPLE_RATE * DELAY_S);
 
-        preDelay.delayMs = DELAY_S * 1000;
+        preDelay.setDelayMs(DELAY_S * 1000);
 
-        REQUIRE(preDelay.delayMs == DELAY_S * 1000);
+        REQUIRE(preDelay.getDelayMs() == DELAY_S * 1000);
 
         preDelay.exec(ir);
 
-        REQUIRE(ir.getNumChannels() == 1);
-        REQUIRE(ir.getNumSamples() == IR_SIZE + EXPECTED_NUM_SAMPLES);
+        CHECK(ir.getNumChannels() == 1);
+        CHECK(ir.getNumSamples() == IR_SIZE + EXPECTED_NUM_SAMPLES);
 
         for (int i = 0; i < EXPECTED_NUM_SAMPLES; ++i)
         {
-            REQUIRE(ir.getSample(0, i) == 0);
+            CHECK(ir.getSample(0, i) == 0);
         }
 
         for (int i = EXPECTED_NUM_SAMPLES; i < ir.getNumSamples(); ++i)
         {
-            REQUIRE(ir.getSample(0, i) == IR_VAL_OFFSET + (i - EXPECTED_NUM_SAMPLES));
+            CHECK(ir.getSample(0, i) == IR_VAL_OFFSET + (i - EXPECTED_NUM_SAMPLES));
         }
     }
 
 
     SECTION("When pre-delay exceeds 1s, block should throw an exception") {
-        preDelay.delayMs = preDelay.MAX_DELAY_MS + 1;
+        preDelay.setDelayMs(preDelay.getMaxDelayMs() + 1.0f);
 
-        REQUIRE(preDelay.delayMs == preDelay.MAX_DELAY_MS + 1);
+        REQUIRE(preDelay.getDelayMs() == preDelay.getMaxDelayMs() + 1);
 
         bool gotException = false;
 
@@ -103,6 +120,6 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
             gotException = true;
         }
 
-        REQUIRE(gotException);
+        CHECK(gotException);
     }
 }

@@ -8,166 +8,64 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
+
+#include "PluginProcessor.h"
+
 #include <string.h>
-
-using namespace juce;
-
-const float FILTER_BOX_RELATIVE_WIDTH = 0.2f;
-const float FILTER_BOX_RELATIVE_HEIGHT = 0.35f;
-const float HEADER_BOX_RELATIVE_HEIGHT = 0.10f;
-const float SAMPLE_RATE_BOX_RELATIVE_WIDTH = 0.35f;
-const float ON_BUTTON_RELATIVE_WIDTH = 0.15f;
-const float INFO_BUTTON_RELATIVE_WIDTH = 0.5f;
-const float REVERB_BOX_RELATIVE_HEIGHT = 0.55F;
-const float IR_LENGTH_MIN = 0.1f;
-const float IR_LENGTH_MAX = 5.0f;
-const float IR_LENGTH_DEFAULT = 2.55f;
-const float IR_VOL_MIN = 0.0f;
-const float IR_VOL_MAX = 1.0f;
-const float IR_VOL_DEFAULT = 0.5f;
-
-// TODO: check float/dB conversion required or not
-const float OUT_GAIN_MIN = -50.0f;
-const float OUT_GAIN_MAX = 0.0f;
-const float OUT_GAIN_DEFAULT = -25.0f;
-
-const float DRY_WET_MIN = 0.0f;
-const float DRY_WET_MAX = 1.0f;
-const float DRY_WET_DEFAULT = 0.5f;
-
-// TODO: check float/dB conversion 
-// conversion used: Db to amplitude
-const float PARAM_A_MIN = 0.063f;
-const float PARAM_A_MAX = 3.97f;
-const float PARAM_A_DEFAULT = 0.5f;
-
-const float PARAM_F_LOW_MIN = 16.0f;
-const float PARAM_F_LOW_MAX = 1600.0f;
-const float PARAM_F_LOW_DEFAULT = 808.0f;
-const float PARAM_F_HIGH_MIN = 1000.0f;
-const float PARAM_F_HIGH_MAX = 21000.0f;
-const float PARAM_F_HIGH_DEFAULT = 11000.0f;
-const float PARAM_Q_SHELF_MIN = 0.71f;
-const float PARAM_Q_SHELF_MAX = 1.41f;
-const float PARAM_Q_SHELF_DEFAULT = 1.06f;
-const float PARAM_Q_PEAK_MIN = 0.26f;
-const float PARAM_Q_PEAK_MAX = 6.50f;
-
-// TODO default back to 1/2 range = 3.38f
-const float PARAM_Q_PEAK_DEFAULT = 1.9f;
-
-const float PREDELAY_MIN = 0.0f;
-const float PREDELAY_MAX = 1000.0f;
-const float PREDELAY_DEFAULT = 500.0f;
 
 namespace reverb
 {
-	AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
-		: juce::AudioProcessorEditor(&p), processor(p)
+    /**
+    * @brief Constructs an AudioProcessorEditor object associated with an AudioProcessor
+    *
+    * Creates an AudioProcessorEditor and each of its components. Constructs the UI by adding
+    * all the required elements. It handles element placement, plugin window default size and
+    * how to handle the resizing of the window.
+    *
+    * @param [in] processor    Pointer to main processor
+    *
+    */
+    AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
+        : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
+          headerBlock(p), reverbBlock(p),
+          lowShelfFilterBlock(p, 0), peakLowFilterBlock(p, 1),
+          peakHighFilterBlock(p, 2), highShelfFilterBlock(p, 3)
 	{
 		// Make sure that before the constructor has finished, you've set the
 		// editor's size to whatever you need it to be.
-		
         setResizable(true, true);
-        setResizeLimits(400, 300, 1920, 1080);
+        setResizeLimits(800, 640, 1920, 1080);
 
-        // on/off button config
-        isOn.setColour(isOn.tickColourId, juce::Colour(3, 169, 244));
-        isOn.setColour(isOn.tickDisabledColourId, juce::Colour(204, 204, 204));
-        isOn.setButtonText("On");
-        isOn.addListener(this);        
-        addAndMakeVisible(isOn);
+        // Look and feel
+        setLookAndFeel(&lookAndFeel);
 
-        // sample rate box config
-        auto sampleRateTemp = std::to_string(p.getSampleRate() / 1000);
-        sampleRate.setText("Sample Rate: " + sampleRateTemp.substr(0,4) + "k");
-        sampleRate.setJustification(Justification::centred);
-        sampleRate.setReadOnly(true);
-        addAndMakeVisible(sampleRate);
+        // Display header block
+        addAndMakeVisible(headerBlock);
 
-        // TODO: display IR file
-        // IR file box config
-        //std::size_t pos = 0;
-        //std::string path = p.irPipeline->irFilePath;
-        //genInfo.setButtonText("IR file: " + path );
-        genInfo.addListener(this);
-        addAndMakeVisible(genInfo);
+        // Display right-side block
+        addAndMakeVisible(reverbBlock);
 
-        // display right-side sliders
-        addAndMakeVisible(reverbParam);
+        // Build filter blocks
+        static constexpr const char * filterNames[] = { "low-shelf", "peak (low)", "peak (high)", "high-shelf" };
 
-        // display filter sliders
-        addAndMakeVisible(lowShelf);
-        addAndMakeVisible(peakingLow);
-        addAndMakeVisible(peakingHigh);
-        addAndMakeVisible(highShelf);       
+        addAndMakeVisible(lowShelfFilterBlock);
+        addAndMakeVisible(peakLowFilterBlock);
+        addAndMakeVisible(peakHighFilterBlock);
+        addAndMakeVisible(highShelfFilterBlock);
 
-        // predelay slider config
-        preDelay.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-        preDelay.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 40, 20);
-        preDelay.setRange(PREDELAY_MIN, PREDELAY_MAX);
-        preDelay.setValue(PREDELAY_DEFAULT);
-        preDelay.addListener(this);
-        addAndMakeVisible(preDelay);
+        juce::Image eqGraph = juce::ImageFileFormat::loadFrom(BinaryData::graph_placeholder_png,
+                                                              BinaryData::graph_placeholder_pngSize);
 
-        // predelay label config
-        preDelayLabel.setText("Predelay", juce::NotificationType::dontSendNotification);
-        preDelayLabel.setJustificationType(juce::Justification::centredBottom);
-        preDelayLabel.attachToComponent(&preDelay,false);
+        juce::Image blank;
 
-        // make plugin editor sensitive to slider events
-        reverbParam.addListener(this);
-        lowShelf.addListener(this);
-        highShelf.addListener(this);
-        peakingHigh.addListener(this);
-        peakingLow.addListener(this);
-        
-        // set slider ranges
-        reverbParam.lenIR.setRange(IR_LENGTH_MIN, IR_LENGTH_MAX);
-        reverbParam.volIR.setRange(IR_VOL_MIN, IR_VOL_MAX);
-        reverbParam.gainOut.setRange(OUT_GAIN_MIN, OUT_GAIN_MAX);
-        reverbParam.dryWet.setRange(DRY_WET_MIN, DRY_WET_MAX);
+        graphButton.setImages(false, true, false,
+                              eqGraph, 1.0, juce::Colours::transparentWhite, 
+                              blank, 1.0, juce::Colours::transparentWhite,
+                              blank, 1.0, juce::Colours::transparentWhite,
+                              0);
 
-        lowShelf.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
-        lowShelf.paramf.setRange(PARAM_F_LOW_MIN, PARAM_F_LOW_MAX);
-        lowShelf.paramQ.setRange(PARAM_Q_SHELF_MIN, PARAM_Q_SHELF_MAX);
-
-        peakingLow.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
-        peakingLow.paramf.setRange(PARAM_F_LOW_MIN, PARAM_F_LOW_MAX);
-        peakingLow.paramQ.setRange(PARAM_Q_PEAK_MIN, PARAM_Q_PEAK_MAX);
-
-        peakingHigh.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
-        peakingHigh.paramf.setRange(PARAM_F_HIGH_MIN, PARAM_F_HIGH_MAX);
-        peakingHigh.paramQ.setRange(PARAM_Q_PEAK_MIN, PARAM_Q_PEAK_MAX);
-
-        highShelf.paramA.setRange(PARAM_A_MIN, PARAM_A_MAX);
-        highShelf.paramf.setRange(PARAM_F_HIGH_MIN, PARAM_F_HIGH_MAX);
-        highShelf.paramQ.setRange(PARAM_Q_SHELF_MIN, PARAM_Q_SHELF_MAX);
-
-        // set slider default values
-        reverbParam.lenIR.setValue(IR_LENGTH_DEFAULT);
-        reverbParam.volIR.setValue(IR_VOL_DEFAULT);
-        reverbParam.gainOut.setValue(OUT_GAIN_DEFAULT);
-        reverbParam.dryWet.setValue(DRY_WET_DEFAULT);
-
-        lowShelf.paramA.setValue(PARAM_A_DEFAULT);
-        lowShelf.paramf.setValue(PARAM_F_LOW_DEFAULT);
-        lowShelf.paramQ.setValue(PARAM_Q_SHELF_DEFAULT);
-
-        peakingLow.paramA.setValue(PARAM_A_DEFAULT);
-        peakingLow.paramf.setValue(PARAM_F_LOW_DEFAULT);
-        peakingLow.paramQ.setValue(PARAM_Q_PEAK_DEFAULT);
-
-        peakingHigh.paramA.setValue(PARAM_A_DEFAULT);
-        peakingHigh.paramf.setValue(PARAM_F_HIGH_DEFAULT);
-        peakingHigh.paramQ.setValue(PARAM_Q_PEAK_DEFAULT);
-
-        highShelf.paramA.setValue(PARAM_A_DEFAULT);
-        highShelf.paramf.setValue(PARAM_F_HIGH_DEFAULT);
-        highShelf.paramQ.setValue(PARAM_Q_SHELF_DEFAULT);
-
+        addAndMakeVisible(graphButton);
 
         // Calls resized when creating UI to position all the elements as if window was resized.
         this->resized();
@@ -175,6 +73,7 @@ namespace reverb
 
 	AudioProcessorEditor::~AudioProcessorEditor()
 	{
+        setLookAndFeel(nullptr);
 	}
 
 	void AudioProcessorEditor::paint(juce::Graphics& g)
@@ -184,67 +83,84 @@ namespace reverb
 
 		g.setColour(juce::Colours::white);
 		g.setFont(15.0f);
-		//g.drawFittedText("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
-		
+
         //headerBox.drawAt(g, 0, 0, 100);
 		//g.drawRoundedRectangle(0, 15, 300, 175, 2, 1);
 
 	}    
 
-    // sets the layout of displayed components
+    /**
+    * @brief Manages the layout of AudioProcessorEditor when the window is resized
+    *
+    * This function defines all the relative positioning of the various UI elements.
+    */
 	void AudioProcessorEditor::resized()
 	{
-        isOn.setBoundsRelative(0, 0, ON_BUTTON_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
-        isOn.setTopLeftPosition(0, 0);
+        juce::Rectangle<int> bounds(getLocalBounds());
+
+        int width = bounds.getWidth();
+        int height = bounds.getHeight();
+
+        int padding = (int)(PADDING_REL * height);
+
+        // Header block
+        auto headerBounds = bounds;
         
-        genInfo.setBoundsRelative(0, 0, INFO_BUTTON_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
-        genInfo.setTopLeftPosition(isOn.getRight(), 0);
-        
-        sampleRate.setBoundsRelative(0, 0, SAMPLE_RATE_BOX_RELATIVE_WIDTH, HEADER_BOX_RELATIVE_HEIGHT);
-        sampleRate.setTopLeftPosition(genInfo.getRight(), 0);        
+        headerBounds.setBottom((int)(0.13 * height));
 
-        reverbParam.setBoundsRelative(0, 0, SAMPLE_RATE_BOX_RELATIVE_WIDTH, REVERB_BOX_RELATIVE_HEIGHT);
-        reverbParam.setTopRightPosition(sampleRate.getRight(),sampleRate.getBottom());
-        
-        preDelay.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        preDelay.setTopLeftPosition(0, reverbParam.getBottom());
+        headerBounds.reduce(padding, padding);
 
-        lowShelf.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        lowShelf.setTopLeftPosition(preDelay.getRight(), reverbParam.getBottom());
+        headerBlock.setBounds(headerBounds);
 
-        peakingLow.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        peakingLow.setTopLeftPosition(lowShelf.getRight(), reverbParam.getBottom());
+        // Graph
+        auto graphBounds = bounds;
 
-        peakingHigh.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        peakingHigh.setTopLeftPosition(peakingLow.getRight(), reverbParam.getBottom());
+        graphBounds.setTop(headerBounds.getBottom());
+        graphBounds.setBottom(headerBounds.getBottom() + padding + (int)(0.485 * height));
+        graphBounds.setRight((int)(0.75 * width));
 
-        highShelf.setBoundsRelative(0, 0, FILTER_BOX_RELATIVE_WIDTH, FILTER_BOX_RELATIVE_HEIGHT);
-        highShelf.setTopLeftPosition(peakingHigh.getRight(), reverbParam.getBottom());
+        graphBounds.reduce(padding, padding);
+
+        graphButton.setBounds(graphBounds);
+
+        // Reverb block
+        auto reverbBounds = bounds;
+
+        reverbBounds.setTop(headerBounds.getBottom());
+        reverbBounds.setBottom(headerBounds.getBottom() + padding + 0.485 * height);
+        reverbBounds.setLeft(graphBounds.getRight() + padding);
+
+        reverbBounds.reduce(padding, padding);
+
+        reverbBlock.setBounds(reverbBounds);
+
+        // Filters
+        UIFilterBlock * filters[4] = { &lowShelfFilterBlock, &peakLowFilterBlock,
+                                       &peakHighFilterBlock, &highShelfFilterBlock };
+
+        auto filterBounds = bounds;
+
+        filterBounds.setTop(reverbBounds.getBottom());
+        filterBounds.setBottom(reverbBounds.getBottom() + padding + 0.385 * height);
+
+        int filterBlockWidth = width / 4;
+
+        for (int i = 0; i < 4; ++i)
+        {
+            auto thisFilterBounds = filterBounds.removeFromLeft(filterBlockWidth);
+            thisFilterBounds.reduce(padding, padding);
+
+            filters[i]->setBounds(thisFilterBounds);
+        }
 	}
 
     // handler for button clicks
-    void AudioProcessorEditor::buttonClicked (juce::Button* button) 
+    /*void AudioProcessorEditor::buttonClicked(juce::Button*) 
     {
-        /*
-        if (button == &isOn)
-        {
-            if (isOn.getToggleState()) {
-                processor.mainPipeline->gain->gainFactor = 0.5;
-                sampleRate.setText("gain is: " + std::to_string(processor.mainPipeline->gain->gainFactor));
-            }
-            else {
-                processor.mainPipeline->gain->gainFactor = 0.01;
-                sampleRate.setText("gain is: " + std::to_string(processor.mainPipeline->gain->gainFactor));
-            }
-        }
-        else if (button == &genInfo) {
-            juce::PopupMenu IRmenu;
-            IRmenu.addItem(1, "Load IR");
+        // Most buttons are handled by parameter tree attachments
 
-            //IRmenu.showMenuAsync(juce::PopupMenu::Options(), ModalCallbackFunction::create(menuCallback));
-        }
-        */
-    }
+        // TODO: Handler for IR selection?
+    }*/
 
     // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
     /** Pops up a dialog letting the user re-load the processor's state from a file. */
@@ -278,113 +194,5 @@ namespace reverb
         if (button != nullptr && result != 0)
             button->handleMenuResult(result);
     }*/
-
-    // handler for slider interactions
-    // TODO: add predelay handling
-    void AudioProcessorEditor::sliderValueChanged(juce::Slider * changedSlider)
-    {
-        juce::Slider* reverbSlider = reverbParam.getSlider(changedSlider);
-        juce::Slider* lowShelfSlider = lowShelf.getSlider(changedSlider);
-        juce::Slider* peakingLowSlider = peakingLow.getSlider(changedSlider);
-        juce::Slider* peakingHighSlider = peakingHigh.getSlider(changedSlider);
-        juce::Slider* highShelfSlider = highShelf.getSlider(changedSlider);
-        if(reverbSlider){
-            if (reverbSlider->getComponentID() == "lenIR") {
-                /* TODO: find what param to change changetempo? originalSampleRate?
-                genInfo.setText("bro toggled IR volume");
-                processor.irPipeline->gain->gainFactor = reverbSlider->getValue();
-                sampleRate.setText("ir volume is: " + std::to_string(processor.irPipeline->gain->gainFactor));
-                */
-            }            
-            else if (reverbSlider->getComponentID() == "volIR") {
-                processor.irPipeline->gain->gainFactor = reverbSlider->getValue();
-            }
-            else if (reverbSlider->getComponentID() == "gainOut") {
-                processor.mainPipeline->gain->gainFactor = reverbSlider->getValue();
-            }
-            else if (reverbSlider->getComponentID() == "dryWet") {
-                // TODO: check if value to provide is in range [0 - 100] or [0.00 - 1]
-                processor.mainPipeline->dryWetMixer->wetRatio = reverbSlider->getValue();
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (lowShelfSlider) {
-            if (lowShelfSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[0]->setQ(lowShelfSlider->getValue());
-            }
-            else if (lowShelfSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[0]->setFrequency(lowShelfSlider->getValue());
-            }
-            else if (lowShelfSlider->getComponentID() == "paramA") {
-                processor.irPipeline->filters[0]->setGain(lowShelfSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (peakingLowSlider) {
-            if (peakingLowSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[1]->setQ(peakingLowSlider->getValue());
-            }
-            else if (peakingLowSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[1]->setFrequency(peakingLowSlider->getValue());
-            }
-            else if (peakingLowSlider->getComponentID() == "paramA") {
-                processor.irPipeline->filters[1]->setGain(peakingLowSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (peakingHighSlider) {
-            if (peakingHighSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[2]->setQ(peakingHighSlider->getValue());
-            }
-            else if (peakingHighSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[2]->setFrequency(peakingHighSlider->getValue());
-            }
-            else if (peakingHighSlider->getComponentID() == "paramA") {
-                processor.irPipeline->filters[2]->setGain(peakingHighSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-                
-        else if (highShelfSlider) {
-            if (highShelfSlider->getComponentID() == "paramQ") {
-                processor.irPipeline->filters[3]->setQ(highShelfSlider->getValue());
-            }
-            else if (highShelfSlider->getComponentID() == "paramf") {
-                processor.irPipeline->filters[3]->setFrequency(highShelfSlider->getValue());
-            }
-            else if (highShelfSlider->getComponentID() == "paramA") {
-                processor.irPipeline->filters[3]->setGain(highShelfSlider->getValue());
-            }
-            else
-            {
-                // TODO: add warning/error
-            }
-        }
-
-        else if( changedSlider == &preDelay)
-        {
-            processor.irPipeline->preDelay->delayMs = changedSlider->getValue();
-        }
-
-        else {
-            // TODO: add warning / exception / error due to lack of handling
-        }
-
-    }
 
 }

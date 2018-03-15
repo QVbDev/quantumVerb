@@ -4,3 +4,6 @@
 [submodule "vendor/soundtouch"]
 	path = vendor/soundtouch
 	url = https://github.com/segwin/soundtouch-mirror.git
+[submodule "vendor/juce"]
+	path = vendor/juce
+	url = https://github.com/WeAreROLI/JUCE.git

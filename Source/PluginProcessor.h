@@ -10,12 +10,15 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "JuceHeader.h"
 
+#include "IRBank.h"
 #include "IRPipeline.h"
 #include "MainPipeline.h"
 
+#include <map>
 #include <mutex>
+#include <vector>
 
 namespace reverb
 {
@@ -40,7 +43,9 @@ namespace reverb
 		bool isBusesLayoutSupported(const juce::BusesLayout& layouts) const override;
 #endif
 
-		void processBlock(juce::AudioSampleBuffer&, juce::MidiBuffer&) override;
+		void processBlock(juce::AudioSampleBuffer& audio, juce::MidiBuffer&) override;
+
+        void processBlockBypassed(juce::AudioSampleBuffer& audio, juce::MidiBuffer& midi) override;
 
 		//==============================================================================
 		juce::AudioProcessorEditor* createEditor() override;
@@ -66,10 +71,44 @@ namespace reverb
 		void setStateInformation(const void* data, int sizeInBytes) override;
 
         //==============================================================================
-        IRPipeline::Ptr irPipeline;
-        MainPipeline::Ptr mainPipeline;
-
         std::mutex lock;
+
+        //==============================================================================
+        IRBank irBank;
+
+        //==============================================================================
+        juce::AudioProcessorValueTreeState parameters;
+        
+        // Unique parameter IDs
+        static constexpr const char * PID_ACTIVE             = "is_active";
+
+        static constexpr const char * PID_IR_FILE_CHOICE     = "ir_file_choice";
+        static constexpr const char * PID_IR_LENGTH          = "ir_length";
+
+        static constexpr const char * PID_FILTER_PREFIX      = "filter";
+        static constexpr const char * PID_FILTER_FREQ_SUFFIX = "_freq";
+        static constexpr const char * PID_FILTER_Q_SUFFIX    = "_q";
+        static constexpr const char * PID_FILTER_GAIN_SUFFIX = "_gain";
+        
+        static constexpr const char * PID_PREDELAY           = "predelay";
+        static constexpr const char * PID_IR_GAIN            = "ir_gain";
+        static constexpr const char * PID_WETRATIO           = "wetratio";
+        static constexpr const char * PID_AUDIO_OUT_GAIN     = "audio_out_gain";
+
+
+    protected:
+        //==============================================================================
+        void initParams();
+        bool paramsInitialised = false;
+
+        //==============================================================================
+        void processChannel(int channelIdx);
+
+        std::vector<IRPipeline::Ptr>   irPipelines;
+        std::vector<MainPipeline::Ptr> mainPipelines;
+
+        std::vector<juce::AudioSampleBuffer> irChannels;
+        std::vector<juce::AudioSampleBuffer> audioChannels;
 
 	private:
 		//==============================================================================

@@ -12,10 +12,12 @@
 
 #include "Filter.h"
 #include "Gain.h"
+#include "IRBank.h"
 #include "PreDelay.h"
 #include "TimeStretch.h"
 
 #include <array>
+#include <mutex>
 #include <string>
 
 namespace reverb
@@ -32,17 +34,27 @@ namespace reverb
     {
     public:
         //==============================================================================
-        IRPipeline(juce::AudioProcessor * processor);
+        IRPipeline(juce::AudioProcessor * processor, const IRBank& irBank, int channelIdx);
 
         //==============================================================================
         using Ptr = std::shared_ptr<IRPipeline>;
 
         //==============================================================================
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& = "") override;
+
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
-        void loadIR(const std::string& irFilePath);
+        virtual bool needsToRun() const override;
 
+        //==============================================================================
+        bool updateSampleRate(double sampleRate);
+
+        //==============================================================================
+        void loadIR(const std::string& irNameOrFilePath);
+
+    protected:
         //==============================================================================
         std::array<Filter::Ptr, 4> filters;
         TimeStretch::Ptr timeStretch;
@@ -50,13 +62,20 @@ namespace reverb
         PreDelay::Ptr preDelay;
 
         //==============================================================================
-        static constexpr int MAX_IR_LENGTH_S = 5;
+        double lastSampleRate = 0;
 
-        bool mustExec = true;
+        //==============================================================================
+        static std::mutex irMutex;
 
-    protected:
-        std::vector<juce::AudioSampleBuffer> irChannels;
-        juce::File irBank;
+        void loadIRFromBank(const std::string& irBuffer);
+        void loadIRFromDisk(const std::string& irFilePath);
+
+        int channelIdx;
+        juce::AudioSampleBuffer irChannel;
+
+        //==============================================================================
+        const IRBank& irBank;
+        juce::String currentIR = "";
     };
 
 }

@@ -8,6 +8,8 @@
 
 #include "Gain.h"
 
+#include "Logger.h"
+
 namespace reverb
 {
 
@@ -22,17 +24,33 @@ namespace reverb
     Gain::Gain(juce::AudioProcessor * processor)
         : Task(processor)
     {
-		gainFactor = 1.0;
     }
+    
+    //==============================================================================
+    /**
+     * @brief Read processor parameters and update block parameters as necessary
+     *
+     * @returns True if any parameters were changed, false otherwise.
+     */
+    bool Gain::updateParams(const juce::AudioProcessorValueTreeState& params,
+                            const juce::String& blockId)
+    {
+        // Gain factor
+        auto paramGain = params.getRawParameterValue(blockId);
 
-	//==============================================================================
-	/**
-	* @brief Destroys a Gain object
+        if (!paramGain)
+        {
+            throw std::invalid_argument("Parameter not found for gain in Gain block");
+        }
 
-	*/
-	Gain::~Gain()
-	{
-	}
+        if (*paramGain != gainFactor)
+        {
+            gainFactor = *paramGain;
+            mustExec = true;
+        }
+
+        return mustExec;
+    }
 
     //==============================================================================
     /**
@@ -45,7 +63,9 @@ namespace reverb
     void Gain::exec(juce::AudioSampleBuffer& buffer)
     {
 		buffer.applyGain (gainFactor);
-		
+
+        // Reset mustExec flag
+        mustExec = false;
     }
 
 }

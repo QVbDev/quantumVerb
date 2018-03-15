@@ -18,19 +18,10 @@ Test_Filter.cpp
 * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
 */
 
-
-bool compareValues(const float a1, const float a2) {
-	float ratio = a1 / a2;
-
-	if (ratio >= 0.999 && ratio <= 1.001)
-		return true;
-
-	else
-		return false;
-
-}
+#define compareFloats(a1, a2) std::abs(a2 - a1) <= 0.01
 
 
+ // TODO: Test parameter changes
 
 TEST_CASE("Filter class is tested", "[filters]") {
 
@@ -100,15 +91,15 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
 		//Test for gain at low freuquency
-		REQUIRE(compareValues(gain, fftBuffer[0]));
+        CHECK(compareFloats(gain, fftBuffer[0]));
 
 		//Test for gain at high frequency
-		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
+        CHECK(compareFloats(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
 
 		//Test for cut-off frequency
 		int cutOffIndex = (int)std::round(freq / freqRes);
 
-		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
+        CHECK(compareFloats(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing high-shelf filter") {
@@ -122,15 +113,15 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
 		//Test for gain at low frequency
-		REQUIRE(compareValues(1, fftBuffer[0]));
+        CHECK(compareFloats(1, fftBuffer[0]));
 
 		//Test for gain at high frequency
-		REQUIRE(compareValues(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
+        CHECK(compareFloats(gain, fftBuffer[(int)(forwardFFT.getSize()/2)]));
 
 		//Test for cut-off frequency
 		int cutOffIndex = (int)std::round(freq / freqRes);
 
-		REQUIRE(compareValues(fftBuffer[cutOffIndex], std::sqrt(gain)));
+        CHECK(compareFloats(fftBuffer[cutOffIndex], std::sqrt(gain)));
 	}
 
 	SECTION("Testing peaking filter") {
@@ -146,21 +137,21 @@ TEST_CASE("Filter class is tested", "[filters]") {
 		int peakIndex = (int)std::round(centerFreq / freqRes);
 
 		//Test for gain at center frequency
-		REQUIRE(compareValues(gain, fftBuffer[peakIndex]));
+        CHECK(compareFloats(gain, fftBuffer[peakIndex]));
 
 		//Test for gain at both ends of the spectrum
-		REQUIRE(compareValues(1, fftBuffer[0]));
-		REQUIRE(compareValues(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
+        CHECK(compareFloats(1, fftBuffer[0]));
+        CHECK(compareFloats(1, fftBuffer[(int)(forwardFFT.getSize() / 2)]));
 	}
 
-
+    /*
 	SECTION("Testing filter toggle") {
 		reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
 		filter.disable();
 		filter.exec(sampleBuffer);
 
 	}
-
+    */
 	delete[] fftBuffer;
 
 

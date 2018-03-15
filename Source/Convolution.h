@@ -15,11 +15,11 @@ namespace reverb
 
 	//==============================================================================
 	/**
-	* @brief Derives from JUCE's Convolution base class. Computes the convolution
-	*        algorithm between the audio signal and the IR buffer.
-	*/
+	 * Derives from JUCE's Convolution base class. Computes the convolution
+	 * algorithm between the audio signal and the IR buffer.
+	 */
 	class Convolution : public Task,
-		public juce::dsp::Convolution
+		                protected juce::dsp::Convolution
 	{
 	public:
 		//==============================================================================
@@ -28,8 +28,11 @@ namespace reverb
 		//==============================================================================
 		using Ptr = std::shared_ptr<Convolution>;
 
-		//==============================================================================
-		virtual void exec(juce::AudioSampleBuffer& audio) override;
+        //==============================================================================
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& = "") override;
+
+        virtual void exec(juce::AudioSampleBuffer& audio) override;
 
 		//==============================================================================
 		void loadIR(juce::AudioSampleBuffer& ir);

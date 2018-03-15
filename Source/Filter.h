@@ -11,13 +11,6 @@
 #include "Task.h"
 
 #include <memory>
-#include <exception>
-
-#define QMIN 0.2
-#define QMAX 2
-#define GMIN -24
-#define GMAX 15
-#define FMAX 20000
 
 namespace reverb
 {
@@ -37,6 +30,9 @@ namespace reverb
         using Ptr = std::shared_ptr<Filter>;
 
         //==============================================================================
+        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& blockId) override;
+
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
         //==============================================================================
@@ -45,24 +41,19 @@ namespace reverb
         }
 
         //==============================================================================
+        bool isEnabled();
+        void enable();
+        void disable();
 
-		void setFrequency(float);
-		void setQ(float);
-		void setGain(float);
-
-		bool isEnabled();
-		void enable();
-		void disable();
-
-	protected:
-		bool assertValues();
+    protected:
+        //==============================================================================
 		virtual void buildFilter() = 0;
-		
 		bool isOn;
-		float frequency;
+
+        //==============================================================================
+        float frequency;
         float Q;
         float gainFactor;
-
     };
 
     
@@ -109,21 +100,5 @@ namespace reverb
         //==============================================================================
         virtual void buildFilter() override;
     };
-
-	//==============================================================================
-	/**
-	* Exceptions for Filter class
-	*/
-	struct ChannelNumberException : public std::exception {
-		const char * what() const throw () {
-			return "Filter: AudioBuffer channel number is not 1";
-		}
-	};
-
-	struct WrongParameterException : public std::exception {
-		const char * what() const throw () {
-			return "Filter: Parameter(s) is out of bounds";
-		}
-	};
 
 }
