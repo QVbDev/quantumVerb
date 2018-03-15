@@ -28,6 +28,8 @@ namespace reverb
         //==============================================================================
         void paint(juce::Graphics&) override;
         void resized() override;
+        void addListener(juce::Button::Listener* pluginEditor);
+        juce::Button* getButton(juce::Button* clickedButton);
 
     protected:
         //==============================================================================
@@ -40,6 +42,7 @@ namespace reverb
 
         juce::TextButton irChoice;
         juce::Label irChoiceLabel;
+        std::unique_ptr<ButtonAttachment> irChoiceAttachment;
 
         juce::TextButton sampleRate;
         juce::Label sampleRateLabel;

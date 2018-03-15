@@ -44,6 +44,10 @@ namespace reverb
         irChoiceLabel.setJustificationType(juce::Justification::topLeft);
         irChoiceLabel.attachToComponent(&irChoice, false);
 
+        irChoiceAttachment.reset(new ButtonAttachment(p.parameters,
+                                                      irChoice.getComponentID(),
+                                                      irChoice));
+
         // TODO: Ensure IR file box tracks the IR choice parameter
 
         // Sample rate box
@@ -108,6 +112,21 @@ namespace reverb
         isOn.setBounds(cells[0]);
         irChoice.setBounds(cells[1]);
         sampleRate.setBounds(cells[2]);
+    }
+
+    void reverb::UIHeaderBlock::addListener(juce::Button::Listener* pluginEditor)
+    {
+        irChoice.addListener(pluginEditor);
+    }
+
+    juce::Button* UIHeaderBlock::getButton(juce::Button* clickedButton)
+    {
+        if (clickedButton == &irChoice) {
+            return &irChoice;
+        }
+        else {
+            return nullptr;
+        }
     }
 
 }

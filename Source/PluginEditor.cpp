@@ -41,6 +41,7 @@ namespace reverb
         setLookAndFeel(&lookAndFeel);
 
         // Display header block
+        headerBlock.addListener(this);
         addAndMakeVisible(headerBlock);
 
         // Display right-side block
@@ -155,44 +156,47 @@ namespace reverb
 	}
 
     // handler for button clicks
-    /*void AudioProcessorEditor::buttonClicked(juce::Button*) 
+    void AudioProcessorEditor::buttonClicked(juce::Button* clickedButton) 
     {
         // Most buttons are handled by parameter tree attachments
+        juce::Button* headerButton = headerBlock.getButton(clickedButton);
+        if (headerButton->getComponentID() == processor.PID_IR_FILE_CHOICE) {
+            juce::AudioFormatManager formatManager;
+            formatManager.registerBasicFormats();
+            juce::File defaultFolder = juce::File::getCurrentWorkingDirectory().getParentDirectory()
+                .getParentDirectory()
+                .getChildFile("Resources")
+                .getChildFile("ImpulseResponses");
+            // Accepts the following file types: .wav, .bwf, .aiff, .flac, .ogg, .mp3, .wmv, .asf, .wm, .wma
+            juce::FileChooser fileChooser("Select an impulse response",
+                                          defaultFolder,
+                                          formatManager.getWildcardForAllFormats(),
+                                          false);
+            if (fileChooser.browseForFileToOpen()) {
+                juce::File selectedFile = fileChooser.getResult();
 
-        // TODO: Handler for IR selection?
-    }*/
-
-    // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
-    /** Pops up a dialog letting the user re-load the processor's state from a file. */
-
-    // TODO: complete drop downmenu file explorer file selection
-    /*void AudioProcessorEditor::loadIR(int num)
-    {
-        FileChooser fc("Load IR file");
-
-        if (fc.browseForFileToOpen())
-        {
-
-            processor.irPipeline->irFilePath = fc.getResult().getFullPathName().toStdString();
+                headerButton->setButtonText(selectedFile.getFullPathName());
+                // Verify if the selected impulse response is part of the IR bank. If so, retrieve its name from the
+                // BinaryData's list. Else, the PID_IR_FILE_CHOICE's parameter property value will be set to the
+                // entire full path of the user-provided IR file.
+                juce::String newName;
+                if (selectedFile.getParentDirectory() == defaultFolder) {
+                    newName = selectedFile.getFileNameWithoutExtension() + "_wav";
+                }
+                else {
+                    newName = selectedFile.getFullPathName();
+                }
+                processor.parameters.state.getChildWithName(processor.PID_IR_FILE_CHOICE)
+                                          .setProperty("value", newName, nullptr);
+            }
         }
     }
 
-    void AudioProcessorEditor::handleMenuResult(int result)
+    // handler for slider interactions
+    // TODO: add predelay handling
+    void AudioProcessorEditor::sliderValueChanged(juce::Slider* changedSlider)
     {
-        switch (result)
-        {
-        case 1:  this->loadIR(0) ; break;
-        //case 2:  pluginHolder->askUserToSaveState(); break;
-        //case 3:  pluginHolder->askUserToLoadState(); break;
-        //case 4:  resetToDefaultState(); break;
-        default: break;
-        }
+        // All sliders are handled by parameter tree attachments
     }
-
-    void AudioProcessorEditor::menuCallback(int result)
-    {
-        if (button != nullptr && result != 0)
-            button->handleMenuResult(result);
-    }*/
 
 }
