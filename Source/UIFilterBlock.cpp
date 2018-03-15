@@ -57,7 +57,7 @@ namespace reverb
         gainLabel.attachToComponent(&gain, false);
 
         // Attachments
-        gainAttachment.reset(new SliderAttachment(processor.parameters,
+        freqAttachment.reset(new SliderAttachment(processor.parameters,
                                                   freq.getComponentID(),
                                                   freq));
 
