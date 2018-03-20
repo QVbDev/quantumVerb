@@ -75,7 +75,6 @@ namespace reverb
         void disable();
 
     protected:
-        bool assertValues();
         virtual void buildFilter() = 0;
 
         bool isOn;
@@ -138,20 +137,5 @@ namespace reverb
     /**
     * Exceptions for Filter class
     */
-    struct ChannelNumberException : public std::exception
-    {
-        const char * what() const throw ()
-        {
-            return "Filter: AudioBuffer channel number is not 1";
-        }
-    };
-
-    struct WrongParameterException : public std::exception
-    {
-        const char * what() const throw ()
-        {
-            return "Filter: Parameter(s) is out of bounds";
-        }
-    };
 
 }
