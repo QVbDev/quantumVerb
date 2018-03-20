@@ -91,13 +91,13 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
     //Test band gains (at 0, f1, f2 and fmax)
 
-    REQUIRE(compareValues(fftBuffer[0], EQ.getEQGain(LOWSHELF)));
+    REQUIRE(compareValues(fftBuffer[0], EQ.getEQGain(0)));
 
-    REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(PEAK1) / freqRes)], EQ.getEQGain(PEAK1)));
+    REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(1) / freqRes)], EQ.getEQGain(1)));
 
-    REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(PEAK2) / freqRes)], EQ.getEQGain(PEAK2)));
+    REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(2) / freqRes)], EQ.getEQGain(2)));
 
-    REQUIRE(compareValues(fftBuffer[(int)(FMAX / freqRes)], EQ.getEQGain(HIGHSHELF)));
+    REQUIRE(compareValues(fftBuffer[(int)(FMAX / freqRes)], EQ.getEQGain(3)));
 
     //Test getdBAmplitude()
 

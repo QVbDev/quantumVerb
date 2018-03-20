@@ -59,20 +59,21 @@ namespace reverb {
     */
 
     bool Equalizer::updateParams(const juce::AudioProcessorValueTreeState& params,
-        const juce::String& blockId) 
+        const juce::String& blockId)
         {
 
-        bool mustExec = false;
 
-        for (int i = 0; i < filterSet.size(); i++) 
+        int filterId = std::stoi(blockId.getLastCharacters(1).toStdString());
+
+        if (filterId < 0 || filterId >= filterSet.size()) throw InvalidFilterException();
+
+        if (filterSet[filterId]->needsToRun() && filterSet[filterId]->isEnabled())
         {
-            if (filterSet[i]->updateParams(params, blockId))
-            {
-                mustExec = true;
-            }
+            mustExec = true;
         }
 
-        return mustExec;
+
+        return filterSet[filterId]->updateParams(params, blockId);
     }
 
     /**
@@ -89,6 +90,8 @@ namespace reverb {
         {
             filterSet[i]->exec(ir);
         }
+
+        mustExec = false;
     }
 
     /**
@@ -337,5 +340,10 @@ namespace reverb {
     int Equalizer::getNumFilters() 
     {
         return filterSet.size();
+    }
+
+    bool Equalizer::needsToRun() const {
+
+        return mustExec;
     }
 }

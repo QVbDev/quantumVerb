@@ -13,8 +13,7 @@ Equalizer.h
 
 #include <memory>
 #include <exception>
-
-enum FilterType {LOWSHELF, PEAK1, PEAK2, HIGHSHELF};
+#include <string>
 
 
 namespace reverb {
@@ -37,6 +36,8 @@ namespace reverb {
         virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
             const juce::String& blockId) override;
 
+        using Ptr = std::shared_ptr<Equalizer>;
+
 
         virtual void exec(juce::AudioSampleBuffer& ir) override;
 
@@ -58,6 +59,8 @@ namespace reverb {
         float getEQGain(int num);
 
         int getNumFilters();
+
+        virtual bool needsToRun() const override;
 
 
     private:
