@@ -45,10 +45,6 @@ namespace reverb {
 
         float getdBAmplitude(float freq);
 
-        void setFilterFrequency(float freq, int num);
-        void setFilterGain(float gain, int num);
-        void setFilterQ(float Q, int num);
-
         float getFilterFrequency(int num);
         float getFilterGain(int num);
         float getFilterQ(int num);
