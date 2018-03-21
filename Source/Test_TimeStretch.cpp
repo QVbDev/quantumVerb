@@ -142,4 +142,67 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         CHECK(ir.getNumSamples() < MAX_IR_LENGTH_S * SAMPLE_RATE);
     }
 
+    SECTION("Performance_Testing") {
+        constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(100);
+
+        SECTION("Stretching") {
+            constexpr int IR_ORIG_SAMPLE_RATE = 96000;
+            constexpr std::chrono::seconds IR_ORIG_DURATION_S(2);
+            constexpr int64_t IR_ORIG_NUM_SAMPLES = IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE;
+
+            constexpr std::chrono::seconds IR_TARGET_DURATION_S(4);
+            constexpr int64_t IR_EXPECTED_NUM_SAMPLES = IR_TARGET_DURATION_S.count() * SAMPLE_RATE;
+
+            // Prepare "audio" buffer
+            juce::AudioSampleBuffer ir(NUM_CHANNELS, IR_ORIG_NUM_SAMPLES);
+
+            // Prepare TimeStretch
+            timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
+
+            auto irLength = processor.parameters.getParameterAsValue(processor.PID_IR_LENGTH);
+            irLength.setValue(IR_TARGET_DURATION_S.count());
+
+            timeStretch.updateParams(processor.parameters, processor.PID_IR_LENGTH);
+
+            // Run TimeStretch
+            auto start = std::chrono::high_resolution_clock::now();
+            timeStretch.exec(ir);
+            auto end = std::chrono::high_resolution_clock::now();
+
+            auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+        }
+
+        SECTION("Compressing") {
+
+            constexpr int IR_ORIG_SAMPLE_RATE = 96000;
+            constexpr std::chrono::seconds IR_ORIG_DURATION_S(4);
+            constexpr int64_t IR_ORIG_NUM_SAMPLES = IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE;
+
+            constexpr std::chrono::seconds IR_TARGET_DURATION_S(2);
+            constexpr int64_t IR_EXPECTED_NUM_SAMPLES = IR_TARGET_DURATION_S.count() * SAMPLE_RATE;
+
+            // Prepare "audio" buffer
+            juce::AudioSampleBuffer ir(NUM_CHANNELS, IR_ORIG_NUM_SAMPLES);
+
+            // Prepare TimeStretch
+            timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
+
+            auto irLength = processor.parameters.getParameterAsValue(processor.PID_IR_LENGTH);
+            irLength.setValue(IR_TARGET_DURATION_S.count());
+
+            timeStretch.updateParams(processor.parameters, processor.PID_IR_LENGTH);
+
+            // Run TimeStretch
+            // Measure exec time
+            auto start = std::chrono::high_resolution_clock::now();
+            timeStretch.exec(ir);
+            auto end = std::chrono::high_resolution_clock::now();
+
+            auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+        }
+    }
+
+
 }

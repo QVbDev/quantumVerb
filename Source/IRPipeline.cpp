@@ -169,15 +169,15 @@ namespace reverb
         // Execute pipeline on IR channel
         for (auto& filter : filters)
         {
-            filter->exec(irChannel);
+            if (filter->needsToRun()) filter->exec(irChannel);
         }
 
-        timeStretch->exec(irChannel);
-        gain->exec(irChannel);
+        if(timeStretch->needsToRun()) timeStretch->exec(irChannel);
+        if(gain->needsToRun()) gain->exec(irChannel);
 
         try
         {
-            preDelay->exec(irChannel);
+            if(preDelay->needsToRun()) preDelay->exec(irChannel);
         }
         catch (const std::exception& e)
         {
