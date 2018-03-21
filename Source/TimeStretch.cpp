@@ -87,66 +87,68 @@ namespace reverb
      */
     void TimeStretch::exec(juce::AudioSampleBuffer& ir)
     {
-        if (!soundtouch)
+        if (mustExec)
         {
-            logger.dualPrint(Logger::Level::Error, "No SoundTouch instance exists, cannot apply time stretch to IR");
-        }
+            if (!soundtouch)
+            {
+                logger.dualPrint(Logger::Level::Error, "No SoundTouch instance exists, cannot apply time stretch to IR");
+            }
 
-        soundtouch->setChannels(1);
-        soundtouch->setSampleRate((unsigned)origIRSampleRate);
+            soundtouch->setChannels(1);
+            soundtouch->setSampleRate((unsigned)origIRSampleRate);
 
-        // Move input data to new buffer; ir becomes output buffer for SoundTouch processing
-        juce::AudioSampleBuffer irIn = std::move(ir);
+            // Move input data to new buffer; ir becomes output buffer for SoundTouch processing
+            juce::AudioSampleBuffer irIn = std::move(ir);
 
-        // Calculate tempo change & expected number of samples in output buffer
-        if (!origIRSampleRate)
-        {
-            throw std::invalid_argument("Unknown sample rate for given IR, cannot apply time stretching");
-        }
+            // Calculate tempo change & expected number of samples in output buffer
+            if (!origIRSampleRate)
+            {
+                throw std::invalid_argument("Unknown sample rate for given IR, cannot apply time stretching");
+            }
 
-        double newNumSamples = irLengthS * processor->getSampleRate();
-        double sampleRateRatio = (double)irIn.getNumSamples() / newNumSamples;
+            double newNumSamples = irLengthS * processor->getSampleRate();
+            double sampleRateRatio = (double)irIn.getNumSamples() / newNumSamples;
 
-        ir.setSize(irIn.getNumChannels(), (int)std::ceil(newNumSamples), false, true);
+            ir.setSize(irIn.getNumChannels(), (int)std::ceil(newNumSamples), false, true);
 
-        // Use SoundTouch processor to calculate time stretch
-        soundtouch->clear();
-        soundtouch->setTempo(sampleRateRatio);
+            // Use SoundTouch processor to calculate time stretch
+            soundtouch->clear();
+            soundtouch->setTempo(sampleRateRatio);
 
-        soundtouch->putSamples(irIn.getReadPointer(0), irIn.getNumSamples());
+            soundtouch->putSamples(irIn.getReadPointer(0), irIn.getNumSamples());
 
-        // Wait for processing to complete
-        unsigned curSample = 0;
-        unsigned nbSamplesReceived = 0;
+            // Wait for processing to complete
+            unsigned curSample = 0;
+            unsigned nbSamplesReceived = 0;
 
-        do
-        {
-            curSample += nbSamplesReceived;
+            do
+            {
+                curSample += nbSamplesReceived;
 
-            // Write processed samples to output buffer
-            auto curWritePtr = &ir.getWritePointer(0)[curSample];
-                
-            nbSamplesReceived = soundtouch->receiveSamples(curWritePtr,
-                                                            ir.getNumSamples() - curSample);
-        }
-        while (nbSamplesReceived != 0 &&
+                // Write processed samples to output buffer
+                auto curWritePtr = &ir.getWritePointer(0)[curSample];
+
+                nbSamplesReceived = soundtouch->receiveSamples(curWritePtr,
+                    ir.getNumSamples() - curSample);
+            } while (nbSamplesReceived != 0 &&
                 soundtouch->numUnprocessedSamples() != 0);
 
-        // Get last remaining samples from SoundTouch pipeline, if any
-        if (soundtouch->numUnprocessedSamples() != 0)
-        {
-            soundtouch->flush();
-            
-            curSample += soundtouch->numSamples();
-            
-            // Write processed samples to output buffer
-            auto curWritePtr = &ir.getWritePointer(0)[curSample];
+            // Get last remaining samples from SoundTouch pipeline, if any
+            if (soundtouch->numUnprocessedSamples() != 0)
+            {
+                soundtouch->flush();
 
-            soundtouch->receiveSamples(curWritePtr, ir.getNumSamples() - curSample);
+                curSample += soundtouch->numSamples();
+
+                // Write processed samples to output buffer
+                auto curWritePtr = &ir.getWritePointer(0)[curSample];
+
+                soundtouch->receiveSamples(curWritePtr, ir.getNumSamples() - curSample);
+            }
+
+            // Reset mustExec flag
+            mustExec = false;
         }
-
-        // Reset mustExec flag
-        mustExec = false;
     }
 
 }

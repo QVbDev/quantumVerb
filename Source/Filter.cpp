@@ -97,24 +97,27 @@ namespace reverb
      */
     void Filter::exec(juce::AudioSampleBuffer& ir)
     {
-        buildFilter();
-
-        if (ir.getNumChannels() != 1)
+        if (mustExec)
         {
-            logger.dualPrint(Logger::Level::Warning, "Filter: AudioBuffer channel count is not 1");
-            return;
+            buildFilter();
+
+            if (ir.getNumChannels() != 1)
+            {
+                logger.dualPrint(Logger::Level::Warning, "Filter: AudioBuffer channel count is not 1");
+                return;
+            }
+
+            if (isOn)
+            {
+                juce::dsp::AudioBlock<float> block(ir);
+
+                juce::dsp::ProcessContextReplacing<float> context(block);
+                juce::dsp::IIR::Filter<float>::process(context);
+
+                // Reset mustExec flag
+                mustExec = false;
+            }
         }
-		
-		if (isOn)
-        {
-			juce::dsp::AudioBlock<float> block(ir);
-
-			juce::dsp::ProcessContextReplacing<float> context(block);
-			juce::dsp::IIR::Filter<float>::process(context);
-
-            // Reset mustExec flag
-            mustExec = false;
-		}
     }
 
     //==============================================================================
