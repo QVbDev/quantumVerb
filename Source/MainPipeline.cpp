@@ -63,9 +63,9 @@ namespace reverb
     {
         dryWetMixer->loadDry(audio);
 
-        if (convolution->needsToRun()) convolution->exec(audio);
-        if (dryWetMixer->needsToRun()) dryWetMixer->exec(audio);
-        if (gain->needsToRun()) gain->exec(audio);
+        convolution->exec(audio);
+        dryWetMixer->exec(audio);
+        gain->exec(audio);
     }
 
     //==============================================================================
