@@ -267,9 +267,6 @@ namespace reverb
      */
     void IRPipeline::loadIRFromDisk(const std::string& irFilePath)
     {
-        // Suspend processing since this may take a while
-        //processor->suspendProcessing(true);
-
         // Load impulse response file
         juce::File irFile(irFilePath);
 
@@ -296,8 +293,5 @@ namespace reverb
 
         // Set parameters based on current impulse response
         timeStretch->setOrigIRSampleRate(reader->sampleRate);
-
-        // Resume processing
-        //processor->suspendProcessing(false);
     }
 }
