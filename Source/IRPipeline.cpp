@@ -172,12 +172,12 @@ namespace reverb
             if (filter->needsToRun()) filter->exec(irChannel);
         }
 
-        if(timeStretch->needsToRun()) timeStretch->exec(irChannel);
-        if(gain->needsToRun()) gain->exec(irChannel);
+        if (timeStretch->needsToRun()) timeStretch->exec(irChannel);
+        if (gain->needsToRun()) gain->exec(irChannel);
 
         try
         {
-            if(preDelay->needsToRun()) preDelay->exec(irChannel);
+            if (preDelay->needsToRun()) preDelay->exec(irChannel);
         }
         catch (const std::exception& e)
         {

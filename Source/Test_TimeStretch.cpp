@@ -69,7 +69,7 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
 
         timeStretch.updateParams(processor.parameters, processor.PID_IR_LENGTH);
 
-        REQUIRE(timeStretch.getIRLengthS() == IR_TARGET_DURATION_S.count());
+        REQUIRE(timeStretch.getIRLengthS() == Approx(IR_TARGET_DURATION_S.count()).epsilon(0.1));
 
         // Run TimeStretch
         timeStretch.exec(ir);
