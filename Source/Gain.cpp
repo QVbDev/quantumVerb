@@ -62,13 +62,10 @@ namespace reverb
      */
     void Gain::exec(juce::AudioSampleBuffer& buffer)
     {
-        if (mustExec)
-        {
-            buffer.applyGain(gainFactor);
+		buffer.applyGain (gainFactor);
 
-            // Reset mustExec flag
-            mustExec = false;
-        }
+        // Reset mustExec flag
+        mustExec = false;
     }
 
 }

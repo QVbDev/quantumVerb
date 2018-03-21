@@ -65,14 +65,12 @@ namespace reverb
      */
     void Mixer::exec(juce::AudioSampleBuffer& wetAudio)
     {
-        if (mustExec) {
-            wetAudio.applyGain(wetRatio);
-            dryAudio.applyGain(1 - wetRatio);
-            wetAudio.addFrom(0, 0, dryAudio, 0, 0, wetAudio.getNumSamples(), 1.0);
+		wetAudio.applyGain (wetRatio);
+		dryAudio.applyGain (1 - wetRatio);
+		wetAudio.addFrom(0,0,dryAudio,0,0,wetAudio.getNumSamples(),1.0);
 
-            // Reset mustExec flag
-            mustExec = false;
-        }
+        // Reset mustExec flag
+        mustExec = false;
     }
 
     //==============================================================================
