@@ -195,8 +195,6 @@ namespace reverb
      */
     void IRPipeline::loadIR(const std::string& irNameOrFilePath)
     {
-        std::lock_guard<std::mutex> lock(irMutex);
-
         if (irNameOrFilePath.empty())
         {
             throw std::invalid_argument("Received invalid IR name/path");
@@ -226,9 +224,6 @@ namespace reverb
      */
     void IRPipeline::loadIRFromBank(const std::string& irName)
     {
-        // Suspend processing since this may take a while
-        processor->suspendProcessing(true);
-
         // Find requested IR
         const auto irIter = irBank.buffers.find(irName);
         const auto sampleRateIter = irBank.sampleRates.find(irName);
@@ -256,9 +251,6 @@ namespace reverb
 
         // Set parameters based on current impulse response
         timeStretch->setOrigIRSampleRate(irSampleRate);
-
-        // Resume processing
-        processor->suspendProcessing(false);
     }
 
     //==============================================================================
@@ -276,7 +268,7 @@ namespace reverb
     void IRPipeline::loadIRFromDisk(const std::string& irFilePath)
     {
         // Suspend processing since this may take a while
-        processor->suspendProcessing(true);
+        //processor->suspendProcessing(true);
 
         // Load impulse response file
         juce::File irFile(irFilePath);
@@ -306,6 +298,6 @@ namespace reverb
         timeStretch->setOrigIRSampleRate(reader->sampleRate);
 
         // Resume processing
-        processor->suspendProcessing(false);
+        //processor->suspendProcessing(false);
     }
 }
