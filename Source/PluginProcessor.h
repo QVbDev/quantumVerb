@@ -71,9 +71,6 @@ namespace reverb
 		void setStateInformation(const void* data, int sizeInBytes) override;
 
         //==============================================================================
-        std::mutex lock;
-
-        //==============================================================================
         IRBank irBank;
 
         //==============================================================================
@@ -100,6 +97,15 @@ namespace reverb
         //==============================================================================
         void initParams();
         bool paramsInitialised = false;
+
+        //==============================================================================
+        static constexpr int NUM_BLOCKS_PER_UPDATE_PARAMS = 5;
+        int64_t blocksProcessed = 0;
+
+        void updateParams(double sampleRate);
+        void updateParamsForChannel(int channelIdx, double sampleRate);
+
+        std::mutex updatingParams;
 
         //==============================================================================
         void processChannel(int channelIdx);

@@ -27,31 +27,23 @@ namespace reverb
         : Task(processor)
     {
     }
-    
-    //==============================================================================
+
     /**
-     * @brief Read processor parameters and update block parameters as necessary
-     *
-     * @returns True if any parameters were changed, false otherwise.
+     * @brief Updates parameters from processor parameter tree
+     * 
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool Mixer::updateParams(const juce::AudioProcessorValueTreeState& params,
+    void Mixer::updateParams(const juce::AudioProcessorValueTreeState& params,
                              const juce::String& blockId)
     {
-        // Dry/wet ratio
-        auto paramWetRatio = params.getRawParameterValue(blockId);
+        float _wetRatio = getParam(params, blockId);
 
-        if (!paramWetRatio)
+        if (wetRatio != _wetRatio)
         {
-            throw std::invalid_argument("Parameter not found for wet ratio in Mixer block");
-        }
-
-        if (*paramWetRatio != wetRatio)
-        {
-            wetRatio = *paramWetRatio;
+            wetRatio = _wetRatio;
             mustExec = true;
         }
-
-        return mustExec;
     }
 
     //==============================================================================

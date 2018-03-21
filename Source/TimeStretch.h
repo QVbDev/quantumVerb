@@ -30,7 +30,7 @@ namespace reverb
         using Ptr = std::shared_ptr<TimeStretch>;
 
         //==============================================================================
-        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+        virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& blockID) override;
 
         virtual void exec(juce::AudioSampleBuffer& ir) override;

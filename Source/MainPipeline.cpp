@@ -31,22 +31,17 @@ namespace reverb
         dryWetMixer = std::make_shared<Mixer>(processor);
     }
 
-    //==============================================================================
     /**
-     * @brief Read processor parameters and update child parameters as necessary
+     * @brief Updates parameters from processor parameter tree
      *
-     * @returns True if any parameters were changed, false otherwise.
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool MainPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
-                                    const juce::String&)
+    void MainPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
+                                    const juce::String& blockId)
     {
-        bool changedParams = false;
-
-        // Update child parameters
-        changedParams |= gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
-        changedParams |= dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
-
-        return changedParams;
+        gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
+        dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
     }
 
     //==============================================================================

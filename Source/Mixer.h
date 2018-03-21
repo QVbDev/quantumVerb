@@ -28,7 +28,7 @@ namespace reverb
         using Ptr = std::shared_ptr<Mixer>;
 
         //==============================================================================
-        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+        virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& blockId) override;
 
         virtual void exec(juce::AudioSampleBuffer& wetAudio) override;

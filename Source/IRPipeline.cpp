@@ -45,27 +45,20 @@ namespace reverb
         preDelay = std::make_shared<PreDelay>(processor);
     }
 
-    //==============================================================================
     /**
-     * @brief Read processor parameters and update child parameters as necessary
-     * 
-     * Update parameters based on current processor configuration. Set mustExec flag
-     * if any parameters are changed in this process.
+     * @brief Updates parameters from processor parameter tree
      *
-     * @returns True if any parameters were changed, false otherwise.
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool IRPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
-                                  const juce::String&)
+    void IRPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
+                                  const juce::String& blockId)
     {
         // Update pipeline parameters
         auto paramIRChoice = params.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE);
-
         if (paramIRChoice.getProperty("value") != currentIR)
         {
             currentIR = paramIRChoice.getProperty("value");
-
-            loadIR(currentIR.toStdString());
-
             mustExec = true;
         }
 
@@ -73,19 +66,12 @@ namespace reverb
         for (int i = 0; i < filters.size(); ++i)
         {
             std::string filterId = AudioProcessor::PID_FILTER_PREFIX + std::to_string(i);
-            mustExec |= filters[i]->updateParams(params, filterId);
+            filters[i]->updateParams(params, filterId);
         }
 
-        mustExec |= gain->updateParams(params, AudioProcessor::PID_IR_GAIN);
-        mustExec |= preDelay->updateParams(params, AudioProcessor::PID_PREDELAY);
-        mustExec |= timeStretch->updateParams(params, AudioProcessor::PID_IR_LENGTH);
-
-        if (mustExec)
-        {
-            loadIR(currentIR.toStdString());
-        }
-
-        return mustExec;
+        gain->updateParams(params, AudioProcessor::PID_IR_GAIN);
+        preDelay->updateParams(params, AudioProcessor::PID_PREDELAY);
+        timeStretch->updateParams(params, AudioProcessor::PID_IR_LENGTH);
     }
 
     //==============================================================================
@@ -166,6 +152,8 @@ namespace reverb
      */
     void IRPipeline::exec(juce::AudioSampleBuffer& irChannelOut)
     {
+        loadIR(currentIR.toStdString());
+
         // Execute pipeline on IR channel
         for (auto& filter : filters)
         {
