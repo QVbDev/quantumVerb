@@ -5,11 +5,13 @@
 namespace reverb
 {
 
-    class UIBlock : public juce::Component
+    class UIBlock : public juce::GroupComponent
     {
     public:
         //==============================================================================
-        UIBlock(int numComponents, int numComponentsPerRow);
+        UIBlock(int numComponents, int numComponentsPerRow,
+            const juce::String& componentName = juce::String(),
+            const juce::String &labelText = juce::String());
 
         //==============================================================================
         using Ptr = std::unique_ptr<UIBlock>;

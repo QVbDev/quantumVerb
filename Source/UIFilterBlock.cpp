@@ -20,8 +20,8 @@ namespace reverb
     * parameters to the AudioProcessorValueTreeState.
     */
     //==============================================================================
-    UIFilterBlock::UIFilterBlock(AudioProcessor& processor, int index)
-        : UIBlock(3, 2)
+    UIFilterBlock::UIFilterBlock(AudioProcessor& processor, int index, const juce::String& displayedName)
+        : UIBlock(3, 2, "Filter", displayedName)
     {
         // Sliders
         freq.setSliderStyle(juce::Slider::RotaryVerticalDrag);
@@ -87,6 +87,10 @@ namespace reverb
 
         g.setColour(juce::Colours::white);
         g.setFont(15.0f);
+
+        juce::Rectangle<int> bounds(getLocalBounds());
+        getLookAndFeel().drawGroupComponentOutline(g, bounds.getWidth(), bounds.getHeight(), getText(), 
+            juce::Justification(juce::Justification::centredTop), *this);
     }
     /**
     * @brief Manages the layout of UIFilterBlock when the block is resized
@@ -99,8 +103,9 @@ namespace reverb
     {
         juce::Rectangle<int> bounds(getLocalBounds());
 
-        // Draw frame
-        // TODO: Make this look nice
+        int height = bounds.getHeight();
+        int padding = (int)(height * 0.06);
+        bounds.reduce(padding, padding);
 
         // Distribute elements in columns
         auto cells = getComponentCells(bounds);
@@ -108,6 +113,7 @@ namespace reverb
         freq.setBounds(cells[0]);
         q.setBounds(cells[1]);
         gain.setBounds(cells[2]);
+
     }
 
 }

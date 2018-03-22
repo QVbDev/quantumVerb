@@ -19,7 +19,7 @@ namespace reverb {
     {
     public:
         //==============================================================================
-        UIFilterBlock(AudioProcessor& processor, int index);
+        UIFilterBlock(AudioProcessor& processor, int index, const juce::String& displayedName = juce::String());
 
         //==============================================================================
         using Ptr = std::unique_ptr<UIFilterBlock>;
