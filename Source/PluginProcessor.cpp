@@ -12,6 +12,10 @@
 #include "PluginEditor.h"
 #include "Logger.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include <thread>
 
 namespace reverb
@@ -207,6 +211,11 @@ namespace reverb
      */
 	void AudioProcessor::processBlock(juce::AudioSampleBuffer& audio, juce::MidiBuffer&)
 	{
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_TIME_CRITICAL);
+#endif
+
         // Reset the bypass detection parameter
         auto activeParam = parameters.getParameter(PID_ACTIVE);
 
@@ -259,6 +268,11 @@ namespace reverb
             {
                 std::thread updateParamsThread(&AudioProcessor::updateParams,
                                                this, getSampleRate());
+
+#ifdef WIN32
+                SetThreadPriority(updateParamsThread.native_handle(),
+                                  THREAD_MODE_BACKGROUND_BEGIN);
+#endif
             
                 lock.unlock();
 
@@ -274,6 +288,11 @@ namespace reverb
         for (int i = 0; i < totalNumInputChannels; ++i)
         {
             channelThreads.emplace_back(&AudioProcessor::processChannel, this, i);
+
+#ifdef WIN32
+            SetThreadPriority(channelThreads[i].native_handle(),
+                              THREAD_PRIORITY_TIME_CRITICAL);
+#endif
         }
 
         // Wait for each thread to complete
@@ -309,6 +328,11 @@ namespace reverb
 #endif
 
         blocksProcessed++;
+
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_NORMAL);
+#endif
 	}
 
     /**
