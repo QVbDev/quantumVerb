@@ -34,7 +34,7 @@ namespace reverb
     {
     public:
         //==============================================================================
-        IRPipeline(juce::AudioProcessor * processor, const IRBank& irBank, int channelIdx);
+        IRPipeline(juce::AudioProcessor * processor, int channelIdx);
 
         //==============================================================================
         using Ptr = std::shared_ptr<IRPipeline>;
@@ -52,7 +52,7 @@ namespace reverb
         virtual void updateSampleRate(double sr) override;
 
         //==============================================================================
-        void loadIR(const std::string& irNameOrFilePath);
+        AudioBlock reloadIR();
 
     protected:
         //==============================================================================
@@ -65,16 +65,15 @@ namespace reverb
         double lastSampleRate = 0;
 
         //==============================================================================
-        static std::mutex irMutex;
+        int channelIdx;
+
+        //==============================================================================
+        std::string irNameOrFilePath = "";
+
+        juce::AudioSampleBuffer ir;
 
         void loadIRFromBank(const std::string& irBuffer);
         void loadIRFromDisk(const std::string& irFilePath);
-
-        int channelIdx;
-        juce::AudioSampleBuffer irChannel;
-
-        //==============================================================================
-        juce::String currentIR = "";
     };
 
 }

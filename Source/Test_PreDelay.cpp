@@ -68,6 +68,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         REQUIRE(preDelay.getDelayMs() == 0);
 
+        preDelay.prepareIR(ir);
         preDelay.exec(ir);
 
         CHECK(ir.getNumChannels() == 1);
@@ -88,7 +89,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         REQUIRE(preDelay.getDelayMs() == DELAY_S * 1000);
 
-        ir.setSize(1, ir.getNumSamples() + preDelay.getNumSamplesToAdd(), true, false, false);
+        preDelay.prepareIR(ir);
         preDelay.exec(ir);
 
         CHECK(ir.getNumChannels() == 1);

@@ -43,6 +43,7 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
 
     GainMocked gain(&processor);
 
+
     SECTION("Apply gain to audio buffer") {
         constexpr float GAIN = 2.0f;
 

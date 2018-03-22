@@ -57,21 +57,19 @@ namespace reverb
      */
     AudioBlock PreDelay::exec(AudioBlock ir)
     {
-        const int numSamplesToAdd = getNumSamplesToAdd();
-        const int lengthWithoutPreDelay = (ir.getNumSamples() - numSamplesToAdd);
+        const size_t numSamplesToAdd = getNumSamplesToAdd();
+        const size_t lengthWithoutPreDelay = (ir.getNumSamples() - numSamplesToAdd);
 
-        if (numSamplesToAdd <= 0)
+        if (numSamplesToAdd > 0)
         {
-            return ir;
+            // Shift audio samples in memory to leave room for predelay
+            // NB: Use memmove instead of memcpy since dst and src will probably overlap
+            float * irPtr = ir.getChannelPointer(0);
+            memmove(irPtr + numSamplesToAdd, irPtr, lengthWithoutPreDelay * sizeof(float));
+
+            // Clear predelay samples
+            memset(irPtr, 0, numSamplesToAdd * sizeof(float));
         }
-
-        // Shift audio samples in memory to leave room for predelay
-        // NB: Use memmove instead of memcpy since dst and src will probably overlap
-        float * irPtr = ir.getChannelPointer(0);
-        memmove(irPtr + numSamplesToAdd, irPtr, lengthWithoutPreDelay * sizeof(float));
-
-        // Clear predelay samples
-        memset(irPtr, 0, numSamplesToAdd * sizeof(float));
 
         // Reset mustExec flag
         mustExec = false;
@@ -80,6 +78,18 @@ namespace reverb
     }
 
     //==============================================================================
+    /**
+     * @brief Resizes given IR before processing
+     *
+     * @param [in,out] ir   IR to prepare
+     */
+    void PreDelay::prepareIR(juce::AudioSampleBuffer& ir)
+    {
+        ir.setSize(ir.getNumChannels(),
+                   ir.getNumSamples() + getNumSamplesToAdd(),
+                   true, false, false);
+    }
+
     /**
      * @brief Returns expected number of samples after processing
      *

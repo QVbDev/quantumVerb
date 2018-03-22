@@ -56,24 +56,14 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief Set sample rate for future IR buffer to process
-     *
-     * Informs TimeStretch block of original sample rate for IR buffer that wil be
-     * received.
-     *
-     * @param [in] sampleRate   Original sample rate of IR that will be processed
-     */
-    void TimeStretch::setOrigIRSampleRate(double sr)
-    {
-        origIRSampleRate = sr;
-    }
-
-    //==============================================================================
-    /**
      * @brief Apply time stretching algorithm to input IR buffer to change sample rate
-     *
+     * 
      * Stretch or compress input buffer by a factor proportional to original and desired
      * sample rates.
+     *
+     * NOTE: prepareIR() method should be called before to manage buffer size. This
+     *       will copy the original IR and resize the given buffer to the appropriate
+     *       size based on sample rate and desired length.
      *
      * @param [in,out] ir   Audio sample buffer to process
      */
@@ -82,29 +72,21 @@ namespace reverb
         if (!soundtouch)
         {
             logger.dualPrint(Logger::Level::Error, "No SoundTouch instance exists, cannot apply time stretch to IR");
+            return ir;
         }
 
         soundtouch->setChannels(1);
-        soundtouch->setSampleRate((unsigned)origIRSampleRate);
-
-        // Copy input data to new buffer; ir becomes output buffer for SoundTouch processing
-        juce::AudioSampleBuffer irCopy(1, (int)ir.getNumSamples());
-        irCopy.copyFrom(0, 0, ir.getChannelPointer(0), (int)ir.getNumSamples());
+        soundtouch->setSampleRate((unsigned)sampleRate);
 
         // Calculate tempo change & expected number of samples in output buffer
-        if (!origIRSampleRate)
-        {
-            throw std::invalid_argument("Unknown sample rate for given IR, cannot apply time stretching");
-        }
-
-        double newNumSamples = getOutputNumSamples();
-        double sampleRateRatio = (double)irCopy.getNumSamples() / newNumSamples;
+        int newNumSamples = getOutputNumSamples();
+        double sampleRateRatio = (double)irOrig.getNumSamples() / (double)newNumSamples;
 
         // Use SoundTouch processor to calculate time stretch
         soundtouch->clear();
         soundtouch->setTempo(sampleRateRatio);
 
-        soundtouch->putSamples(irCopy.getReadPointer(0), irCopy.getNumSamples());
+        soundtouch->putSamples(irOrig.getReadPointer(0), irOrig.getNumSamples());
 
         // Wait for processing to complete
         unsigned curSample = 0;
@@ -116,25 +98,26 @@ namespace reverb
 
             // Write processed samples to output buffer
             auto curWritePtr = &ir.getChannelPointer(0)[curSample];
-                
+            
             nbSamplesReceived = soundtouch->receiveSamples(curWritePtr,
                                                            (unsigned)ir.getNumSamples() - curSample);
         }
-        while (nbSamplesReceived != 0 &&
-               soundtouch->numUnprocessedSamples() != 0);
+        while (nbSamplesReceived != 0);
 
         // Get last remaining samples from SoundTouch pipeline, if any
-        if (soundtouch->numUnprocessedSamples() != 0)
+        soundtouch->flush();
+        do
         {
-            soundtouch->flush();
-            
-            curSample += soundtouch->numSamples();
-            
-            // Write processed samples to output buffer
             auto curWritePtr = &ir.getChannelPointer(0)[curSample];
 
-            soundtouch->receiveSamples(curWritePtr, (unsigned)ir.getNumSamples() - curSample);
+            nbSamplesReceived = soundtouch->receiveSamples(curWritePtr,
+                                                           (unsigned)ir.getNumSamples() - curSample);
+
+            curSample += nbSamplesReceived;
         }
+        while (nbSamplesReceived != 0);
+
+        jassert(curSample == ir.getNumSamples());
 
         // Reset mustExec flag
         mustExec = false;
@@ -143,6 +126,17 @@ namespace reverb
     }
 
     //==============================================================================
+    /**
+     * @brief Copies given IR to internal representation and resizes it before processing
+     *
+     * @param [in,out] ir   IR to copy and resize
+     */
+    void TimeStretch::prepareIR(juce::AudioSampleBuffer& ir)
+    {
+        irOrig.makeCopyOf(ir);
+        ir.setSize(ir.getNumChannels(), getOutputNumSamples());
+    }
+
     /**
      * @brief Returns expected number of samples after processing
      *

@@ -26,7 +26,6 @@ class TimeStretchMocked : public reverb::TimeStretch
 public:
     using TimeStretch::TimeStretch;
 
-    double getOrigIRSampleRate() { return origIRSampleRate; }
     float getIRLengthS() { return irLengthS; }
     static constexpr double getMaxIRLengthS() { return MAX_IR_LENGTH_S; }
 };
@@ -51,10 +50,10 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
     SECTION("Stretch audio buffer (2s @ 96kHz -> 4s @ 88.2kHz)") {
         constexpr double IR_ORIG_SAMPLE_RATE = 96000;
         constexpr std::chrono::seconds IR_ORIG_DURATION_S(2);
-        const int64_t IR_ORIG_NUM_SAMPLES = (int64_t)std::ceil(IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE);
+        const int IR_ORIG_NUM_SAMPLES = (int)std::ceil(IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE);
 
         constexpr std::chrono::seconds IR_TARGET_DURATION_S(4);
-        const int64_t IR_EXPECTED_NUM_SAMPLES = (int64_t)std::ceil(IR_TARGET_DURATION_S.count() * SAMPLE_RATE);
+        const int IR_EXPECTED_NUM_SAMPLES = (int)std::ceil(IR_TARGET_DURATION_S.count() * SAMPLE_RATE);
 
         // Prepare "audio" buffer
         juce::AudioSampleBuffer ir(NUM_CHANNELS, IR_ORIG_NUM_SAMPLES);
@@ -63,10 +62,6 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         REQUIRE(ir.getNumSamples() == IR_ORIG_NUM_SAMPLES);
 
         // Prepare TimeStretch
-        timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
-
-        REQUIRE(compareFloats(timeStretch.getOrigIRSampleRate(), (double)IR_ORIG_SAMPLE_RATE));
-
         auto irLength = processor.parameters.getParameterAsValue(processor.PID_IR_LENGTH);
         irLength.setValue(IR_TARGET_DURATION_S.count());
 
@@ -75,7 +70,7 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         REQUIRE(compareFloats(timeStretch.getIRLengthS(), IR_TARGET_DURATION_S.count()));
 
         // Run TimeStretch
-        ir.setSize(1, timeStretch.getOutputNumSamples(), true, false, false);
+        timeStretch.prepareIR(ir);
         timeStretch.exec(ir);
 
         CHECK(ir.getNumChannels() == NUM_CHANNELS);
@@ -86,10 +81,10 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
     SECTION("Compress audio buffer (4s @ 96kHz -> 2s @ 88.2kHz)") {
         constexpr double IR_ORIG_SAMPLE_RATE = 96000;
         constexpr std::chrono::seconds IR_ORIG_DURATION_S(4);
-        constexpr int64_t IR_ORIG_NUM_SAMPLES = IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE;
+        const int IR_ORIG_NUM_SAMPLES = (int)std::ceil(IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE);
 
         constexpr std::chrono::seconds IR_TARGET_DURATION_S(2);
-        constexpr int64_t IR_EXPECTED_NUM_SAMPLES = IR_TARGET_DURATION_S.count() * SAMPLE_RATE;
+        const int IR_EXPECTED_NUM_SAMPLES = (int)std::ceil(IR_TARGET_DURATION_S.count() * SAMPLE_RATE);
 
         // Prepare "audio" buffer
         juce::AudioSampleBuffer ir(NUM_CHANNELS, IR_ORIG_NUM_SAMPLES);
@@ -98,10 +93,6 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         REQUIRE(ir.getNumSamples() == IR_ORIG_NUM_SAMPLES);
 
         // Prepare TimeStretch
-        timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
-
-        REQUIRE(timeStretch.getOrigIRSampleRate() == (double)IR_ORIG_SAMPLE_RATE);
-
         auto irLength = processor.parameters.getParameterAsValue(processor.PID_IR_LENGTH);
         irLength.setValue(IR_TARGET_DURATION_S.count());
 
@@ -110,7 +101,7 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         REQUIRE(compareFloats(timeStretch.getIRLengthS(), IR_TARGET_DURATION_S.count()));
 
         // Run TimeStretch
-        ir.setSize(1, timeStretch.getOutputNumSamples(), true, false, false);
+        timeStretch.prepareIR(ir);
         timeStretch.exec(ir);
 
         CHECK(ir.getNumChannels() == NUM_CHANNELS);

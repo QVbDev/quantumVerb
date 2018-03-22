@@ -32,57 +32,7 @@ public:
     using IRPipeline::IRPipeline;
 
     //==============================================================================
-    juce::String getCurrentIR() { return currentIR; }
-
-    //==============================================================================
-    /**
-     * @brief Copies an impulse response buffer to internal representation
-     *
-     * Writes the given IR buffer to a temporary file on disk, then uses IRPipeline::loadIR
-     * to read it into the object's internal representation.
-     *
-     * @param [in] ir   Impulse response sample buffer
-     */
-    void loadIRBuffer(juce::AudioSampleBuffer& ir, double sr)
-    {
-        // Create temporary output file
-        juce::File fileOut = juce::File::getCurrentWorkingDirectory().getChildFile("tmp_ir.wav");
-        fileOut.create();
-
-        {// Local scope to write temporary output file
-            // NB: We don't need to handle freeing this stream since JUCE's writer will do it for us
-            //     (unpleasant but that's how it is)
-            juce::FileOutputStream * fileOutStream = fileOut.createOutputStream();
-
-            if (fileOutStream->failedToOpen())
-            {
-                throw std::runtime_error("Failed to open temporary output file for mocked IRPipeline");
-            }
-
-            // Write IR to disk
-            juce::WavAudioFormat wavFormat;
-        
-            std::unique_ptr<juce::AudioFormatWriter> writer(
-                wavFormat.createWriterFor( fileOutStream, sr, ir.getNumChannels(),
-                                            wavFormat.getPossibleBitDepths()[0],
-                                            (juce::StringPairArray()),
-                                            0 )
-            );
-
-            if (!writer)
-            {
-                throw std::runtime_error("Failed to create writer for temporary output file in mocked IRPipeline");
-            }
-
-            writer->writeFromAudioSampleBuffer(ir, 0, ir.getNumSamples());
-        }
-
-        // Load temporary IR file
-        loadIR(fileOut.getFullPathName().toStdString());
-
-        // Clean up
-        fileOut.deleteFile();
-    }
+    juce::String getIRName() { return irNameOrFilePath; }
 };
 
 TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]") {

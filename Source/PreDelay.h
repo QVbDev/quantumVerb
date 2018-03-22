@@ -35,6 +35,7 @@ namespace reverb
         virtual AudioBlock exec(AudioBlock ir) override;
 
         //==============================================================================
+        void prepareIR(juce::AudioSampleBuffer& ir);
         int getNumSamplesToAdd();
 
     protected:

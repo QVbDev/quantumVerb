@@ -149,7 +149,7 @@ namespace reverb
 
         for (size_t i = irPipelines.size(); i < numChannels; ++i)
         {
-            irPipelines.emplace_back(new IRPipeline(this, irBank, (int)i));
+            irPipelines.emplace_back(new IRPipeline(this, (int)i));
         }
 
         for (size_t i = numChannels; i < mainPipelines.size(); ++i)
@@ -173,7 +173,6 @@ namespace reverb
      */
 	void AudioProcessor::releaseResources()
 	{
-        audioChannels.clear();
 	}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -237,7 +236,7 @@ namespace reverb
         // these values here.
         for (size_t i = irPipelines.size(); i < totalNumInputChannels; ++i)
         {
-            irPipelines.emplace_back(new IRPipeline(this, irBank, (int)i));
+            irPipelines.emplace_back(new IRPipeline(this, (int)i));
         }
 
         for (size_t i = mainPipelines.size(); i < totalNumInputChannels; ++i)
@@ -366,7 +365,7 @@ namespace reverb
      */
     void AudioProcessor::updateParamsForChannel(int channelIdx, double sampleRate)
     {
-        auto& lock = getCallbackLock();
+        auto& processorLock = getCallbackLock();
 
         auto& irPipeline = irPipelines[channelIdx];
         auto& mainPipeline = mainPipelines[channelIdx];
@@ -382,33 +381,21 @@ namespace reverb
 
         if (updateIR)
         {
-            try
-            {
-                irChannel = irPipeline->exec();
-            }
-            catch (const std::exception& e)
-            {
-                std::string errMsg = "Skipping IR pipeline for channel " +
-                    std::to_string(channelIdx) +
-                    " due to exception: " +
-                    e.what();
-
-                logger.dualPrint(Logger::Level::Error, errMsg);
-            }
+            irChannel = irPipeline->exec();
         }
 
         // Update main parameters (critical section: mainPipeline is used by
         // processChannel)
-        lock.enter();
-
-        mainPipeline->updateParams(parameters);
-
-        if (updateIR)
         {
-            mainPipeline->loadIR(irChannel);
+            juce::ScopedLock lock(processorLock);
+
+            mainPipeline->updateParams(parameters);
+
+            if (updateIR)
+            {
+                mainPipeline->loadIR(irChannel);
+            }
         }
-        
-        lock.exit();
     }
 
     //==============================================================================
