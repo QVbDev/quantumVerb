@@ -71,7 +71,7 @@ namespace reverb
      */
     void MainPipeline::loadIR(juce::AudioSampleBuffer&& irIn)
     {
-        ir = std::move(irIn);
+        ir = irIn;
 		convolution->loadIR(ir);
     }
 

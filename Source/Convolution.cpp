@@ -48,8 +48,8 @@ namespace reverb
     void Convolution::exec(juce::AudioSampleBuffer& audio)
     {
         juce::dsp::AudioBlock<float> audioBlock(audio);
-        juce::dsp::AudioBlock<float> outBlock(audio);
-        juce::dsp::ProcessContextNonReplacing<float> context(audioBlock, outBlock);
+        juce::dsp::ProcessContextReplacing<float> context(audioBlock);
+
         process(context);
     }
 
@@ -66,7 +66,7 @@ namespace reverb
     void Convolution::loadIR(juce::AudioSampleBuffer& ir)
     {
         juce::dsp::ProcessSpec spec;
-        spec.sampleRate = processor->getSampleRate(); // 44.1 kHz
+        spec.sampleRate = processor->getSampleRate();
 
         // If the block size is small, the overlap-add method requires a small amount of RAM
         // at the expense of increasing computational load. If the block size is large, the
