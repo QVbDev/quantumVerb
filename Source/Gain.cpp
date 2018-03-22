@@ -52,12 +52,14 @@ namespace reverb
      *
      * @param [in,out] buffer   Audio sample buffer to process
      */
-    void Gain::exec(juce::AudioSampleBuffer& buffer)
+    AudioBlock Gain::exec(AudioBlock buffer)
     {
-		buffer.applyGain (gainFactor);
+		buffer.multiply(gainFactor);
 
         // Reset mustExec flag
         mustExec = false;
+
+        return buffer;
     }
 
 }

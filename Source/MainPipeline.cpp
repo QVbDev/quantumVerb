@@ -38,7 +38,7 @@ namespace reverb
      * @param [in] blockId  ID of block whose paramters should be checked
      */
     void MainPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
-                                    const juce::String& blockId)
+                                    const juce::String&)
     {
         gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
         dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
@@ -54,25 +54,29 @@ namespace reverb
      *
      * @param [in,out] audio    Audio sample buffer
      */
-    void MainPipeline::exec(juce::AudioSampleBuffer& audio)
+    AudioBlock MainPipeline::exec(AudioBlock audio)
     {
         dryWetMixer->loadDry(audio);
 
         convolution->exec(audio);
         dryWetMixer->exec(audio);
         gain->exec(audio);
+
+        return audio;
     }
 
     //==============================================================================
     /**
-     * @brief Move IR buffer into MainPipeline object
+     * @brief Copy reference to IR buffer
      *
-     * @param [in] irIn Input IR buffer, empty after this method is called
+     * Calls convolution block's loadIR method to pass along the given audio block
+     *
+     * @param [in] irIn Input IR block
      */
-    void MainPipeline::loadIR(juce::AudioSampleBuffer&& irIn)
+    void MainPipeline::loadIR(AudioBlock irIn)
     {
         ir = irIn;
-		convolution->loadIR(ir);
+		convolution->loadIR(irIn);
     }
 
 }

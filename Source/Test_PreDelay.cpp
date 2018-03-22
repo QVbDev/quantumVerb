@@ -49,6 +49,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
     REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
     PreDelayMocked preDelay(&processor);
+    preDelay.updateSampleRate(SAMPLE_RATE);
 
     // Prepare dummy IR
     constexpr int IR_SIZE = 2048;
@@ -87,6 +88,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         REQUIRE(preDelay.getDelayMs() == DELAY_S * 1000);
 
+        ir.setSize(1, ir.getNumSamples() + preDelay.getNumSamplesToAdd(), true, false, false);
         preDelay.exec(ir);
 
         CHECK(ir.getNumChannels() == 1);
@@ -103,23 +105,4 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
         }
     }
 
-
-    SECTION("When pre-delay exceeds 1s, block should throw an exception") {
-        preDelay.setDelayMs(preDelay.getMaxDelayMs() + 1.0f);
-
-        REQUIRE(preDelay.getDelayMs() == preDelay.getMaxDelayMs() + 1);
-
-        bool gotException = false;
-
-        try
-        {
-            preDelay.exec(ir);
-        }
-        catch (std::invalid_argument)
-        {
-            gotException = true;
-        }
-
-        CHECK(gotException);
-    }
 }

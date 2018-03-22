@@ -42,7 +42,7 @@ public:
      *
      * @param [in] ir   Impulse response sample buffer
      */
-    void loadIRBuffer(juce::AudioSampleBuffer& ir, double sampleRate)
+    void loadIRBuffer(juce::AudioSampleBuffer& ir, double sr)
     {
         // Create temporary output file
         juce::File fileOut = juce::File::getCurrentWorkingDirectory().getChildFile("tmp_ir.wav");
@@ -62,7 +62,7 @@ public:
             juce::WavAudioFormat wavFormat;
         
             std::unique_ptr<juce::AudioFormatWriter> writer(
-                wavFormat.createWriterFor( fileOutStream, sampleRate, ir.getNumChannels(),
+                wavFormat.createWriterFor( fileOutStream, sr, ir.getNumChannels(),
                                             wavFormat.getPossibleBitDepths()[0],
                                             (juce::StringPairArray()),
                                             0 )
@@ -99,6 +99,7 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
 
     IRPipelineMocked irPipeline(&processor, processor.irBank, 0);
     irPipeline.updateParams(processor.parameters);
+    irPipeline.updateSampleRate(IR_SAMPLE_RATE);
 
     REQUIRE(irPipeline.getCurrentIR() == processor.irBank.buffers.begin()->first);
 

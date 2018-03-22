@@ -52,7 +52,7 @@ namespace reverb
      * @param [in] blockId  ID of block whose paramters should be checked
      */
     void IRPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
-                                  const juce::String& blockId)
+                                  const juce::String&)
     {
         // Update pipeline parameters
         auto paramIRChoice = params.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE);
@@ -76,23 +76,30 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief Update sample rate for IR processing
+     * @brief Update sample rate for pipeline and child tasks
      * 
      * Compares new sample rate with previous value. If different, sets mustExec to
      * true in order to re-run pipeline for new sample rate. Store new sample rate
-     * value once complete.
+     * value in object.
      *
-     * @returns True if sample rate changed, false otherwise.
+     * @param [in] sr   Sample rate
      */
-    bool IRPipeline::updateSampleRate(double sampleRate)
+    void IRPipeline::updateSampleRate(double sr)
     {
-        if (sampleRate != lastSampleRate)
+        if (sr != sampleRate)
         {
-            lastSampleRate = sampleRate;
+            sampleRate = sr;
             mustExec = true;
-        }
 
-        return mustExec;
+            for (auto& filter : filters)
+            {
+                filter->updateSampleRate(sr);
+            }
+
+            gain->updateSampleRate(sr);
+            preDelay->updateSampleRate(sr);
+            timeStretch->updateSampleRate(sr);
+        }
     }
 
     //==============================================================================
@@ -150,36 +157,38 @@ namespace reverb
      *
      * @throws std::runtime_error
      */
-    void IRPipeline::exec(juce::AudioSampleBuffer& irChannelOut)
+    AudioBlock IRPipeline::exec(AudioBlock)
     {
         loadIR(currentIR.toStdString());
 
-        // Execute pipeline on IR channel
+        // Apply filters
         for (auto& filter : filters)
         {
             filter->exec(irChannel);
         }
 
-        timeStretch->exec(irChannel);
+        // Apply gain
         gain->exec(irChannel);
 
-        try
-        {
-            preDelay->exec(irChannel);
-        }
-        catch (const std::exception& e)
-        {
-            std::string errMsg = "Skipping pre-delay step due to exception: ";
-                        errMsg += e.what();
-                
-            logger.dualPrint(Logger::Level::Error, errMsg);
-        }
+        // Resize buffer and apply timestretch
+        irChannel.setSize(1,
+                          timeStretch->getOutputNumSamples(),
+                          true, false, false);
 
-        // Use move semantics to write to output IR channel
-        irChannelOut = std::move(irChannel);
+        timeStretch->exec(irChannel);
+
+        // Resize buffer and apply predelay
+        irChannel.setSize(1,
+                          irChannel.getNumSamples() + preDelay->getNumSamplesToAdd(),
+                          true, false, false);
+
+        preDelay->exec(irChannel);
 
         // Reset mustExec flag
         mustExec = false;
+
+        // Return reference to processed IR channel
+        return AudioBlock(irChannel);
     }
 
     //==============================================================================

@@ -39,7 +39,7 @@ namespace reverb
         virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& = "") override;
 
-        virtual void exec(juce::AudioSampleBuffer& audio) override;
+        virtual AudioBlock exec(AudioBlock audio) override;
 
         //==============================================================================
         /**
@@ -50,16 +50,15 @@ namespace reverb
         virtual bool needsToRun() const override { return true; }
 
         //==============================================================================
-        void loadIR(juce::AudioSampleBuffer&& ir);
+        void loadIR(AudioBlock irIn);
+
+        AudioBlock ir;
 
     protected:
         //==============================================================================
         Convolution::Ptr convolution;
         Gain::Ptr gain;
         Mixer::Ptr dryWetMixer;
-
-        //==============================================================================
-        juce::AudioSampleBuffer ir;
     };
 
 }

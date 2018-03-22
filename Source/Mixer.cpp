@@ -55,14 +55,15 @@ namespace reverb
      *
      * @param [in,out] wetAudio Buffer containing the wet audio signal 
      */
-    void Mixer::exec(juce::AudioSampleBuffer& wetAudio)
+    AudioBlock Mixer::exec(AudioBlock wetAudio)
     {
-		wetAudio.applyGain (wetRatio);
-		dryAudio.applyGain (1 - wetRatio);
-		wetAudio.addFrom(0,0,dryAudio,0,0,wetAudio.getNumSamples(),1.0);
+        wetAudio.multiply(wetRatio);
+        wetAudio.addWithMultiply(dryAudioCopy, 1 - wetRatio);
 
         // Reset mustExec flag
         mustExec = false;
+
+        return wetAudio;
     }
 
     //==============================================================================
@@ -71,9 +72,14 @@ namespace reverb
     *
     * @param [in,out] dryAudio Buffer containing the dry signal
     */
-    void Mixer::loadDry(const juce::AudioSampleBuffer dryAudio)
+    void Mixer::loadDry(AudioBlock dryAudio)
     {
-		this->dryAudio = dryAudio;
+		dryAudioCopy.clear();
+        dryAudioCopy.setSize(1, (int)dryAudio.getNumSamples());
+
+        dryAudioCopy.copyFrom(0, 0,
+                              dryAudio.getChannelPointer(0),
+                              (int)dryAudio.getNumSamples());
     }
 
 }

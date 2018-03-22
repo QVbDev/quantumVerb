@@ -43,13 +43,13 @@ namespace reverb
         virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& = "") override;
 
-        virtual void exec(juce::AudioSampleBuffer& ir) override;
+        virtual AudioBlock exec(AudioBlock = AudioBlock()) override;
 
         //==============================================================================
         virtual bool needsToRun() const override;
 
         //==============================================================================
-        bool updateSampleRate(double sampleRate);
+        virtual void updateSampleRate(double sr) override;
 
         //==============================================================================
         void loadIR(const std::string& irNameOrFilePath);

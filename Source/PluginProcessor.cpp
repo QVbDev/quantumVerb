@@ -39,6 +39,7 @@ namespace reverb
 
 	AudioProcessor::~AudioProcessor()
 	{
+        std::lock_guard<std::mutex> lock(updatingParams);
 	}
 
 	//==============================================================================
@@ -123,7 +124,7 @@ namespace reverb
      * @param sampleRate [in]       Target sample rate (constant until playback stops)
      * @param samplesPerBlock [in]  Hint about max. expected samples in upcoming block
      */
-    void AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+    void AudioProcessor::prepareToPlay(double sampleRate, int)
     {
         size_t numChannels = getTotalNumInputChannels();
 
@@ -159,28 +160,6 @@ namespace reverb
         for (size_t i = mainPipelines.size(); i < numChannels; ++i)
         {
             mainPipelines.emplace_back(new MainPipeline(this));
-        }
-
-        // Add empty buffers to meet channel count if necessary
-        for (size_t i = irChannels.size(); i < numChannels; ++i)
-        {
-            irChannels.emplace_back();
-        }
-
-        // Clear existing audio buffers and add/remove buffers of appropriate size if necessary
-        for (size_t i = numChannels; i < audioChannels.size(); ++i)
-        {
-            audioChannels.pop_back();
-        }
-
-        for (auto& channel : audioChannels)
-        {
-            channel.setSize(1, samplesPerBlock);
-        }
-
-        for (size_t i = audioChannels.size(); i < numChannels; ++i)
-        {
-            audioChannels.emplace_back(1, samplesPerBlock);
         }
 
         // Update parameters across pipelines
@@ -266,31 +245,8 @@ namespace reverb
             mainPipelines.emplace_back(new MainPipeline(this));
         }
 
-        for (size_t i = irChannels.size(); i < totalNumInputChannels; ++i)
-        {
-            irChannels.emplace_back(1, 0);
-        }
-
-        for (size_t i = audioChannels.size(); i < totalNumInputChannels; ++i)
-        {
-            audioChannels.emplace_back(1, audio.getNumSamples());
-        }
-
-        // Split input buffer into one buffer per channel
-        for (int i = 0; i < totalNumInputChannels; ++i)
-        {
-            // Audio channel should have been prepared with the right size in
-            // prepareToPlay(), but we should play it safe in case the DAW gave
-            // us the wrong number of samples then.
-            if (audioChannels[i].getNumSamples() != audio.getNumSamples())
-            {
-                audioChannels[i].setSize(1, audio.getNumSamples(), true);
-            }
-
-            memcpy(audioChannels[i].getWritePointer(0),
-                   audio.getReadPointer(i),
-                   audio.getNumSamples() * sizeof(audio.getReadPointer(0)[0]));
-        }
+        // Associate audio block with input
+        audioChannels = audio;
 
 #if REVERB_MULTITHREADED > 0
         // Update parameters asynchronously
@@ -325,29 +281,6 @@ namespace reverb
         for (int i = 0; i < channelThreads.size(); ++i)
         {
             channelThreads[i].join();
-
-            // Copy resulting channel into output buffer
-            if (audio.getNumSamples() < audioChannels[i].getNumSamples())
-            {
-                // Safety check, we shouldn't enter this section under normal circumstances
-                std::string errMsg = "Processed audio unexpectedly contains more samples than"
-                                     "input buffer (input: " +
-                                     std::to_string(audio.getNumSamples()) +
-                                     " samples, output: " +
-                                     std::to_string(audioChannels[i].getNumSamples()) +
-                                     " samples)";
-                
-                audio.setSize(audio.getNumChannels(),
-                               audioChannels[i].getNumSamples(), true);
-
-                logger.dualPrint(Logger::Level::Error, errMsg);
-            }
-
-            auto channelReadPtr = audioChannels[i].getReadPointer(0);
-
-            memcpy(audio.getWritePointer(i),
-                   channelReadPtr,
-                   audioChannels[i].getNumSamples() * sizeof(channelReadPtr[0]));
         }
 #else
         // Update parameters asynchronously
@@ -370,35 +303,9 @@ namespace reverb
             }
         }
 
-        for (int i = 0; i < audio.getNumChannels(); ++i)
+        for (int i = 0; i < totalNumInputChannels; ++i)
         {
             processChannel(i);
-        }
-
-        // Copy resulting channels into output buffer
-        for (int i = 0; i < channelThreads.size(); ++i)
-        {
-            if (audio.getNumSamples() < audioChannels[i].getNumSamples())
-            {
-                // Safety check, we shouldn't enter this section under normal circumstances
-                std::string errMsg = "Processed audio unexpectedly contains more samples than"
-                                     "input buffer (input: " +
-                                     std::to_string(audio.getNumSamples()) +
-                                     " samples, output: " +
-                                     std::to_string(audioChannels[i].getNumSamples()) +
-                                     " samples)";
-
-                audio.setSize(audio.getNumChannels(),
-                              audioChannels[i].getNumSamples(), true);
-
-                logger.dualPrint(Logger::Level::Error, errMsg);
-            }
-
-            auto channelReadPtr = audioChannels[i].getReadPointer(0);
-
-            memcpy(audio.getWritePointer(i),
-                   channelReadPtr,
-                   audioChannels[i].getNumSamples() * sizeof(channelReadPtr[0]));
         }
 #endif
 
@@ -412,7 +319,8 @@ namespace reverb
      */
     void AudioProcessor::processChannel(int channelIdx)
     {
-        mainPipelines[channelIdx]->exec(audioChannels[channelIdx]);
+        AudioBlock channelAudio = audioChannels.getSingleChannelBlock(channelIdx);
+        mainPipelines[channelIdx]->exec(channelAudio);
     }
 
     //==============================================================================
@@ -433,11 +341,9 @@ namespace reverb
         std::lock_guard<std::mutex> lock(updatingParams);
 
         // Check number of channels
-        const int numChannels = irPipelines.size();
+        const int numChannels = (int)irPipelines.size();
         
         jassert(mainPipelines.size() == numChannels);
-        jassert(irChannels.size() == numChannels);
-        jassert(audioChannels.size() == numChannels);
 
         // Process parameters for each channel
         for (int i = 0; i < numChannels; ++i)
@@ -465,7 +371,7 @@ namespace reverb
         auto& irPipeline = irPipelines[channelIdx];
         auto& mainPipeline = mainPipelines[channelIdx];
 
-        auto& irChannel = irChannels[channelIdx];
+        AudioBlock irChannel;
 
         // Update IR parameters
         irPipeline->updateSampleRate(sampleRate);
@@ -478,7 +384,7 @@ namespace reverb
         {
             try
             {
-                irPipeline->exec(irChannel);
+                irChannel = irPipeline->exec();
             }
             catch (const std::exception& e)
             {
@@ -499,7 +405,7 @@ namespace reverb
 
         if (updateIR)
         {
-            mainPipeline->loadIR(std::move(irChannel));
+            mainPipeline->loadIR(irChannel);
         }
         
         lock.exit();
