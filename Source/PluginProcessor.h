@@ -71,9 +71,6 @@ namespace reverb
 		void setStateInformation(const void* data, int sizeInBytes) override;
 
         //==============================================================================
-        IRBank irBank;
-
-        //==============================================================================
         juce::AudioProcessorValueTreeState parameters;
         
         // Unique parameter IDs

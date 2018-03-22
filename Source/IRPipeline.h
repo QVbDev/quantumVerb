@@ -74,7 +74,6 @@ namespace reverb
         juce::AudioSampleBuffer irChannel;
 
         //==============================================================================
-        const IRBank& irBank;
         juce::String currentIR = "";
     };
 

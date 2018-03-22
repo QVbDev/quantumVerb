@@ -8,6 +8,7 @@
 
 #include "catch.hpp"
 
+#include "IRBank.h"
 #include "IRPipeline.h"
 #include "PluginProcessor.h"
 #include "Logger.h"
@@ -97,11 +98,12 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
 
     REQUIRE(processor.getSampleRate() == IR_SAMPLE_RATE);
 
-    IRPipelineMocked irPipeline(&processor, processor.irBank, 0);
+    IRPipelineMocked irPipeline(&processor, 0);
     irPipeline.updateParams(processor.parameters);
     irPipeline.updateSampleRate(IR_SAMPLE_RATE);
-
-    REQUIRE(irPipeline.getCurrentIR() == processor.irBank.buffers.begin()->first);
+    
+    auto& irBank = reverb::IRBank::getInstance();
+    REQUIRE(irPipeline.getIRName() == irBank.buffers.begin()->first);
 
 
     SECTION("IR processing shouldn't be excessively long") {

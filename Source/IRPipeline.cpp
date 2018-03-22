@@ -29,9 +29,8 @@ namespace reverb
      *
      * @param [in] processor    Pointer to main processor
      */
-    IRPipeline::IRPipeline(juce::AudioProcessor * processor, const IRBank& irBank, int channelIdx)
+    IRPipeline::IRPipeline(juce::AudioProcessor * processor, int channelIdx)
         : Task(processor),
-          irBank(irBank),
           channelIdx(channelIdx)
     {
         // Initialise pipeline steps

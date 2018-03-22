@@ -657,6 +657,7 @@ namespace reverb
          */
         juce::ValueTree irFile(PID_IR_FILE_CHOICE);
 
+        auto& irBank = IRBank::getInstance();
         if (irBank.buffers.begin() != irBank.buffers.end())
         {
             const juce::String& firstBankedIR = irBank.buffers.begin()->first;
