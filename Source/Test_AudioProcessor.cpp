@@ -79,15 +79,14 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
 
     SECTION("Regular processing should be real-time") {
 #ifdef NDEBUG
-        constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS / 2);
+        constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
+        constexpr int NUM_ITERATIONS = 2000;
 #else
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(5*BLOCK_DURATION_MS);
+        constexpr int NUM_ITERATIONS = 100;
 #endif
 
-        constexpr int NUM_ITERATIONS = 100;
-
         // Prepare impulse response
-        processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
         processor.processBlock(audio, midi);
 
         std::array<std::chrono::milliseconds, NUM_ITERATIONS> execTimes;
@@ -96,10 +95,7 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
         {
             // Measure total processing time for one block
             auto start = std::chrono::high_resolution_clock::now();
-
-            processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
             processor.processBlock(audio, midi);
-
             auto end = std::chrono::high_resolution_clock::now();
 
             execTimes[i] = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);

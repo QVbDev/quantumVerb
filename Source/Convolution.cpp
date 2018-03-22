@@ -67,14 +67,16 @@ namespace reverb
     {
         juce::dsp::ProcessSpec spec;
         spec.sampleRate = processor->getSampleRate(); // 44.1 kHz
+
         // If the block size is small, the overlap-add method requires a small amount of RAM
         // at the expense of increasing computational load. If the block size is large, the
         // overlap-add method is more efficient computationally, at the expense of the memory
-        // required. It is relatively difficult to find an optimal block size , since the
+        // required. It is relatively difficult to find an optimal block size, since the
         // implementation is machine-dependent.
         // https://books.google.ca/books?id=VQs_Ly4DYDMC&pg=PA130&lpg=PA130&dq=convolution+algorithm+optimal+block+size&source=bl&ots=jImfjKud-t&sig=SjLhgdAnfac0_6He7RBl0O-Snu8&hl=en&sa=X&ved=0ahUKEwj4y9367IDZAhWL24MKHV28AXoQ6AEIOzAD#v=onepage&q=convolution%20algorithm%20optimal%20block%20size&f=false
-        spec.maximumBlockSize = 1024;
+        spec.maximumBlockSize = 2048;
         spec.numChannels = ir.getNumChannels();
+
         // Must be called before loading the impulse response to provide to the convolution
         // the maximumBufferSize to handle and the sample rate for optional resampling.
         prepare(spec);
