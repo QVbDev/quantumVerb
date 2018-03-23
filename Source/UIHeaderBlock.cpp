@@ -36,17 +36,22 @@ namespace reverb
                                              .getChildWithName(p.PID_IR_FILE_CHOICE)
                                              .getProperty("value");
 
-        irChoice.setButtonText(currentIR);
-
         irChoice.setComponentID(p.PID_IR_FILE_CHOICE);
+
+        irChoice.addItem("Load custom file...", irChoice.getNumItems() + 1);
+        irChoice.addSeparator();
+        for (auto irFile : p.irBank.buffers) {
+            irChoice.addItem(irFile.first, irChoice.getNumItems() + 1);
+        }
+        irChoice.setSelectedItemIndex(1);
 
         irChoiceLabel.setText("impulse response", juce::NotificationType::dontSendNotification);
         irChoiceLabel.setJustificationType(juce::Justification::topLeft);
         irChoiceLabel.attachToComponent(&irChoice, false);
 
-        irChoiceAttachment.reset(new ButtonAttachment(p.parameters,
-                                                      irChoice.getComponentID(),
-                                                      irChoice));
+        irChoiceAttachment.reset(new ComboBoxAttachment(p.parameters,
+            irChoice.getComponentID(),
+            irChoice));
 
         // TODO: Ensure IR file box tracks the IR choice parameter
 
@@ -89,13 +94,6 @@ namespace reverb
         int padding = AudioProcessorEditor::PADDING_REL * boundsHeight;
         int labelHeight = 20;
 
-        // Draw frame
-        // TODO: Make this look nice
-        /*auto frameBounds = bounds.reduced(padding);
-        frame.setBounds(frameBounds);
-
-        bounds.reduce(padding, padding);*/
-
         // Distribute child elements in columns
         std::vector<juce::Rectangle<int>> cells(3);
         std::vector<double> cellWidths = { 0.15, 0.60, 0.25 };
@@ -114,14 +112,14 @@ namespace reverb
         sampleRate.setBounds(cells[2]);
     }
 
-    void reverb::UIHeaderBlock::addListener(juce::Button::Listener* pluginEditor)
+    void reverb::UIHeaderBlock::addListener(juce::ComboBox::Listener* pluginEditor)
     {
         irChoice.addListener(pluginEditor);
     }
 
-    juce::Button* UIHeaderBlock::getButton(juce::Button* clickedButton)
+    juce::ComboBox* reverb::UIHeaderBlock::getComboBox(juce::ComboBox* clickedComboBox)
     {
-        if (clickedButton == &irChoice) {
+        if (clickedComboBox == &irChoice) {
             return &irChoice;
         }
         else {

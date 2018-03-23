@@ -28,9 +28,9 @@ namespace reverb
     */
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
-          headerBlock(p), reverbBlock(p),
-          lowShelfFilterBlock(p, 0), peakLowFilterBlock(p, 1),
-          peakHighFilterBlock(p, 2), highShelfFilterBlock(p, 3)
+        headerBlock(p), reverbBlock(p),
+        lowShelfFilterBlock(p, 0, "Low-Shelf Filter"), peakLowFilterBlock(p, 1, "Low-Peak Filter"),
+        peakHighFilterBlock(p, 2, "High-Peak Filter"), highShelfFilterBlock(p, 3, "High-Shelf Filter")
 	{
 		// Make sure that before the constructor has finished, you've set the
 		// editor's size to whatever you need it to be.
@@ -84,11 +84,7 @@ namespace reverb
 
 		g.setColour(juce::Colours::white);
 		g.setFont(15.0f);
-
-        //headerBox.drawAt(g, 0, 0, 100);
-		//g.drawRoundedRectangle(0, 15, 300, 175, 2, 1);
-
-	}    
+	}
 
     /**
     * @brief Manages the layout of AudioProcessorEditor when the window is resized
@@ -106,7 +102,7 @@ namespace reverb
 
         // Header block
         auto headerBounds = bounds;
-        
+
         headerBounds.setBottom((int)(0.13 * height));
 
         headerBounds.reduce(padding, padding);
@@ -155,41 +151,43 @@ namespace reverb
         }
 	}
 
+    // https://forum.juce.com/t/custom-graphics-sliders-and-knobs/4588/4
+
+    void AudioProcessorEditor::comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged)
+    {
+        juce::ComboBox* irComboBox = headerBlock.getComboBox(comboBoxThatHasChanged);
+        if (irComboBox->getComponentID() == processor.PID_IR_FILE_CHOICE) {
+            // If the user chose to select a custom impulse response
+            if (irComboBox->getSelectedItemIndex() == 0) {
+                juce::AudioFormatManager formatManager;
+                formatManager.registerBasicFormats();
+                // Accepts the following file types: .wav, .bwf, .aiff, .flac, .ogg, .mp3, .wmv, .asf, .wm, .wma
+                juce::FileChooser fileChooser("Select an impulse response",
+                    juce::File::getCurrentWorkingDirectory(),
+                    formatManager.getWildcardForAllFormats(),
+                    false);
+                if (fileChooser.browseForFileToOpen()) {
+                    juce::File selectedFile = fileChooser.getResult();
+                    processor.parameters.state.getChildWithName(processor.PID_IR_FILE_CHOICE)
+                        .setProperty("value", selectedFile.getFullPathName(), nullptr);
+                    irComboBox->setText(selectedFile.getFullPathName());
+                }
+                else {
+
+                }
+            }
+            // If the user chose to select an impulse response from the IR bank
+            else {
+                processor.parameters.state.getChildWithName(processor.PID_IR_FILE_CHOICE)
+                    .setProperty("value", irComboBox->getItemText(irComboBox->getSelectedItemIndex()), nullptr);
+            }
+        }
+    }
+
     // handler for button clicks
     void AudioProcessorEditor::buttonClicked(juce::Button* clickedButton) 
     {
-        // Most buttons are handled by parameter tree attachments
-        juce::Button* headerButton = headerBlock.getButton(clickedButton);
-        if (headerButton->getComponentID() == processor.PID_IR_FILE_CHOICE) {
-            juce::AudioFormatManager formatManager;
-            formatManager.registerBasicFormats();
-            juce::File defaultFolder = juce::File::getCurrentWorkingDirectory().getParentDirectory()
-                .getParentDirectory()
-                .getChildFile("Resources")
-                .getChildFile("ImpulseResponses");
-            // Accepts the following file types: .wav, .bwf, .aiff, .flac, .ogg, .mp3, .wmv, .asf, .wm, .wma
-            juce::FileChooser fileChooser("Select an impulse response",
-                                          defaultFolder,
-                                          formatManager.getWildcardForAllFormats(),
-                                          false);
-            if (fileChooser.browseForFileToOpen()) {
-                juce::File selectedFile = fileChooser.getResult();
 
-                headerButton->setButtonText(selectedFile.getFullPathName());
-                // Verify if the selected impulse response is part of the IR bank. If so, retrieve its name from the
-                // BinaryData's list. Else, the PID_IR_FILE_CHOICE's parameter property value will be set to the
-                // entire full path of the user-provided IR file.
-                juce::String newName;
-                if (selectedFile.getParentDirectory() == defaultFolder) {
-                    newName = selectedFile.getFileNameWithoutExtension() + "_wav";
-                }
-                else {
-                    newName = selectedFile.getFullPathName();
-                }
-                processor.parameters.state.getChildWithName(processor.PID_IR_FILE_CHOICE)
-                                          .setProperty("value", newName, nullptr);
-            }
-        }
     }
 
     // handler for slider interactions

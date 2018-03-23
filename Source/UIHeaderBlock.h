@@ -28,21 +28,22 @@ namespace reverb
         //==============================================================================
         void paint(juce::Graphics&) override;
         void resized() override;
-        void addListener(juce::Button::Listener* pluginEditor);
-        juce::Button* getButton(juce::Button* clickedButton);
+        void addListener(juce::ComboBox::Listener* pluginEditor);
+        juce::ComboBox* getComboBox(juce::ComboBox* clickedComboBox);
 
     protected:
         //==============================================================================
         using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+        using ComboBoxAttachment = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
 
         //==============================================================================
         juce::TextButton isOn;
         juce::Label isOnLabel;
         std::unique_ptr<ButtonAttachment> isOnAttachment;
 
-        juce::TextButton irChoice;
         juce::Label irChoiceLabel;
-        std::unique_ptr<ButtonAttachment> irChoiceAttachment;
+        juce::ComboBox irChoice;
+        std::unique_ptr<ComboBoxAttachment> irChoiceAttachment;
 
         juce::TextButton sampleRate;
         juce::Label sampleRateLabel;
