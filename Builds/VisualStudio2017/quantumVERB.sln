@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27428.2002
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quantumVERB_StandalonePlugin", "quantumVERB_StandalonePlugin.vcxproj", "{CB1C78C7-C393-2466-3BAB-560BD7C25654}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -85,6 +85,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A9EE4A52-8F47-4373-902B-C2AA76B72E6F}
+		SolutionGuid = {2D11EEFC-28E7-4D1E-87EF-97A527582ECE}
 	EndGlobalSection
 EndGlobal

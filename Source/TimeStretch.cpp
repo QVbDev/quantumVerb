@@ -36,30 +36,22 @@ namespace reverb
         }
     }
 
-    //==============================================================================
     /**
-     * @brief No parameters to update, do nothing
+     * @brief Updates parameters from processor parameter tree
      *
-     * @returns False
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool TimeStretch::updateParams(const juce::AudioProcessorValueTreeState& params,
-                                   const juce::String& blockID)
+    void TimeStretch::updateParams(const juce::AudioProcessorValueTreeState& params,
+                                   const juce::String& blockId)
     {
-        // IR length
-        auto paramIRLength = params.getRawParameterValue(blockID);
-        
-        if (!paramIRLength)
-        {
-            throw std::invalid_argument("Parameter not found for gain in Gain block");
-        }
+        float _irLengthS = getParam(params, blockId);
 
-        if (*paramIRLength != irLengthS)
+        if (_irLengthS != irLengthS)
         {
-            irLengthS = *paramIRLength;
+            irLengthS = _irLengthS;
             mustExec = true;
         }
-
-        return mustExec;
     }
 
     //==============================================================================

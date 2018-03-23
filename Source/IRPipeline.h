@@ -40,7 +40,7 @@ namespace reverb
         using Ptr = std::shared_ptr<IRPipeline>;
 
         //==============================================================================
-        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+        virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& = "") override;
 
         virtual void exec(juce::AudioSampleBuffer& ir) override;
