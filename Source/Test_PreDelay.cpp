@@ -124,7 +124,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
     }
 
     SECTION("Performance_Testing") {
-        constexpr std::chrono::microseconds MAX_EXEC_TIME_MS(1000);
+        constexpr std::chrono::microseconds MAX_EXEC_TIME_US(1000);
         static constexpr double DELAY_S = 1;
         const int EXPECTED_NUM_SAMPLES = (int)std::ceil(SAMPLE_RATE * DELAY_S);
 
