@@ -11,7 +11,7 @@
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="quantumVerbAU"
               pluginRTASCategory="" aaxIdentifier="ca.quantum-music.quantumVERB"
-              pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.2.1"
+              pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.3.0"
               companyName="Quantum-Music" companyWebsite="http://quantum-music.ca/"
               companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\vendor\soundtouch\include"
               defines="DONT_SET_USING_JUCE_NAMESPACE=1&#10;REVERB_MULTITHREADED=1">
@@ -85,7 +85,7 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
             vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouch.lib"
-            IPPLibrary="true" smallIcon="KdBY4m" bigIcon="KdBY4m">
+            IPPLibrary="Parallel_Static" smallIcon="KdBY4m" bigIcon="KdBY4m">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"

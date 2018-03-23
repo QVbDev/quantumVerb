@@ -83,10 +83,6 @@ namespace reverb
 
 		g.setColour(juce::Colours::white);
 		g.setFont(15.0f);
-
-        //headerBox.drawAt(g, 0, 0, 100);
-		//g.drawRoundedRectangle(0, 15, 300, 175, 2, 1);
-
 	}    
 
     /**
@@ -116,7 +112,7 @@ namespace reverb
         auto graphBounds = bounds;
 
         graphBounds.setTop(headerBounds.getBottom());
-        graphBounds.setBottom(headerBounds.getBottom() + padding + (int)(0.485 * height));
+        graphBounds.setBottom(headerBounds.getBottom() + padding + (int)(0.52 * height));
         graphBounds.setRight((int)(0.75 * width));
 
         graphBounds.reduce(padding, padding);
@@ -127,7 +123,7 @@ namespace reverb
         auto reverbBounds = bounds;
 
         reverbBounds.setTop(headerBounds.getBottom());
-        reverbBounds.setBottom(headerBounds.getBottom() + padding + 0.485 * height);
+        reverbBounds.setBottom(headerBounds.getBottom() + padding + (int)std::round(0.52 * height));
         reverbBounds.setLeft(graphBounds.getRight() + padding);
 
         reverbBounds.reduce(padding, padding);
@@ -141,7 +137,7 @@ namespace reverb
         auto filterBounds = bounds;
 
         filterBounds.setTop(reverbBounds.getBottom());
-        filterBounds.setBottom(reverbBounds.getBottom() + padding + 0.385 * height);
+        filterBounds.setBottom(reverbBounds.getBottom() + padding + (int)std::round(0.35 * height));
 
         int filterBlockWidth = width / 4;
 
