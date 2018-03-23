@@ -256,7 +256,6 @@ namespace reverb
         // Associate audio block with input
         audioChannels = audio;
 
-#if REVERB_MULTITHREADED > 0
         // Update parameters asynchronously
         if (blocksProcessed % NUM_BLOCKS_PER_UPDATE_PARAMS)
         {
@@ -282,6 +281,7 @@ namespace reverb
             }
         }
 
+#if REVERB_MULTITHREADED > 0
         // Process each channel in its own thread
         std::vector<std::thread> channelThreads;
 
@@ -301,26 +301,6 @@ namespace reverb
             channelThreads[i].join();
         }
 #else
-        // Update parameters asynchronously
-        if (blocksProcessed % NUM_BLOCKS_PER_UPDATE_PARAMS)
-        {
-            std::unique_lock<std::mutex> lock(updatingParams, std::try_to_lock);
-
-            // If parameters are already being updated, skip this and go straight
-            // to processing.
-            if (lock.owns_lock())
-            {
-                std::thread updateParamsThread(&AudioProcessor::updateParams,
-                                               this, getSampleRate());
-            
-                lock.unlock();
-
-                // updateParams() uses double buffering to update everything
-                // asynchronously, so we can let it do its own thing.
-                updateParamsThread.detach();
-            }
-        }
-
         for (int i = 0; i < totalNumInputChannels; ++i)
         {
             processChannel(i);
