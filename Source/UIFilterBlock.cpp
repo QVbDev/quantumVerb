@@ -28,13 +28,19 @@ namespace reverb
         q.setSliderStyle(juce::Slider::RotaryVerticalDrag);
         gain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
+		freq.getLookAndFeel().drawRotarySlider()
+
         freq.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
         q.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
         gain.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
 
-        freq.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+        freq.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x04444440));
         q.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
         gain.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
+
+		freq.setSkewFactor(1.0, false); 
+		q.setSkewFactor(1.0, false);
+		gain.setSkewFactor(10, true); // Skew factor of 100 on all gain filter sliders
 
         juce::String filterIDPrefix = processor.PID_FILTER_PREFIX + std::to_string(index);
 
