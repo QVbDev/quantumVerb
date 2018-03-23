@@ -292,7 +292,6 @@ namespace reverb
                    audio.getNumSamples() * sizeof(audio.getReadPointer(0)[0]));
         }
 
-#if REVERB_MULTITHREADED > 0
         // Update parameters asynchronously
         if (blocksProcessed % NUM_BLOCKS_PER_UPDATE_PARAMS)
         {
@@ -303,8 +302,8 @@ namespace reverb
             if (lock.owns_lock())
             {
                 std::thread updateParamsThread(&AudioProcessor::updateParams,
-                                               this, getSampleRate());
-            
+                    this, getSampleRate());
+
                 lock.unlock();
 
                 // updateParams() uses double buffering to update everything
@@ -313,6 +312,7 @@ namespace reverb
             }
         }
 
+#if REVERB_MULTITHREADED > 0
         // Process each channel in its own thread
         std::vector<std::thread> channelThreads;
 
@@ -350,33 +350,13 @@ namespace reverb
                    audioChannels[i].getNumSamples() * sizeof(channelReadPtr[0]));
         }
 #else
-        // Update parameters asynchronously
-        if (blocksProcessed % NUM_BLOCKS_PER_UPDATE_PARAMS)
-        {
-            std::unique_lock<std::mutex> lock(updatingParams, std::try_to_lock);
-
-            // If parameters are already being updated, skip this and go straight
-            // to processing.
-            if (lock.owns_lock())
-            {
-                std::thread updateParamsThread(&AudioProcessor::updateParams,
-                                               this, getSampleRate());
-            
-                lock.unlock();
-
-                // updateParams() uses double buffering to update everything
-                // asynchronously, so we can let it do its own thing.
-                updateParamsThread.detach();
-            }
-        }
-
-        for (int i = 0; i < audio.getNumChannels(); ++i)
+        for (int i = 0; i < totalNumInputChannels; ++i)
         {
             processChannel(i);
         }
 
         // Copy resulting channels into output buffer
-        for (int i = 0; i < channelThreads.size(); ++i)
+        for (int i = 0; i < totalNumInputChannels; ++i)
         {
             if (audio.getNumSamples() < audioChannels[i].getNumSamples())
             {
