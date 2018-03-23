@@ -173,7 +173,7 @@ namespace reverb
                     irComboBox->setText(selectedFile.getFullPathName());
                 }
                 else {
-
+                    irComboBox->setSelectedItemIndex(headerBlock.previousSelectedIR);
                 }
             }
             // If the user chose to select an impulse response from the IR bank
@@ -181,6 +181,7 @@ namespace reverb
                 processor.parameters.state.getChildWithName(processor.PID_IR_FILE_CHOICE)
                     .setProperty("value", irComboBox->getItemText(irComboBox->getSelectedItemIndex()), nullptr);
             }
+            headerBlock.previousSelectedIR = irComboBox->getSelectedItemIndex();
         }
     }
 

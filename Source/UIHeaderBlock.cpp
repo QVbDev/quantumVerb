@@ -44,6 +44,7 @@ namespace reverb
             irChoice.addItem(irFile.first, irChoice.getNumItems() + 1);
         }
         irChoice.setSelectedItemIndex(1);
+        previousSelectedIR = 1;
 
         irChoiceLabel.setText("impulse response", juce::NotificationType::dontSendNotification);
         irChoiceLabel.setJustificationType(juce::Justification::topLeft);

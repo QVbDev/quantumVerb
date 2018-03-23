@@ -31,6 +31,8 @@ namespace reverb
         void addListener(juce::ComboBox::Listener* pluginEditor);
         juce::ComboBox* getComboBox(juce::ComboBox* clickedComboBox);
 
+        int previousSelectedIR;
+
     protected:
         //==============================================================================
         using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
