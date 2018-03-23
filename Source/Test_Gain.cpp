@@ -75,4 +75,28 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
         }
     }
 
+    SECTION("Performance_Testing") {
+        constexpr std::chrono::microseconds MAX_EXEC_TIME_US(1000);
+        constexpr float GAIN = 2.0f;
+
+        // Create audio block
+        juce::AudioSampleBuffer audio(1, NUM_SAMPLES);
+
+        for (int i = 0; i < NUM_SAMPLES; i++)
+        {
+            audio.setSample(0, i, 1);
+        }
+
+        // Run gain
+        gain.setGainFactor(GAIN);
+
+        // Measure exec time
+        auto start = std::chrono::high_resolution_clock::now();
+        gain.exec(audio);
+        auto end = std::chrono::high_resolution_clock::now();
+
+        auto execTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+    }
 }
