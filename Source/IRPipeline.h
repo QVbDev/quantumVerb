@@ -54,6 +54,8 @@ namespace reverb
         //==============================================================================
         AudioBlock reloadIR();
 
+        static constexpr float MAX_IR_INTENSITY = 0.5f;
+
     protected:
         //==============================================================================
         std::array<Filter::Ptr, 4> filters;
