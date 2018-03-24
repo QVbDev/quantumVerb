@@ -15,6 +15,38 @@ namespace reverb
 
     using AudioBlock = juce::dsp::AudioBlock<float>;
 
+    /**
+    * @brief Normalise intensity range of block to given threshold
+    *
+    * @param [in] maxValue  Threshold for min/max values
+    */
+    forcedinline AudioBlock& normalise(AudioBlock& block, float threshold)
+    {
+        if (block.getNumSamples() == 0)
+        {
+            return block;
+        }
+
+        // Find absolute magnitude of maximum value in block
+        juce::Range<float> range = block.findMinAndMax();
+
+        float absMax = std::max(std::abs(range.getStart()),
+            std::abs(range.getEnd()));
+
+        // Don't scale if block doesn't contain any non-zero values
+        if (absMax < std::numeric_limits<float>::epsilon())
+        {
+            return block;
+        }
+
+        // Scale IR intensity to meet normal threshold
+        float scale = threshold / absMax;
+
+        block.multiply(scale);
+
+        return block;
+    }
+
     //==============================================================================
     /**
      * Abstract task object used to represent various processing elements
