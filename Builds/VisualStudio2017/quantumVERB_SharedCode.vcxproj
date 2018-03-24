@@ -17,7 +17,7 @@
     <ProjectGuid>{57C8BC74-B084-1E41-A6B0-E8CD20A8C968}</ProjectGuid>
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <UseIntelIPP>Parallel_Static</UseIntelIPP>
+    <UseIntelIPP>Parallel_Dynamic</UseIntelIPP>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"
@@ -28,7 +28,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <UseIntelIPP>Parallel_Static</UseIntelIPP>
+    <UseIntelIPP>Parallel_Dynamic</UseIntelIPP>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'"
                  Label="Configuration">
@@ -38,7 +38,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <UseIntelIPP>Parallel_Static</UseIntelIPP>
+    <UseIntelIPP>Parallel_Dynamic</UseIntelIPP>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <ImportGroup Label="ExtensionSettings"/>
@@ -50,7 +50,7 @@
   <PropertyGroup Label="UserMacros">
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <UseIntelIPP>Parallel_Static</UseIntelIPP>
+    <UseIntelIPP>Parallel_Dynamic</UseIntelIPP>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
@@ -67,7 +67,7 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath);$(SolutionDir)$(Platform)\$(Configuration)\SoundTouch\</LibraryPath>
     <PlatformToolset>v141</PlatformToolset>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <UseIntelIPP>Parallel_Static</UseIntelIPP>
+    <UseIntelIPP>Parallel_Dynamic</UseIntelIPP>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -180,6 +180,7 @@
     <ClCompile Include="..\..\Source\TimeStretch.cpp"/>
     <ClCompile Include="..\..\Source\UIBlock.cpp"/>
     <ClCompile Include="..\..\Source\UIFilterBlock.cpp"/>
+    <ClCompile Include="..\..\Source\UIGraphBlock.cpp"/>
     <ClCompile Include="..\..\Source\UIHeaderBlock.cpp"/>
     <ClCompile Include="..\..\Source\UIReverbBlock.cpp"/>
     <ClCompile Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioChannelSet.cpp">
@@ -1970,9 +1971,6 @@
     <ClInclude Include="..\..\Source\Convolution.h"/>
     <ClInclude Include="..\..\Source\Filter.h"/>
     <ClInclude Include="..\..\Source\Gain.h"/>
-    <ClInclude Include="..\..\Source\UIFilterBlock.h"/>
-    <ClInclude Include="..\..\Source\UIReverbBlock.h"/>
-    <ClInclude Include="..\..\Source\UIHeaderBlock.h"/>
     <ClInclude Include="..\..\Source\IRBank.h"/>
     <ClInclude Include="..\..\Source\IRPipeline.h"/>
     <ClInclude Include="..\..\Source\Logger.h"/>
@@ -1985,6 +1983,10 @@
     <ClInclude Include="..\..\Source\Task.h"/>
     <ClInclude Include="..\..\Source\TimeStretch.h"/>
     <ClInclude Include="..\..\Source\UIBlock.h"/>
+    <ClInclude Include="..\..\Source\UIFilterBlock.h"/>
+    <ClInclude Include="..\..\Source\UIGraphBlock.h"/>
+    <ClInclude Include="..\..\Source\UIReverbBlock.h"/>
+    <ClInclude Include="..\..\Source\UIHeaderBlock.h"/>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h"/>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioChannelSet.h"/>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h"/>

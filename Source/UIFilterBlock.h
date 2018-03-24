@@ -15,6 +15,7 @@
 
 namespace reverb {
 
+    //==============================================================================
     class UIFilterBlock : public UIBlock
     {
     public:

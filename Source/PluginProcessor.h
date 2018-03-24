@@ -89,6 +89,10 @@ namespace reverb
         static constexpr const char * PID_WETRATIO           = "wetratio";
         static constexpr const char * PID_AUDIO_OUT_GAIN     = "audio_out_gain";
 
+        //==============================================================================
+        std::vector<IRPipeline::Ptr>   irPipelines;
+        std::vector<MainPipeline::Ptr> mainPipelines;
+
 
     protected:
         //==============================================================================
@@ -106,9 +110,6 @@ namespace reverb
 
         //==============================================================================
         void processChannel(int channelIdx);
-
-        std::vector<IRPipeline::Ptr>   irPipelines;
-        std::vector<MainPipeline::Ptr> mainPipelines;
 
         AudioBlock audioChannels;
 

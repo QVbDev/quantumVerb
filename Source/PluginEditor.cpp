@@ -28,7 +28,7 @@ namespace reverb
     */
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
-          headerBlock(p), reverbBlock(p),
+          headerBlock(p), graphBlock(p), reverbBlock(p),
           lowShelfFilterBlock(p, 0), peakLowFilterBlock(p, 1),
           peakHighFilterBlock(p, 2), highShelfFilterBlock(p, 3)
 	{
@@ -43,7 +43,10 @@ namespace reverb
         // Display header block
         addAndMakeVisible(headerBlock);
 
-        // Display right-side block
+        // Display graph block
+        addAndMakeVisible(graphBlock);
+
+        // Display reverb params block
         addAndMakeVisible(reverbBlock);
 
         // Build filter blocks
@@ -53,19 +56,6 @@ namespace reverb
         addAndMakeVisible(peakLowFilterBlock);
         addAndMakeVisible(peakHighFilterBlock);
         addAndMakeVisible(highShelfFilterBlock);
-
-        juce::Image eqGraph = juce::ImageFileFormat::loadFrom(BinaryData::graph_placeholder_png,
-                                                              BinaryData::graph_placeholder_pngSize);
-
-        juce::Image blank;
-
-        graphButton.setImages(false, true, false,
-                              eqGraph, 1.0, juce::Colours::transparentWhite, 
-                              blank, 1.0, juce::Colours::transparentWhite,
-                              blank, 1.0, juce::Colours::transparentWhite,
-                              0);
-
-        addAndMakeVisible(graphButton);
 
         // Calls resized when creating UI to position all the elements as if window was resized.
         this->resized();

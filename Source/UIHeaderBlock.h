@@ -16,6 +16,7 @@
 namespace reverb
 {
 
+    //==============================================================================
     class UIHeaderBlock : public UIBlock
     {
     public:

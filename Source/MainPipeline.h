@@ -54,6 +54,9 @@ namespace reverb
 
         AudioBlock ir;
 
+        //==============================================================================
+        juce::AudioSampleBuffer ir;
+
     protected:
         //==============================================================================
         Convolution::Ptr convolution;

@@ -11,6 +11,8 @@
 
 namespace reverb
 {
+
+    //==============================================================================
     /**
     * @brief Constructs an UIReverbBlock object
     *
@@ -20,7 +22,6 @@ namespace reverb
     * does most of the configuration for these sliders. It also adds its 
     * parameters to the AudioProcessorValueTreeState.
     */
-    //==============================================================================
     UIReverbBlock::UIReverbBlock(AudioProcessor& processor)
         : UIBlock(5, 2)
     {
@@ -122,13 +123,13 @@ namespace reverb
         g.setFont(15.0f);
     }
 
+    //==============================================================================
     /**
     * @brief Manages the layout of UIReverbBlock when the block is resized
     *
     * This function defines all the relative positioning of the various UIReverbBlock
     * elements.
     */
-    //==============================================================================
     void reverb::UIReverbBlock::resized()
     {
         juce::Rectangle<int> bounds(getLocalBounds());
