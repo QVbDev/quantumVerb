@@ -30,19 +30,21 @@ namespace reverb
         void paint(juce::Graphics&) override;
         void resized() override;
 
+        //==============================================================================
+        juce::TextButton isOn;
+        juce::TextButton irChoice;
+        juce::TextButton sampleRate;
+
     protected:
         //==============================================================================
         using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
 
         //==============================================================================
-        juce::TextButton isOn;
         juce::Label isOnLabel;
         std::unique_ptr<ButtonAttachment> isOnAttachment;
 
-        juce::TextButton irChoice;
         juce::Label irChoiceLabel;
 
-        juce::TextButton sampleRate;
         juce::Label sampleRateLabel;
 
     private:

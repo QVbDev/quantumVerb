@@ -116,12 +116,13 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         // Measure exec time
         auto start = std::chrono::high_resolution_clock::now();
+        preDelay.prepareIR(ir);
         preDelay.exec(ir);
         auto end = std::chrono::high_resolution_clock::now();
 
         auto execTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+        CHECK(execTime.count() < MAX_EXEC_TIME_US.count());
     }
 
 }

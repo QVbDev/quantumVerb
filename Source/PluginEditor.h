@@ -71,6 +71,9 @@ namespace reverb
         UIFilterBlock peakHighFilterBlock;
         UIFilterBlock highShelfFilterBlock;
 
+        std::array<UIFilterBlock*, 4> filterBlocks;
+        std::array<juce::String, 4> filterBlockNames;
+
     private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};

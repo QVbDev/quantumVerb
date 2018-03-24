@@ -16,6 +16,8 @@
 
 namespace reverb
 {
+
+    //==============================================================================
     /**
     * @brief Constructs an AudioProcessorEditor object associated with an AudioProcessor
     *
@@ -29,8 +31,9 @@ namespace reverb
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
           headerBlock(p), graphBlock(p), reverbBlock(p),
-          lowShelfFilterBlock(p, 0), peakLowFilterBlock(p, 1),
-          peakHighFilterBlock(p, 2), highShelfFilterBlock(p, 3)
+          lowShelfFilterBlock(p,0), peakLowFilterBlock(p,1),
+          peakHighFilterBlock(p,2), highShelfFilterBlock(p,3),
+          filterBlocks({ &lowShelfFilterBlock, &peakLowFilterBlock, &peakHighFilterBlock, &highShelfFilterBlock })
 	{
 		// Make sure that before the constructor has finished, you've set the
 		// editor's size to whatever you need it to be.
@@ -50,17 +53,34 @@ namespace reverb
         addAndMakeVisible(reverbBlock);
 
         // Build filter blocks
-        static constexpr const char * filterNames[] = { "low-shelf", "peak (low)", "peak (high)", "high-shelf" };
+        filterBlockNames = { "low-shelf", "peak (low)", "peak (high)", "high-shelf" };
 
-        addAndMakeVisible(lowShelfFilterBlock);
-        addAndMakeVisible(peakLowFilterBlock);
-        addAndMakeVisible(peakHighFilterBlock);
-        addAndMakeVisible(highShelfFilterBlock);
+        for (auto filterBlock : filterBlocks)
+        {
+            addAndMakeVisible(*filterBlock);
+        }
+
+        // Set listeners for IR graph
+        headerBlock.irChoice.addListener(&graphBlock);
+
+        reverbBlock.irLength.addListener(&graphBlock);
+        reverbBlock.preDelay.addListener(&graphBlock);
+        reverbBlock.irGain.addListener(&graphBlock);
+        reverbBlock.outGain.addListener(&graphBlock);
+        reverbBlock.wetRatio.addListener(&graphBlock);
+
+        for (auto& filterBlock : filterBlocks)
+        {
+            filterBlock->freq.addListener(&graphBlock);
+            filterBlock->q.addListener(&graphBlock);
+            filterBlock->gain.addListener(&graphBlock);
+        }
 
         // Calls resized when creating UI to position all the elements as if window was resized.
         this->resized();
 	}
 
+    //==============================================================================
 	AudioProcessorEditor::~AudioProcessorEditor()
 	{
         setLookAndFeel(nullptr);
@@ -73,8 +93,9 @@ namespace reverb
 
 		g.setColour(juce::Colours::white);
 		g.setFont(15.0f);
-	}    
+	}
 
+    //==============================================================================
     /**
     * @brief Manages the layout of AudioProcessorEditor when the window is resized
     *
@@ -107,7 +128,7 @@ namespace reverb
 
         graphBounds.reduce(padding, padding);
 
-        graphButton.setBounds(graphBounds);
+        graphBlock.setBounds(graphBounds);
 
         // Reverb block
         auto reverbBounds = bounds;
@@ -121,9 +142,6 @@ namespace reverb
         reverbBlock.setBounds(reverbBounds);
 
         // Filters
-        UIFilterBlock * filters[4] = { &lowShelfFilterBlock, &peakLowFilterBlock,
-                                       &peakHighFilterBlock, &highShelfFilterBlock };
-
         auto filterBounds = bounds;
 
         filterBounds.setTop(reverbBounds.getBottom());
@@ -136,49 +154,8 @@ namespace reverb
             auto thisFilterBounds = filterBounds.removeFromLeft(filterBlockWidth);
             thisFilterBounds.reduce(padding, padding);
 
-            filters[i]->setBounds(thisFilterBounds);
+            filterBlocks[i]->setBounds(thisFilterBounds);
         }
 	}
-
-    // handler for button clicks
-    /*void AudioProcessorEditor::buttonClicked(juce::Button*) 
-    {
-        // Most buttons are handled by parameter tree attachments
-
-        // TODO: Handler for IR selection?
-    }*/
-
-    // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
-    /** Pops up a dialog letting the user re-load the processor's state from a file. */
-
-    // TODO: complete drop downmenu file explorer file selection
-    /*void AudioProcessorEditor::loadIR(int num)
-    {
-        FileChooser fc("Load IR file");
-
-        if (fc.browseForFileToOpen())
-        {
-
-            processor.irPipeline->irFilePath = fc.getResult().getFullPathName().toStdString();
-        }
-    }
-
-    void AudioProcessorEditor::handleMenuResult(int result)
-    {
-        switch (result)
-        {
-        case 1:  this->loadIR(0) ; break;
-        //case 2:  pluginHolder->askUserToSaveState(); break;
-        //case 3:  pluginHolder->askUserToLoadState(); break;
-        //case 4:  resetToDefaultState(); break;
-        default: break;
-        }
-    }
-
-    void AudioProcessorEditor::menuCallback(int result)
-    {
-        if (button != nullptr && result != 0)
-            button->handleMenuResult(result);
-    }*/
 
 }
