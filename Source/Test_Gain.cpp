@@ -76,7 +76,7 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
     }
 
     SECTION("Performance_Testing") {
-        constexpr std::chrono::microseconds MAX_EXEC_TIME_US(1000);
+        constexpr std::chrono::microseconds MAX_EXEC_TIME_US(2000);
         constexpr float GAIN = 2.0f;
 
         // Create audio block
@@ -97,6 +97,6 @@ TEST_CASE("Gain Class is tested", "[Gain]") {
 
         auto execTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+        CHECK(execTime.count() < MAX_EXEC_TIME_US.count());
     }
 }

@@ -137,7 +137,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         auto execTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+        CHECK(execTime.count() < MAX_EXEC_TIME_US.count());
     }
 
 }
