@@ -118,7 +118,7 @@ namespace reverb
      * the busLayout member variable to find out the number of channels your
      * processBlock callback must process.
      * 
-     * The maximumExpectedSamplesPerBlock value is a strong hint about the maximum
+     * The samplesPerBlock value is a strong hint about the maximum
      * number of samples that will be provided in each block. You may want to use
      * this value to resize internal buffers. You should program defensively in case
      * a buggy host exceeds this value. The actual block sizes that the host uses
@@ -268,11 +268,6 @@ namespace reverb
                 std::thread updateParamsThread(&AudioProcessor::updateParams,
                                                this, getSampleRate());
 
-#ifdef WIN32
-                SetThreadPriority(updateParamsThread.native_handle(),
-                                  THREAD_MODE_BACKGROUND_BEGIN);
-#endif
-            
                 lock.unlock();
 
                 // updateParams() uses double buffering to update everything
@@ -288,11 +283,6 @@ namespace reverb
         for (int i = 0; i < totalNumInputChannels; ++i)
         {
             channelThreads.emplace_back(&AudioProcessor::processChannel, this, i);
-
-#ifdef WIN32
-            SetThreadPriority(channelThreads[i].native_handle(),
-                              THREAD_PRIORITY_TIME_CRITICAL);
-#endif
         }
 
         // Wait for each thread to complete
@@ -322,8 +312,18 @@ namespace reverb
      */
     void AudioProcessor::processChannel(int channelIdx)
     {
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_TIME_CRITICAL);
+#endif
+
         AudioBlock channelAudio = audioChannels.getSingleChannelBlock(channelIdx);
         mainPipelines[channelIdx]->exec(channelAudio);
+
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_NORMAL);
+#endif
     }
 
     //==============================================================================
@@ -340,6 +340,11 @@ namespace reverb
      */
     void AudioProcessor::updateParams(double sampleRate)
     {
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_MODE_BACKGROUND_BEGIN);
+#endif
+
         // Obtain lock
         std::lock_guard<std::mutex> lock(updatingParams);
 
@@ -353,6 +358,11 @@ namespace reverb
         {
             updateParamsForChannel(i, sampleRate);
         }
+
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_MODE_BACKGROUND_END);
+#endif
     }
 
     /**
@@ -394,6 +404,7 @@ namespace reverb
             juce::ScopedLock lock(processorLock);
 
             mainPipeline->updateParams(parameters);
+            mainPipeline->updateSampleRate(sampleRate);
 
             if (updateIR)
             {

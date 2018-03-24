@@ -469,6 +469,9 @@
     <ClCompile Include="..\..\Source\UIFilterBlock.cpp">
       <Filter>quantumVERB\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\UIGraphBlock.cpp">
+      <Filter>quantumVERB\source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\UIHeaderBlock.cpp">
       <Filter>quantumVERB\source</Filter>
     </ClCompile>
@@ -2436,15 +2439,6 @@
     <ClInclude Include="..\..\Source\Gain.h">
       <Filter>quantumVERB\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\UIFilterBlock.h">
-      <Filter>quantumVERB\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\UIReverbBlock.h">
-      <Filter>quantumVERB\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\UIHeaderBlock.h">
-      <Filter>quantumVERB\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\IRBank.h">
       <Filter>quantumVERB\include</Filter>
     </ClInclude>
@@ -2479,6 +2473,18 @@
       <Filter>quantumVERB\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\UIBlock.h">
+      <Filter>quantumVERB\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\UIFilterBlock.h">
+      <Filter>quantumVERB\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\UIGraphBlock.h">
+      <Filter>quantumVERB\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\UIReverbBlock.h">
+      <Filter>quantumVERB\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\UIHeaderBlock.h">
       <Filter>quantumVERB\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\vendor\juce\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">

@@ -152,6 +152,59 @@ TEST_CASE("Filter class is tested", "[filters]") {
 
 	}
     */
+
+    SECTION("Performance_Testing") {
+        constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(30);
+        constexpr std::chrono::milliseconds MAX_TOTAL_EXEC_TIME_MS(50);
+        std::chrono::milliseconds total_exec(0);        
+
+        // Low shelf
+        float gain = reverb::Filter::invdB(14);
+        float freq = 1000;
+        reverb::LowShelfFilter lowFilter(&processor, freq, 0.71, gain);
+
+        // Measure exec time
+        auto start = std::chrono::high_resolution_clock::now();
+        lowFilter.exec(sampleBuffer);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+        total_exec += execTime;
+        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+
+        // High shelf
+        gain = reverb::Filter::invdB(10);
+        freq = 20000;
+        reverb::HighShelfFilter highFilter(&processor, freq, 0.71, gain);
+
+        // <easure exec time
+        start = std::chrono::high_resolution_clock::now();
+        highFilter.exec(sampleBuffer);
+        end = std::chrono::high_resolution_clock::now();
+
+        execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        total_exec += execTime;
+        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+
+        // Peaking 
+        gain = reverb::Filter::invdB(10);
+        float centerFreq = 10000;
+        reverb::PeakFilter peakFilter(&processor, freq, 0.71, gain);
+
+        // Measure exec time
+        start = std::chrono::high_resolution_clock::now();
+        peakFilter.exec(sampleBuffer);
+        end = std::chrono::high_resolution_clock::now();
+
+        execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        total_exec += execTime;
+        CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
+
+        // total low shelf + high shelf + 1 peaking
+        CHECK(total_exec.count() < MAX_TOTAL_EXEC_TIME_MS.count());
+    }
+
+
 	delete[] fftBuffer;
 
 

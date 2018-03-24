@@ -15,6 +15,7 @@
 
 namespace reverb {
 
+    //==============================================================================
     class UIFilterBlock : public UIBlock
     {
     public:
@@ -28,20 +29,22 @@ namespace reverb {
         void paint(juce::Graphics&) override;
         void resized() override;
 
+        //==============================================================================
+        juce::Slider freq;
+        juce::Slider q;
+        juce::Slider gain;
+
     protected:
         //==============================================================================
         using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
         //==============================================================================
-        juce::Slider q;
-        juce::Label qLabel;
-        std::unique_ptr<SliderAttachment> qAttachment;
-
-        juce::Slider freq;
         juce::Label freqLabel;
         std::unique_ptr<SliderAttachment> freqAttachment;
 
-        juce::Slider gain;
+        juce::Label qLabel;
+        std::unique_ptr<SliderAttachment> qAttachment;
+
         juce::Label gainLabel;
         std::unique_ptr<SliderAttachment> gainAttachment;
 

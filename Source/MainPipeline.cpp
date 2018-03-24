@@ -46,6 +46,29 @@ namespace reverb
 
     //==============================================================================
     /**
+     * @brief Update sample rate for pipeline and child tasks
+     * 
+     * Compares new sample rate with previous value. If different, sets mustExec to
+     * true in order to re-run pipeline for new sample rate. Store new sample rate
+     * value in object.
+     *
+     * @param [in] sr   Sample rate
+     */
+    void MainPipeline::updateSampleRate(double sr)
+    {
+        if (sr != sampleRate)
+        {
+            sampleRate = sr;
+            mustExec = true;
+
+            convolution->updateSampleRate(sr);
+            gain->updateSampleRate(sr);
+            dryWetMixer->updateSampleRate(sr);
+        }
+    }
+
+    //==============================================================================
+    /**
      * @brief Apply reverb effect to given audio buffer
      *
      * Load original audio buffer into dryWetMixer object, then apply reverb pipeline
