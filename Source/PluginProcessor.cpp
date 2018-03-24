@@ -118,7 +118,7 @@ namespace reverb
      * the busLayout member variable to find out the number of channels your
      * processBlock callback must process.
      * 
-     * The maximumExpectedSamplesPerBlock value is a strong hint about the maximum
+     * The samplesPerBlock value is a strong hint about the maximum
      * number of samples that will be provided in each block. You may want to use
      * this value to resize internal buffers. You should program defensively in case
      * a buggy host exceeds this value. The actual block sizes that the host uses
