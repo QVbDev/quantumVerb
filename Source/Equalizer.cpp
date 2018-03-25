@@ -7,6 +7,7 @@ Equalizer.cpp
 */
 
 #include "Equalizer.h"
+#include "PluginProcessor.h"
 
 namespace reverb {
 
@@ -44,6 +45,8 @@ namespace reverb {
             if (i != 0 && i != numFilters - 1) filterSet[i]->setQ(4);
         }
 
+        calibrateFilters();
+
         
 
         
@@ -60,20 +63,42 @@ namespace reverb {
 
     bool Equalizer::updateParams(const juce::AudioProcessorValueTreeState& params,
         const juce::String& blockId)
-        {
-
-
+    {
+        //Extract filter ID from block ID
         int filterId = std::stoi(blockId.getLastCharacters(1).toStdString());
 
         if (filterId < 0 || filterId >= filterSet.size()) throw InvalidFilterException();
 
-        if (filterSet[filterId]->needsToRun() && filterSet[filterId]->isEnabled())
+        /*if (filterSet[filterId]->needsToRun() && filterSet[filterId]->isEnabled())
         {
+            mustExec = true;
+        }*/
+
+        // Gain
+        auto paramGain = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_GAIN_SUFFIX);
+
+        if (!paramGain)
+        {
+            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
+        }
+
+        if ((int)*paramGain != (int)EQGains[filterId])
+        {
+            EQGains[filterId] = *paramGain;
+            calibrateFilters();
             mustExec = true;
         }
 
+        mustExec |= filterSet[filterId]->updateParams(params, blockId);
 
-        return filterSet[filterId]->updateParams(params, blockId);
+        if (mustExec)
+        {
+            filterSet[filterId]->buildFilter();
+        }
+
+        return mustExec;
+
+
     }
 
     /**
@@ -84,7 +109,6 @@ namespace reverb {
 
     void Equalizer::exec(juce::AudioSampleBuffer& ir) 
     {
-        calibrateFilters();
 
         for (int i = 0; i < filterSet.size(); i++) 
         {
@@ -159,10 +183,10 @@ namespace reverb {
             memcpy(lambda_data, gamma_data, dim * sizeof(float));
 
             //Compute B matrix with new gains
-            for (int i = 0; i < dim; i++) 
+            for (int i = 0; i < dim; i++)
             {
 
-                for (int j = 0; j < dim; j++) 
+                for (int j = 0; j < dim; j++)
                 {
 
                     B_data[j + B.getNumColumns() * i] = filterSet[j]->getdBAmplitude(evalFrequencies[i]);

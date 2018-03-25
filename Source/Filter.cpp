@@ -71,26 +71,6 @@ namespace reverb
             mustExec = true;
         }
 
-        // Gain
-        auto paramGain = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_GAIN_SUFFIX);
-
-        if (!paramGain)
-        {
-            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
-        }
-
-        if (*paramGain != gainFactor)
-        {
-            gainFactor = *paramGain;
-            mustExec = true;
-        }
-
-        // Rebuild filter if necessary
-        if (mustExec)
-        {
-            buildFilter();
-        }
-
         return mustExec;
     
     }

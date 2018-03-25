@@ -66,15 +66,15 @@ namespace reverb
         float getAmplitude(float freq);
         float getdBAmplitude(float freq);
 
-        void setFrequency(float);
-        void setQ(float);
-        void setGain(float);
-
         bool isEnabled();
         void enable();
         void disable();
 
     protected:
+        void setFrequency(float);
+        void setQ(float);
+        void setGain(float);
+
         virtual void buildFilter() = 0;
 
         bool isOn;

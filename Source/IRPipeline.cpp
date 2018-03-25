@@ -66,7 +66,7 @@ namespace reverb
         }
 
         // Update child parameters
-        for (int i = 0; i < equalizer->getNumFilters(); ++i)
+        for (int i = 0; i < equalizer->getNumFilters(); i++)
         {
             std::string filterId = AudioProcessor::PID_FILTER_PREFIX + std::to_string(i);
             mustExec |= equalizer->updateParams(params, filterId);
