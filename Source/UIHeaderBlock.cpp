@@ -50,10 +50,6 @@ namespace reverb
         irChoiceLabel.setJustificationType(juce::Justification::topLeft);
         irChoiceLabel.attachToComponent(&irChoice, false);
 
-        irChoiceAttachment.reset(new ComboBoxAttachment(p.parameters,
-            irChoice.getComponentID(),
-            irChoice));
-
         // TODO: Ensure IR file box tracks the IR choice parameter
 
         // Sample rate box
@@ -127,5 +123,4 @@ namespace reverb
             return nullptr;
         }
     }
-
 }

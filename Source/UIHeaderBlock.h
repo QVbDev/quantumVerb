@@ -45,7 +45,6 @@ namespace reverb
 
         juce::Label irChoiceLabel;
         juce::ComboBox irChoice;
-        std::unique_ptr<ComboBoxAttachment> irChoiceAttachment;
 
         juce::TextButton sampleRate;
         juce::Label sampleRateLabel;
