@@ -56,7 +56,8 @@ namespace reverb {
     //==============================================================================
     /**
     * @brief Read processor parameters and update block parameters as necessary
-    *
+    * @param [in] params   the value tree containing the parameters
+    * @param [in] blockId  the Id of the relevant parameter block
     * @returns True if any parameters were changed, false otherwise.
     * @throws ChannelNumberException
     * @throws WrongParameterException
