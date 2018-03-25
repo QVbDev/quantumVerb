@@ -97,7 +97,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
     REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(2) / freqRes)], EQ.getEQGain(2)));
 
-    REQUIRE(compareValues(fftBuffer[(int)(FMAX / freqRes)], EQ.getEQGain(3)));
+    REQUIRE(compareValues(fftBuffer[(int)(21000 / freqRes)], EQ.getEQGain(3)));
 
     //Test getdBAmplitude()
 

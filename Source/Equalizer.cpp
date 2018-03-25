@@ -15,7 +15,8 @@ namespace reverb {
         : Task(processor) 
     {
 
-        if (numFilters < 3) throw WrongFilterNumber();
+        if (numFilters < 3) numFilters = 3;
+        if (numFilters > 6) numFilters = 6;
 
         filterSet.add(new LowShelfFilter(processor));
         
@@ -68,11 +69,6 @@ namespace reverb {
         int filterId = std::stoi(blockId.getLastCharacters(1).toStdString());
 
         if (filterId < 0 || filterId >= filterSet.size()) throw InvalidFilterException();
-
-        /*if (filterSet[filterId]->needsToRun() && filterSet[filterId]->isEnabled())
-        {
-            mustExec = true;
-        }*/
 
         // Gain
         auto paramGain = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_GAIN_SUFFIX);
@@ -148,7 +144,7 @@ namespace reverb {
             evalFrequencies[i] = filterSet[i]->frequency;
         }
 
-        evalFrequencies[(dim - 1)] = FMAX;
+        evalFrequencies[(dim - 1)] = 21000;
 
         //Create Matrix objects
 

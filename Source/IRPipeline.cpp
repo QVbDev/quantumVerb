@@ -69,7 +69,17 @@ namespace reverb
         for (int i = 0; i < equalizer->getNumFilters(); i++)
         {
             std::string filterId = AudioProcessor::PID_FILTER_PREFIX + std::to_string(i);
-            mustExec |= equalizer->updateParams(params, filterId);
+            try 
+            {
+                mustExec |= equalizer->updateParams(params, filterId);
+            }
+            catch (const std::exception& e)
+            {
+                std::string errMsg = "Could not update filters due to exception: ";
+                errMsg += e.what();
+
+                logger.dualPrint(Logger::Level::Error, errMsg);
+            }
         }
 
         mustExec |= gain->updateParams(params, AudioProcessor::PID_IR_GAIN);

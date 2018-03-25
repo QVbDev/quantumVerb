@@ -15,12 +15,6 @@ Filter.h
 #define M_PI 3.14159265358979323846f
 #endif
 
-#define QMIN 0.2
-#define QMAX 6.5
-#define GMIN -24
-#define GMAX 15
-#define FMAX 21000
-
 namespace reverb
 {
 
@@ -132,10 +126,5 @@ namespace reverb
                                 //==============================================================================
         virtual void buildFilter() override;
     };
-
-    //==============================================================================
-    /**
-    * Exceptions for Filter class
-    */
 
 }
