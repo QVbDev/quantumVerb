@@ -38,7 +38,7 @@ namespace reverb {
 
         for (int i = 0; i < numFilters; i++)
         {
-            EQGains[i] = 2;
+            EQGains[i] = 4;
             filterSet[i]->setGain(2);
             filterSet[i]->setFrequency((i + 1) * 10000 / numFilters);
 
@@ -164,7 +164,7 @@ namespace reverb {
 
         for (int i = 0; i < dim; i++) 
         {
-            gamma_data[i] = filterSet[i]->getdBAmplitude(evalFrequencies[i]);
+            gamma_data[i] = Filter::todB(EQGains[i]);
         }
 
         //Set gains to 1 dB for B matrix
