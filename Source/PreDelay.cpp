@@ -27,33 +27,25 @@ namespace reverb
         : Task(processor)
     {
     }
-    
-    //==============================================================================
+
     /**
-     * @brief Read processor parameters and update block parameters as necessary
+     * @brief Updates parameters from processor parameter tree
      *
-     * @returns True if any parameters were changed, false otherwise.
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool PreDelay::updateParams(const juce::AudioProcessorValueTreeState& params,
+    void PreDelay::updateParams(const juce::AudioProcessorValueTreeState& params,
                                 const juce::String& blockId)
     {
-        // Delay (ms)
-        auto paramDelayMs = params.getRawParameterValue(blockId);
+        float _delayMs = getParam(params, blockId);
 
-        if (!paramDelayMs)
+        if (delayMs != _delayMs)
         {
-            throw std::invalid_argument("Parameter not found for pre-delay in PreDelay block");
-        }
-
-        if (*paramDelayMs != delayMs)
-        {
-            delayMs = *paramDelayMs;
+            delayMs = _delayMs;
             mustExec = true;
         }
-
-        return mustExec;
     }
-
+    
     //==============================================================================
     /**
      * @brief Applies predelay to impulse response

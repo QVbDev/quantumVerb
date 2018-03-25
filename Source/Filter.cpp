@@ -26,65 +26,45 @@ namespace reverb
 		: Task(processor),isOn(true), frequency(freq), Q(q), gainFactor(gain)
     {
     }
-    
-    //==============================================================================
+
     /**
-     * @brief Read processor parameters and update block parameters as necessary
+     * @brief Updates parameters from processor parameter tree
      *
-     * @returns True if any parameters were changed, false otherwise.
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool Filter::updateParams(const juce::AudioProcessorValueTreeState& params,
+    void Filter::updateParams(const juce::AudioProcessorValueTreeState& params,
                               const juce::String& blockId)
     {
         // Frequency
-        auto paramFreq = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_FREQ_SUFFIX);
+        float _frequency = getParam(params,
+                                    blockId + AudioProcessor::PID_FILTER_FREQ_SUFFIX);
 
-        if (!paramFreq)
+        if (frequency != _frequency)
         {
-            throw std::invalid_argument("Received non-float parameter for frequency in Filter block");
-        }
-
-        if (*paramFreq != frequency)
-        {
-            frequency = *paramFreq;
+            frequency = _frequency;
             mustExec = true;
         }
 
         // Q factor
-        auto paramQ = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_Q_SUFFIX);
+        float _Q = getParam(params,
+                            blockId + AudioProcessor::PID_FILTER_Q_SUFFIX);
 
-        if (!paramQ)
+        if (Q != _Q)
         {
-            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
-        }
-
-        if (*paramQ != Q)
-        {
-            Q = *paramQ;
+            Q = _Q;
             mustExec = true;
         }
 
-        // Gain
-        auto paramGain = params.getRawParameterValue(blockId + AudioProcessor::PID_FILTER_GAIN_SUFFIX);
+        // Gain factor
+        float _gainFactor = getParam(params,
+                                     blockId + AudioProcessor::PID_FILTER_GAIN_SUFFIX);
 
-        if (!paramGain)
+        if (gainFactor != _gainFactor)
         {
-            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
-        }
-        
-        if (*paramGain != gainFactor)
-        {
-            gainFactor = *paramGain;
+            gainFactor = _gainFactor;
             mustExec = true;
         }
-
-        // Rebuild filter if necessary
-        if (mustExec)
-        {
-            buildFilter();
-        }
-
-        return mustExec;
     }
 
     //==============================================================================

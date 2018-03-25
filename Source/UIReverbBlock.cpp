@@ -92,19 +92,25 @@ namespace reverb
                                                       wetRatio.getComponentID(),
                                                       wetRatio));
 
+        // Tweak value box appearance
+        irLength.setNumDecimalPlacesToDisplay(2);
+        irLength.setTextValueSuffix(" s");
+
+        preDelay.setNumDecimalPlacesToDisplay(2);
+        preDelay.setTextValueSuffix(" ms");
+
+        irGain.setNumDecimalPlacesToDisplay(2);
+
+        outGain.setNumDecimalPlacesToDisplay(2);
+
+        wetRatio.setNumDecimalPlacesToDisplay(2);
+
         // Add sliders
         addAndMakeVisible(irLength);
         addAndMakeVisible(preDelay);
         addAndMakeVisible(irGain);
         addAndMakeVisible(outGain);
         addAndMakeVisible(wetRatio);
-
-        // Default values
-        irLength.setValue(2.5f);
-        preDelay.setValue(500.0f);
-        irGain.setValue(0.5f);
-        outGain.setValue(0.0f);
-        wetRatio.setValue(0.5f);
     }
 
     //==============================================================================

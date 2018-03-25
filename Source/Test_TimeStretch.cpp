@@ -19,6 +19,8 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
+#define compareFloats(a1, a2) std::abs(a2 - a1) <= 0.01
+
 class TimeStretchMocked : public reverb::TimeStretch
 {
 public:
@@ -40,13 +42,13 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
     processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
                                    SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
 
-    REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
+    REQUIRE(compareFloats(processor.getSampleRate(), SAMPLE_RATE));
 
     TimeStretchMocked timeStretch(&processor);
 
 
     SECTION("Stretch audio buffer (2s @ 96kHz -> 4s @ 88.2kHz)") {
-        constexpr int IR_ORIG_SAMPLE_RATE = 96000;
+        constexpr double IR_ORIG_SAMPLE_RATE = 96000;
         constexpr std::chrono::seconds IR_ORIG_DURATION_S(2);
         constexpr int64_t IR_ORIG_NUM_SAMPLES = IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE;
 
@@ -62,14 +64,14 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         // Prepare TimeStretch
         timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
 
-        REQUIRE(timeStretch.getOrigIRSampleRate() == IR_ORIG_SAMPLE_RATE);
+        REQUIRE(compareFloats(timeStretch.getOrigIRSampleRate(), (double)IR_ORIG_SAMPLE_RATE));
 
         auto irLength = processor.parameters.getParameterAsValue(processor.PID_IR_LENGTH);
         irLength.setValue(IR_TARGET_DURATION_S.count());
 
         timeStretch.updateParams(processor.parameters, processor.PID_IR_LENGTH);
 
-        REQUIRE(timeStretch.getIRLengthS() == IR_TARGET_DURATION_S.count());
+        REQUIRE(compareFloats(timeStretch.getIRLengthS(), IR_TARGET_DURATION_S.count()));
 
         // Run TimeStretch
         timeStretch.exec(ir);
@@ -80,7 +82,7 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
 
 
     SECTION("Compress audio buffer (4s @ 96kHz -> 2s @ 88.2kHz)") {
-        constexpr int IR_ORIG_SAMPLE_RATE = 96000;
+        constexpr double IR_ORIG_SAMPLE_RATE = 96000;
         constexpr std::chrono::seconds IR_ORIG_DURATION_S(4);
         constexpr int64_t IR_ORIG_NUM_SAMPLES = IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE;
 
@@ -103,7 +105,7 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
 
         timeStretch.updateParams(processor.parameters, processor.PID_IR_LENGTH);
 
-        REQUIRE(timeStretch.getIRLengthS() == IR_TARGET_DURATION_S.count());
+        REQUIRE(compareFloats(timeStretch.getIRLengthS(), IR_TARGET_DURATION_S.count()));
 
         // Run TimeStretch
         timeStretch.exec(ir);
@@ -133,7 +135,7 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         // Prepare TimeStretch
         timeStretch.setOrigIRSampleRate(IR_ORIG_SAMPLE_RATE);
 
-        REQUIRE(timeStretch.getOrigIRSampleRate() == (double)IR_ORIG_SAMPLE_RATE);
+        REQUIRE(compareFloats(timeStretch.getOrigIRSampleRate(), (double)IR_ORIG_SAMPLE_RATE));
 
         auto irLength = processor.parameters.getParameterAsValue(processor.PID_IR_LENGTH);
 

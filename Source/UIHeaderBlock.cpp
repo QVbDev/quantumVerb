@@ -88,7 +88,7 @@ namespace reverb
         int boundsWidth = bounds.getWidth();
         int boundsHeight = bounds.getHeight();
 
-        int padding = AudioProcessorEditor::PADDING_REL * boundsHeight;
+        int padding = (int)std::ceil(AudioProcessorEditor::PADDING_REL * boundsHeight);
         int labelHeight = 20;
 
         // Distribute child elements in columns
@@ -97,7 +97,7 @@ namespace reverb
 
         for (int i = 0; i < 3; ++i)
         {
-            cells[i] = bounds.removeFromLeft(cellWidths[i] * boundsWidth);
+            cells[i] = bounds.removeFromLeft((int)std::round(cellWidths[i] * boundsWidth));
 
             cells[i].removeFromTop(labelHeight);
             cells[i].reduce(padding, padding);
