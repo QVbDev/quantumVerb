@@ -192,11 +192,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\catch.hpp" />
+    <ClInclude Include="..\..\Source\Test_Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Test_AudioProcessor.cpp" />
     <ClCompile Include="..\..\Source\Test_AudioProcessorEditor.cpp" />
     <ClCompile Include="..\..\Source\Test_Convolution.cpp" />
+    <ClCompile Include="..\..\Source\Test_Equalizer.cpp" />
     <ClCompile Include="..\..\Source\Test_Filter.cpp" />
     <ClCompile Include="..\..\Source\Test_Gain.cpp" />
     <ClCompile Include="..\..\Source\Test_IRPipeline.cpp" />
@@ -205,6 +207,7 @@
     <ClCompile Include="..\..\Source\Test_Mixer.cpp" />
     <ClCompile Include="..\..\Source\Test_PreDelay.cpp" />
     <ClCompile Include="..\..\Source\Test_TimeStretch.cpp" />
+    <ClCompile Include="..\..\Source\Test_Util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
