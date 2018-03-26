@@ -63,6 +63,11 @@ namespace reverb
             mustExec = true;
         }
 
+        if (mustExec)
+        {
+            buildFilter();
+        }
+
 
     
     }

@@ -33,7 +33,7 @@ namespace reverb {
     public:
 
         Equalizer(juce::AudioProcessor * processor, int numFilters = 4);
-        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+        virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
             const juce::String& blockId) override;
 
         using Ptr = std::shared_ptr<Equalizer>;

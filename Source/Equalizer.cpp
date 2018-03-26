@@ -67,7 +67,7 @@ namespace reverb {
     * @throws WrongParameterException
     */
 
-    bool Equalizer::updateParams(const juce::AudioProcessorValueTreeState& params,
+    void Equalizer::updateParams(const juce::AudioProcessorValueTreeState& params,
         const juce::String& blockId)
     {
         //Extract filter ID from block ID
@@ -80,7 +80,7 @@ namespace reverb {
 
         if (!paramGain)
         {
-            throw std::invalid_argument("Parameter not found for Q factor in Filter block");
+            throw std::invalid_argument("Parameter not found for gain factor in Filter block");
         }
 
         if ((int)*paramGain != (int)EQGains[filterId])
@@ -90,14 +90,12 @@ namespace reverb {
             mustExec = true;
         }
 
-        mustExec |= filterSet[filterId]->updateParams(params, blockId);
+        filterSet[filterId]->updateParams(params, blockId);
 
         if (mustExec)
         {
             filterSet[filterId]->buildFilter();
         }
-
-        return mustExec;
 
 
     }

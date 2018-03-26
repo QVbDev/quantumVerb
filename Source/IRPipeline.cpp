@@ -64,7 +64,7 @@ namespace reverb
             std::string filterId = AudioProcessor::PID_FILTER_PREFIX + std::to_string(i);
             try 
             {
-                mustExec |= equalizer->updateParams(params, filterId);
+               equalizer->updateParams(params, filterId);
             }
             catch (const std::exception& e)
             {
