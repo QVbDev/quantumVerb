@@ -101,7 +101,6 @@ namespace reverb
         if (isOn)
         {
             juce::dsp::AudioBlock<float> block(ir);
-
             juce::dsp::ProcessContextReplacing<float> context(block);
             juce::dsp::IIR::Filter<float>::process(context);
 
@@ -112,7 +111,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Gives the filter absolute amplitude response at a given frequency
+    * @brief Returns the filter absolute amplitude response at a given frequency
     *
     * @param [in] freq   Frequency at which the filter magnitude is evaluated
     */
@@ -144,7 +143,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Gives the filter amplitude response in dB at a given frequency
+    * @brief Returns the filter amplitude response in dB at a given frequency
     *
     * @param [in] freq   Frequency at which the filter magnitude is evaluated
     *
@@ -158,7 +157,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Sets the filter frequency and updates the IIR filter coefficients
+    * @brief Sets the filter frequency and updates the IIR filter coefficients (Meant to be used by Equalizer class)
     *
     * @param [in] freq   Frequency to be set
     */
@@ -174,7 +173,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Sets the filter Q factor and updates the IIR filter coefficients
+    * @brief Sets the filter Q factor and updates the IIR filter coefficients (Meant to be used by Equalizer class)
     *
     * @param [in] freq   Q factor to be set
     */
@@ -188,7 +187,7 @@ namespace reverb
     }
     //==============================================================================
     /**
-    * @brief Sets the filter band gain and updates the IIR filter coefficients
+    * @brief Sets the filter band gain and updates the IIR filter coefficients (Meant to be used by Equalizer class)
     *
     * @param [in] freq   Band gain to be set
     */
@@ -238,7 +237,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Generates and sets the low-shelf IIR filter coefficients with the current filter parameters
+    * @brief Generates and sets the low-shelf IIR filter coefficients according to the current filter parameters
     *
     */
     void LowShelfFilter::buildFilter()
@@ -250,7 +249,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Generates and sets the high-shelf IIR filter coefficients with the current filter parameters
+    * @brief Generates and sets the high-shelf IIR filter coefficients according to the current filter parameters
     *
     */
     void HighShelfFilter::buildFilter()
@@ -262,7 +261,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * @brief Generates and sets the peak IIR filter coefficients with the current filter parameters
+    * @brief Generates and sets the peak IIR filter coefficients according to the current filter parameters
     *
     */
     void PeakFilter::buildFilter()

@@ -32,14 +32,18 @@ namespace reverb {
             EQGains.push_back(1.0f);
         }
 
-        //These constructor setters will likely need to be updated in the very near future.
+        /*
+        * The following is the default configuration of the Equalizer: 
+        * all filter frequencies are equally spaced between 0 and 10000 Hz 
+        * with a gain of 2, and a Q of 0.71 for the shelf filters and 4 for the peak filters 
+        */
 
         filterSet[0]->setQ(0.71);
         filterSet[numFilters - 1]->setQ(0.71);
 
         for (int i = 0; i < numFilters; i++)
         {
-            EQGains[i] = 4;
+            EQGains[i] = 2;
             filterSet[i]->setGain(2);
             filterSet[i]->setFrequency((i + 1) * 10000 / numFilters);
 
@@ -116,10 +120,10 @@ namespace reverb {
     }
 
     /**
-    * @brief Calibrates the individual filter gains. 
+    * @brief Calibrates the individual filter gains so that the total gains are equal to the user defined values 
     *
     * This function solves a linear equation system of N variables where N = number of filters in order to find the individual gains that, when stacked together, 
-    * are equal to the user specified values at the frequencies of 0, 21000 Hz and at every one of the peak filter center frequencies. 
+    * are equal to the user specified values at the frequencies of 0, 21000 Hz and at each single one of the peak filter center frequencies. 
     *
     * The use of decibels is necessary for the gain stacks to behave linearly. The algorithm can be used iteratively and is detailed
     * in the Standford University lecture note available at https://ccrma.stanford.edu/courses/424/handouts.2004/424_Handout22_Filters4_LectureNotes.pdf
@@ -203,7 +207,7 @@ namespace reverb {
     }
 
     /**
-    * @brief Gives the Equalizer amplitude response in dB at a given frequency
+    * @brief Returns the Equalizer amplitude response in dB at a given frequency
     *
     * @param [in] freq   Frequency at which the filter magnitude is evaluated
     */
@@ -221,40 +225,18 @@ namespace reverb {
 
     }
 
+    /**
+    * @brief Returns the specified filter frequency (Meant to be used in tests only)
+    *
+    * @param [in] num Id of the filter
+    */
+
     float Equalizer::getFilterFrequency(int num) 
     {
 
         if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
 
         return filterSet[num]->frequency;
-    }
-
-    /**
-    * @brief Returns the band gain of one of the equalizer's specified filter. Gain will change after calibration.
-    *
-    * @param num    Filter ID
-    * @return       Gain of the filter
-    */
-
-    float Equalizer::getFilterGain(int num) 
-    {
-        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
-
-        return filterSet[num]->gainFactor;
-    }
-
-    /**
-    * @brief Returns the Q of one of the equalizer's specified filter
-    *
-    * @param num    Filter ID
-    * @return       Q of the filter
-    */
-
-    float Equalizer::getFilterQ(int num) 
-    {
-        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
-
-        return filterSet[num]->gainFactor;
     }
 
     /**
@@ -275,7 +257,7 @@ namespace reverb {
     }
 
     /**
-    * @brief Returns the EQ gains as specified by the user (differs from actual filter gains after calibration
+    * @brief Returns the EQ gains as specified by the user (Meant to be used in tests only)
     *
     * @param [in] num   Filter ID
     * @return           EQ nominal gain
