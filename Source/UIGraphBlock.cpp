@@ -9,10 +9,6 @@
 #include "UIGraphBlock.h"
 #include "PluginEditor.h"
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 namespace reverb
 {
 
