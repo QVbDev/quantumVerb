@@ -51,49 +51,53 @@ namespace reverb
      * @brief Applies predelay to impulse response
      *
      * Zero-pads beginning of impulse response buffer to match requested predelay.
+     * Expects given audio block to be large enough to accomodate predelay.
      *
      * @param [in,out] ir   Impulse response to modify
-     *
-     * @throws std::invalid_argument
      */
-    void PreDelay::exec(juce::AudioSampleBuffer& ir)
+    AudioBlock PreDelay::exec(AudioBlock ir)
     {
-        const int numSamplesToAdd = (int)std::ceil(processor->getSampleRate() * (delayMs/1000.0));
+        const size_t numSamplesToAdd = getNumSamplesToAdd();
+        const size_t lengthWithoutPreDelay = (ir.getNumSamples() - numSamplesToAdd);
 
-        // Ensure IR buffer only contains one channel
-        if (ir.getNumChannels() != 1)
+        if (numSamplesToAdd > 0)
         {
-            throw std::invalid_argument("Received multi-channel IR in mono task block");
+            // Shift audio samples in memory to leave room for predelay
+            // NB: Use memmove instead of memcpy since dst and src will probably overlap
+            float * irPtr = ir.getChannelPointer(0);
+            memmove(irPtr + numSamplesToAdd, irPtr, lengthWithoutPreDelay * sizeof(float));
+
+            // Clear predelay samples
+            memset(irPtr, 0, numSamplesToAdd * sizeof(float));
         }
-
-        // Ensure pre-delay value is within valid range
-        if (delayMs > MAX_DELAY_MS)
-        {
-            throw std::invalid_argument("Requested pre-delay is too large (max. 1s)");
-        }
-
-        // Create intermediate buffer with prepended zeros
-        juce::AudioSampleBuffer irCopy(1, numSamplesToAdd + ir.getNumSamples());
-
-        float * irCopyWritePtr = irCopy.getWritePointer(0);
-
-        for (int i = 0; i < numSamplesToAdd; ++i)
-        {
-            irCopyWritePtr[i] = 0;
-        }
-
-        // Copy IR values to end of intermediate buffer
-        auto irReadPtr = ir.getReadPointer(0);
-
-        memcpy(irCopyWritePtr + numSamplesToAdd,
-               irReadPtr,
-               ir.getNumSamples() * sizeof(irReadPtr[0]));
-
-        // Copy delayed IR to output buffer
-        ir = irCopy;
 
         // Reset mustExec flag
         mustExec = false;
+
+        return ir;
+    }
+
+    //==============================================================================
+    /**
+     * @brief Resizes given IR before processing
+     *
+     * @param [in,out] ir   IR to prepare
+     */
+    void PreDelay::prepareIR(juce::AudioSampleBuffer& ir)
+    {
+        ir.setSize(ir.getNumChannels(),
+                   ir.getNumSamples() + getNumSamplesToAdd(),
+                   true, false, false);
+    }
+
+    /**
+     * @brief Returns expected number of samples after processing
+     *
+     * @param [in] inputNumSamples  Number of samples in input buffer
+     */
+    int PreDelay::getNumSamplesToAdd()
+    {
+        return (int)std::ceil(sampleRate * (delayMs / 1000.0));
     }
 
 }

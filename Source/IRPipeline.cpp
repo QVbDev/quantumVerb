@@ -17,9 +17,6 @@
 namespace reverb
 {
 
-    // Define static IR mutex for use across IRPipelines
-    std::mutex IRPipeline::irMutex;
-
     //==============================================================================
     /**
      * @brief Constructs an IRPipeline object associated with an AudioProcessor
@@ -29,9 +26,8 @@ namespace reverb
      *
      * @param [in] processor    Pointer to main processor
      */
-    IRPipeline::IRPipeline(juce::AudioProcessor * processor, const IRBank& irBank, int channelIdx)
+    IRPipeline::IRPipeline(juce::AudioProcessor * processor, int channelIdx)
         : Task(processor),
-          irBank(irBank),
           channelIdx(channelIdx)
     {
         // Initialise pipeline steps
@@ -52,13 +48,13 @@ namespace reverb
      * @param [in] blockId  ID of block whose paramters should be checked
      */
     void IRPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
-                                  const juce::String& blockId)
+                                  const juce::String&)
     {
         // Update pipeline parameters
         auto paramIRChoice = params.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE);
-        if (paramIRChoice.getProperty("value") != currentIR)
+        if (paramIRChoice.getProperty("value") != irNameOrFilePath)
         {
-            currentIR = paramIRChoice.getProperty("value");
+            irNameOrFilePath = paramIRChoice.getProperty("value").toString().toStdString();
             mustExec = true;
         }
 
@@ -76,23 +72,30 @@ namespace reverb
 
     //==============================================================================
     /**
-     * @brief Update sample rate for IR processing
+     * @brief Update sample rate for pipeline and child tasks
      * 
      * Compares new sample rate with previous value. If different, sets mustExec to
      * true in order to re-run pipeline for new sample rate. Store new sample rate
-     * value once complete.
+     * value in object.
      *
-     * @returns True if sample rate changed, false otherwise.
+     * @param [in] sr   Sample rate
      */
-    bool IRPipeline::updateSampleRate(double sampleRate)
+    void IRPipeline::updateSampleRate(double sr)
     {
-        if (sampleRate != lastSampleRate)
+        if (sr != sampleRate)
         {
-            lastSampleRate = sampleRate;
+            sampleRate = sr;
             mustExec = true;
-        }
 
-        return mustExec;
+            for (auto& filter : filters)
+            {
+                filter->updateSampleRate(sr);
+            }
+
+            gain->updateSampleRate(sr);
+            preDelay->updateSampleRate(sr);
+            timeStretch->updateSampleRate(sr);
+        }
     }
 
     //==============================================================================
@@ -150,36 +153,36 @@ namespace reverb
      *
      * @throws std::runtime_error
      */
-    void IRPipeline::exec(juce::AudioSampleBuffer& irChannelOut)
+    AudioBlock IRPipeline::exec(AudioBlock)
     {
-        loadIR(currentIR.toStdString());
+        AudioBlock irBlock = reloadIR();
 
-        // Execute pipeline on IR channel
+        // Apply filters
         for (auto& filter : filters)
         {
-            filter->exec(irChannel);
+            filter->exec(irBlock);
         }
 
-        timeStretch->exec(irChannel);
-        gain->exec(irChannel);
+        // Apply gain
+        gain->exec(irBlock);
 
-        try
-        {
-            preDelay->exec(irChannel);
-        }
-        catch (const std::exception& e)
-        {
-            std::string errMsg = "Skipping pre-delay step due to exception: ";
-                        errMsg += e.what();
-                
-            logger.dualPrint(Logger::Level::Error, errMsg);
-        }
+        // Resize buffer and apply timestretch
+        timeStretch->prepareIR(ir);
+        irBlock = ir;
 
-        // Use move semantics to write to output IR channel
-        irChannelOut = std::move(irChannel);
+        timeStretch->exec(irBlock);
+
+        // Resize buffer and apply predelay
+        preDelay->prepareIR(ir);
+        irBlock = ir;
+
+        preDelay->exec(irBlock);
 
         // Reset mustExec flag
         mustExec = false;
+
+        // Return reference to processed IR channel
+        return irBlock;
     }
 
     //==============================================================================
@@ -193,13 +196,14 @@ namespace reverb
      *
      * @throws std::invalid_argument
      */
-    void IRPipeline::loadIR(const std::string& irNameOrFilePath)
+    AudioBlock IRPipeline::reloadIR()
     {
         if (irNameOrFilePath.empty())
         {
             throw std::invalid_argument("Received invalid IR name/path");
         }
 
+        auto& irBank = IRBank::getInstance();
         if (irBank.buffers.find(irNameOrFilePath) != irBank.buffers.end())
         {
             loadIRFromBank(irNameOrFilePath);
@@ -208,15 +212,15 @@ namespace reverb
         {
             loadIRFromDisk(irNameOrFilePath);
         }
+
+        return AudioBlock(ir);
     }
 
     //==============================================================================
     /**
      * @brief Loads an impulse response from provided IR bank
      *
-     * Loads the appropriate channel from the selected impulse response (IR) in memory.
-     * Since this operation involves copying an entire buffer and thus may be fairly heavy,
-     * processing is suspended until completion.
+     * Loads the appropriate impulse response (IR) from binary data.
      *
      * @param [in] irName   Name of banked IR file
      *
@@ -224,6 +228,8 @@ namespace reverb
      */
     void IRPipeline::loadIRFromBank(const std::string& irName)
     {
+        auto& irBank = IRBank::getInstance();
+
         // Find requested IR
         const auto irIter = irBank.buffers.find(irName);
         const auto sampleRateIter = irBank.sampleRates.find(irName);
@@ -234,23 +240,12 @@ namespace reverb
             throw std::invalid_argument("Requested impulse response (" + irName + ") does not exist in IR bank");
         }
 
-        const juce::AudioSampleBuffer& ir = irIter->second;
-        double irSampleRate = sampleRateIter->second;
+        // Copy IR buffer to internal representation
+        ir.setSize(1, irIter->second.getNumSamples());
 
-        // Read samples into separate buffers for each channel
-        int numSamples = ir.getNumSamples();
-
-        irChannel.clear();
-
-        // Read channel corresponding to pipeline channel index
-        if (channelIdx < ir.getNumChannels())
-        {
-            irChannel.setSize(1, numSamples);
-            irChannel.copyFrom(0, 0, ir.getReadPointer(channelIdx), numSamples);
-        }
-
-        // Set parameters based on current impulse response
-        timeStretch->setOrigIRSampleRate(irSampleRate);
+        ir.copyFrom(0, 0,
+                    irIter->second.getReadPointer(channelIdx),
+                    irIter->second.getNumSamples());
     }
 
     //==============================================================================
@@ -280,18 +275,9 @@ namespace reverb
             throw std::invalid_argument("Failed to create reader for IR file: " + irFilePath);
         }
 
-        // Read samples into separate buffers for each channel
-        int numSamples = (int)reader->lengthInSamples;
-
-        irChannel.clear();
-
-        // Read channel corresponding to pipeline channel index
-        // TODO: (maybe if we finish earlier than expected) Currently only handles mono/stereo,
-        //       should we duplicate left/right channels when # channels is higher?
-        irChannel.setSize(1, numSamples);
-        reader->read(&irChannel, 0, numSamples, 0, channelIdx == 0, channelIdx == 1);
-
-        // Set parameters based on current impulse response
-        timeStretch->setOrigIRSampleRate(reader->sampleRate);
+        // Read IR buffer into internal representation
+        ir.setSize(reader->numChannels, (int)reader->lengthInSamples);
+        reader->read(&ir, 0, (int)reader->lengthInSamples, 0, (channelIdx == 0), (channelIdx == 1));
     }
+
 }

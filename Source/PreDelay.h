@@ -32,7 +32,11 @@ namespace reverb
         virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& blockId) override;
 
-        virtual void exec(juce::AudioSampleBuffer& ir) override;
+        virtual AudioBlock exec(AudioBlock ir) override;
+
+        //==============================================================================
+        void prepareIR(juce::AudioSampleBuffer& ir);
+        int getNumSamplesToAdd();
 
     protected:
         //==============================================================================

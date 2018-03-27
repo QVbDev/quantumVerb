@@ -30,9 +30,6 @@ public:
 
     reverb::IRPipeline::Ptr getIRPipeline(int channelIdx) { return irPipelines[channelIdx]; }
     reverb::MainPipeline::Ptr getMainPipeline(int channelIdx) { return mainPipelines[channelIdx]; }
-
-    juce::AudioSampleBuffer& getIRChannel(int channelIdx) { return irChannels[channelIdx]; }
-    juce::AudioSampleBuffer& getAudioChannel(int channelIdx) { return audioChannels[channelIdx]; }
 };
 
 TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {

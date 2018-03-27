@@ -75,26 +75,26 @@ namespace reverb
      *
      * @param [in,out] ir   Parameter description
      */
-    void Filter::exec(juce::AudioSampleBuffer& ir)
+    AudioBlock Filter::exec(AudioBlock ir)
     {
         buildFilter();
 
         if (ir.getNumChannels() != 1)
         {
             logger.dualPrint(Logger::Level::Warning, "Filter: AudioBuffer channel count is not 1");
-            return;
+            return ir;
         }
 		
 		if (isOn)
         {
-			juce::dsp::AudioBlock<float> block(ir);
-
-			juce::dsp::ProcessContextReplacing<float> context(block);
+			juce::dsp::ProcessContextReplacing<float> context(ir);
 			juce::dsp::IIR::Filter<float>::process(context);
 
             // Reset mustExec flag
             mustExec = false;
 		}
+
+        return ir;
     }
 
     //==============================================================================

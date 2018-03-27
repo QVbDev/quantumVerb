@@ -71,9 +71,6 @@ namespace reverb
 		void setStateInformation(const void* data, int sizeInBytes) override;
 
         //==============================================================================
-        IRBank irBank;
-
-        //==============================================================================
         juce::AudioProcessorValueTreeState parameters;
         
         // Unique parameter IDs
@@ -113,8 +110,7 @@ namespace reverb
         std::vector<IRPipeline::Ptr>   irPipelines;
         std::vector<MainPipeline::Ptr> mainPipelines;
 
-        std::vector<juce::AudioSampleBuffer> irChannels;
-        std::vector<juce::AudioSampleBuffer> audioChannels;
+        AudioBlock audioChannels;
 
 	private:
 		//==============================================================================

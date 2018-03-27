@@ -33,10 +33,11 @@ namespace reverb
         virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& blockID) override;
 
-        virtual void exec(juce::AudioSampleBuffer& ir) override;
+        virtual AudioBlock exec(AudioBlock ir) override;
 
         //==============================================================================
-        void setOrigIRSampleRate(double sampleRate);
+        void prepareIR(juce::AudioSampleBuffer& ir);
+        int getOutputNumSamples();
 
     protected:
         //==============================================================================
@@ -45,9 +46,7 @@ namespace reverb
         float irLengthS = 3.0f;
 
         //==============================================================================
-        // TODO: Do we need to keep this information? Or is TimeStretch linear (i.e.
-        //       same result if sample rate differential is constant)?
-        double origIRSampleRate;
+        juce::AudioSampleBuffer irOrig;
 
         //==============================================================================
         std::unique_ptr<soundtouch::SoundTouch> soundtouch;

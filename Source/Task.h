@@ -13,6 +13,8 @@
 namespace reverb
 {
 
+    using AudioBlock = juce::dsp::AudioBlock<float>;
+
     //==============================================================================
     /**
      * Abstract task object used to represent various processing elements
@@ -39,7 +41,7 @@ namespace reverb
         /**
          * @brief Apply block logic to input buffer
          */
-        virtual void exec(juce::AudioSampleBuffer&) = 0;
+        virtual AudioBlock exec(AudioBlock) = 0;
         
         /**
          * @brief Tells caller whether block must be run for current block
@@ -47,6 +49,27 @@ namespace reverb
          * May be overriden by IR blocks since these are executed sparingly.
          */
         virtual bool needsToRun() const { return mustExec; }
+
+        //==============================================================================
+        double sampleRate;
+        
+        /**
+         * @brief Update sample rate for task block
+         * 
+         * Compares new sample rate with previous value. If different, sets mustExec to
+         * true in order to re-run task for new sample rate. Store new sample rate
+         * value in object.
+         *
+         * @param [in] sr   Sample rate
+         */
+        virtual void updateSampleRate(double sr)
+        {
+            if (sr != sampleRate)
+            {
+                sampleRate = sr;
+                mustExec = true;
+            }
+        }
 
     protected:
         //==============================================================================
