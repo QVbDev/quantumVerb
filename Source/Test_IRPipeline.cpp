@@ -57,7 +57,7 @@ TEST_CASE("Use an IRPipeline to manipulate an impulse response", "[IRPipeline]")
 
 
     SECTION("IR processing shouldn't be excessively long") {
-        constexpr std::chrono::seconds MAX_EXEC_TIME_MS(200);
+        constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(200);
 
         juce::AudioSampleBuffer ir(1, 512);
 
