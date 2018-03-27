@@ -83,7 +83,7 @@ namespace reverb {
             throw std::invalid_argument("Parameter not found for gain factor in Filter block");
         }
 
-        if (*paramGain != EQGains[filterId])
+        if ((int)*paramGain != (int)EQGains[filterId])
         {
             EQGains[filterId] = *paramGain;
             calibrateFilters();
@@ -91,8 +91,6 @@ namespace reverb {
         }
 
         filterSet[filterId]->updateParams(params, blockId);
-
-        mustExec |= filterSet[filterId]->needsToRun();
 
         if (mustExec)
         {

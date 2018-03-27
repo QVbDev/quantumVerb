@@ -50,7 +50,6 @@ namespace reverb
         if (frequency != _frequency)
         {
             frequency = _frequency;
-            buildFilter();
             mustExec = true;
         }
 
@@ -61,10 +60,13 @@ namespace reverb
         if (Q != _Q)
         {
             Q = _Q;
-            buildFilter();
             mustExec = true;
         }
 
+        if (mustExec)
+        {
+            buildFilter();
+        }
 
 
     
