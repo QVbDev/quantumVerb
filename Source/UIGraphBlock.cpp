@@ -145,23 +145,41 @@ namespace reverb
 
         while (!stopGraphThread)
         {
-            {
-                lock.unlock();
+            // Lock JUCE message manager (necessary for repaint() method)
+            juce::Component::SafePointer<juce::Component> sp(this);
 
-                // Wait until parameter processing is complete
-                std::lock_guard<std::mutex> paramsLock(processor.updatingParams);
-
-                // Lock JUCE message manager (necessary for repaint() method)
-                juce::MessageManagerLock mmLock(juce::Thread::getCurrentThread());
-
-                lock.lock();
-
-                if (mmLock.lockWasGained())
+            // Run update mechanism on message manager thread
+            juce::MessageManager::callAsync(
+                [sp]
                 {
-                    resized();
-                    repaint();
+                    if (!sp.getComponent())
+                    {
+                        return;
+                    }
+
+                    UIGraphBlock * gb = dynamic_cast<UIGraphBlock*>(sp.getComponent());
+
+                    if (!gb)
+                    {
+                        return;
+                    }
+
+                    // Wait until parameter processing is complete
+                    std::lock_guard<std::mutex> paramsLock(gb->getProcessorInstance()->updatingParams);
+
+                    // Update graph and send repaint signal
+                    std::unique_lock<std::mutex> lock(gb->updatingGraph);
+
+                    gb->resized();
+                    gb->repaint();
+
+                    // Notify update thread about task completion
+                    gb->updateComplete.notify_all();
                 }
-            }
+            );
+
+            // Wait for graph update completion (time out after update period)
+            updateComplete.wait_for(lock, std::chrono::milliseconds(updatePeriodMs));
 
             // Wait for new notification
             mustUpdate.wait_for(lock, std::chrono::milliseconds(updatePeriodMs));
@@ -176,8 +194,6 @@ namespace reverb
      */
     void UIGraphBlock::notifyToUpdate()
     {
-        std::lock_guard<std::mutex> lock(updatingGraph);
-
         mustUpdate.notify_one();
     }
 
