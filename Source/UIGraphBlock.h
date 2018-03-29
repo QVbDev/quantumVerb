@@ -39,6 +39,12 @@ namespace reverb
         virtual void comboBoxChanged(juce::ComboBox *) override { notifyToUpdate(); }
         virtual void sliderValueChanged(juce::Slider *) override { notifyToUpdate(); }
 
+        //==============================================================================
+        AudioProcessor * getProcessorInstance() { return &processor; }
+
+        std::mutex updatingGraph;
+        std::condition_variable updateComplete;
+
     protected:
         //==============================================================================
         AudioProcessor& processor;
@@ -52,7 +58,6 @@ namespace reverb
         //==============================================================================
         void notifyToUpdate();
 
-        std::mutex updatingGraph;
         std::condition_variable mustUpdate;
 
         //==============================================================================
