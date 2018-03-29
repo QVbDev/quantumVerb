@@ -213,7 +213,10 @@ namespace reverb
             loadIRFromDisk(irNameOrFilePath);
         }
 
-        return AudioBlock(ir);
+        AudioBlock irBlock(ir);
+        normalise(irBlock, MAX_IR_INTENSITY);
+
+        return irBlock;
     }
 
     //==============================================================================

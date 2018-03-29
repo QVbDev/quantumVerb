@@ -18,8 +18,6 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
- // TODO: Test parameter changes
-
  //==============================================================================
  /**
  * Mocked PreDelay class to facilitate accessing protected members in unit tests.
@@ -105,7 +103,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
             CHECK(ir.getSample(0, i) == IR_VAL_OFFSET + (i - EXPECTED_NUM_SAMPLES));
         }
     }
-
+  
 
     SECTION("Performance_Testing") {
         constexpr std::chrono::microseconds MAX_EXEC_TIME_US(1000);
@@ -124,5 +122,5 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         CHECK(execTime.count() < MAX_EXEC_TIME_US.count());
     }
-
+    
 }
