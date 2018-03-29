@@ -122,5 +122,5 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         CHECK(execTime.count() < MAX_EXEC_TIME_US.count());
     }
-  
+    
 }

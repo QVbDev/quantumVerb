@@ -11,6 +11,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "UIFilterBlock.h"
+#include "UIGraphBlock.h"
 #include "UIHeaderBlock.h"
 #include "UIReverbBlock.h"
 #include "LookAndFeel.h"
@@ -59,6 +60,9 @@ namespace reverb
         UIHeaderBlock headerBlock;
 
         //==============================================================================
+        UIGraphBlock graphBlock;
+
+        //==============================================================================
         UIReverbBlock reverbBlock;
 
         //==============================================================================
@@ -67,7 +71,9 @@ namespace reverb
         UIFilterBlock peakHighFilterBlock;
         UIFilterBlock highShelfFilterBlock;
 
-        juce::ImageButton graphButton; 
+        std::array<UIFilterBlock*, 4> filterBlocks;
+        std::array<juce::String, 4> filterBlockNames;
+
     private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioProcessorEditor)
 	};

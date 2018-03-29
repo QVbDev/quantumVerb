@@ -75,6 +75,12 @@ namespace reverb
     }
 
     //==============================================================================
+    /**
+    * @brief Manages the layout of UIHeaderBlock when the block is resized
+    *
+    * This function defines all the relative positioning of the various UIHeaderBlock
+    * elements.
+    */
     void reverb::UIHeaderBlock::resized()
     {
         juce::Rectangle<int> bounds(getLocalBounds());
