@@ -29,13 +29,11 @@ namespace reverb
         q.setSliderStyle(juce::Slider::RotaryVerticalDrag);
         gain.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 
-		freq.getLookAndFeel().drawRotarySlider()
-
         freq.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
         q.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
         gain.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 20);
 
-        freq.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x04444440));
+        freq.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
         q.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
         gain.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
 
