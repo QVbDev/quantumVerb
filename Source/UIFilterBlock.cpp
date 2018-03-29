@@ -11,15 +11,16 @@
 
 namespace reverb
 {
+
+    //==============================================================================
     /**
     * @brief Constructs a UIFilterBlock object
     *
     * Creates a UIFilterBlock and each of its components. Constructs a
     * building block for the UI. This block includes all sliders required
-    * for a filter as well as does most of its configuration. It also adds its 
+    * for a filter as well as does most of its configuration. It also adds its
     * parameters to the AudioProcessorValueTreeState.
     */
-    //==============================================================================
     UIFilterBlock::UIFilterBlock(AudioProcessor& processor, int index)
         : UIBlock(3, 2)
     {
@@ -49,21 +50,21 @@ namespace reverb
         gain.setComponentID(filterIDPrefix + processor.PID_FILTER_GAIN_SUFFIX);
 
         // Labels
-        qLabel.setText("q factor", juce::NotificationType::dontSendNotification);
-        qLabel.setJustificationType(juce::Justification::centredBottom);
-
         freqLabel.setText("frequency", juce::NotificationType::dontSendNotification);
         freqLabel.setJustificationType(juce::Justification::centredBottom);
+
+        qLabel.setText("q factor", juce::NotificationType::dontSendNotification);
+        qLabel.setJustificationType(juce::Justification::centredBottom);
 
         gainLabel.setText("amplitude", juce::NotificationType::dontSendNotification);
         gainLabel.setJustificationType(juce::Justification::centredBottom);
 
-        qLabel.attachToComponent(&q, false);
         freqLabel.attachToComponent(&freq, false);
+        qLabel.attachToComponent(&q, false);
         gainLabel.attachToComponent(&gain, false);
 
         // Attachments
-        gainAttachment.reset(new SliderAttachment(processor.parameters,
+        freqAttachment.reset(new SliderAttachment(processor.parameters,
                                                   freq.getComponentID(),
                                                   freq));
 
@@ -75,15 +76,18 @@ namespace reverb
                                                   gain.getComponentID(),
                                                   gain));
 
-        // Add sliders
-        addAndMakeVisible(q);
-        addAndMakeVisible(freq);
-        addAndMakeVisible(gain);
+        // Tweak value box appearance
+        freq.setNumDecimalPlacesToDisplay(0);
+        freq.setTextValueSuffix(" Hz");
 
-        // Default Values
-        freq.setValue(808.0f);
-        q.setValue(1.06f);
-        gain.setValue(juce::Decibels::decibelsToGain(-6));
+        q.setNumDecimalPlacesToDisplay(2);
+
+        gain.setNumDecimalPlacesToDisplay(2);
+
+        // Add sliders
+        addAndMakeVisible(freq);
+        addAndMakeVisible(q);
+        addAndMakeVisible(gain);
     }
 
     //==============================================================================
@@ -94,13 +98,14 @@ namespace reverb
         g.setColour(juce::Colours::white);
         g.setFont(15.0f);
     }
+
+    //==============================================================================
     /**
     * @brief Manages the layout of UIFilterBlock when the block is resized
     *
     * This function defines all the relative positioning of the various UIFilterBlock
     * elements.
     */
-    //==============================================================================
     void UIFilterBlock::resized()
     {
         juce::Rectangle<int> bounds(getLocalBounds());

@@ -71,12 +71,6 @@ namespace reverb
 		void setStateInformation(const void* data, int sizeInBytes) override;
 
         //==============================================================================
-        std::mutex lock;
-
-        //==============================================================================
-        IRBank irBank;
-
-        //==============================================================================
         juce::AudioProcessorValueTreeState parameters;
         
         // Unique parameter IDs
@@ -95,6 +89,12 @@ namespace reverb
         static constexpr const char * PID_WETRATIO           = "wetratio";
         static constexpr const char * PID_AUDIO_OUT_GAIN     = "audio_out_gain";
 
+        //==============================================================================
+        std::vector<IRPipeline::Ptr>   irPipelines;
+        std::vector<MainPipeline::Ptr> mainPipelines;
+
+        std::mutex updatingParams;
+
 
     protected:
         //==============================================================================
@@ -102,13 +102,16 @@ namespace reverb
         bool paramsInitialised = false;
 
         //==============================================================================
+        static constexpr int NUM_BLOCKS_PER_UPDATE_PARAMS = 5;
+        int64_t blocksProcessed = 0;
+
+        void updateParams(double sampleRate);
+        void updateParamsForChannel(int channelIdx, double sampleRate);
+
+        //==============================================================================
         void processChannel(int channelIdx);
 
-        std::vector<IRPipeline::Ptr>   irPipelines;
-        std::vector<MainPipeline::Ptr> mainPipelines;
-
-        std::vector<juce::AudioSampleBuffer> irChannels;
-        std::vector<juce::AudioSampleBuffer> audioChannels;
+        AudioBlock audioChannels;
 
 	private:
 		//==============================================================================

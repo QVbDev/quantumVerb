@@ -16,6 +16,8 @@
 
 namespace reverb
 {
+
+    //==============================================================================
     /**
     * @brief Constructs an AudioProcessorEditor object associated with an AudioProcessor
     *
@@ -28,9 +30,10 @@ namespace reverb
     */
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
-          headerBlock(p), reverbBlock(p),
-          lowShelfFilterBlock(p, 0), peakLowFilterBlock(p, 1),
-          peakHighFilterBlock(p, 2), highShelfFilterBlock(p, 3)
+          headerBlock(p), graphBlock(p), reverbBlock(p),
+          lowShelfFilterBlock(p,0), peakLowFilterBlock(p,1),
+          peakHighFilterBlock(p,2), highShelfFilterBlock(p,3),
+          filterBlocks({ &lowShelfFilterBlock, &peakLowFilterBlock, &peakHighFilterBlock, &highShelfFilterBlock })
 	{
 		// Make sure that before the constructor has finished, you've set the
 		// editor's size to whatever you need it to be.
@@ -43,34 +46,41 @@ namespace reverb
         // Display header block
         addAndMakeVisible(headerBlock);
 
-        // Display right-side block
+        // Display graph block
+        addAndMakeVisible(graphBlock);
+
+        // Display reverb params block
         addAndMakeVisible(reverbBlock);
 
         // Build filter blocks
-        static constexpr const char * filterNames[] = { "low-shelf", "peak (low)", "peak (high)", "high-shelf" };
+        filterBlockNames = { "low-shelf", "peak (low)", "peak (high)", "high-shelf" };
 
-        addAndMakeVisible(lowShelfFilterBlock);
-        addAndMakeVisible(peakLowFilterBlock);
-        addAndMakeVisible(peakHighFilterBlock);
-        addAndMakeVisible(highShelfFilterBlock);
+        for (auto filterBlock : filterBlocks)
+        {
+            addAndMakeVisible(*filterBlock);
+        }
 
-        juce::Image eqGraph = juce::ImageFileFormat::loadFrom(BinaryData::graph_placeholder_png,
-                                                              BinaryData::graph_placeholder_pngSize);
+        // Set listeners for IR graph
+        headerBlock.irChoice.addListener(&graphBlock);
 
-        juce::Image blank;
+        reverbBlock.irLength.addListener(&graphBlock);
+        reverbBlock.preDelay.addListener(&graphBlock);
+        reverbBlock.irGain.addListener(&graphBlock);
+        reverbBlock.outGain.addListener(&graphBlock);
+        reverbBlock.wetRatio.addListener(&graphBlock);
 
-        graphButton.setImages(false, true, false,
-                              eqGraph, 1.0, juce::Colours::transparentWhite, 
-                              blank, 1.0, juce::Colours::transparentWhite,
-                              blank, 1.0, juce::Colours::transparentWhite,
-                              0);
-
-        addAndMakeVisible(graphButton);
+        for (auto& filterBlock : filterBlocks)
+        {
+            filterBlock->freq.addListener(&graphBlock);
+            filterBlock->q.addListener(&graphBlock);
+            filterBlock->gain.addListener(&graphBlock);
+        }
 
         // Calls resized when creating UI to position all the elements as if window was resized.
         this->resized();
 	}
 
+    //==============================================================================
 	AudioProcessorEditor::~AudioProcessorEditor()
 	{
         setLookAndFeel(nullptr);
@@ -83,12 +93,9 @@ namespace reverb
 
 		g.setColour(juce::Colours::white);
 		g.setFont(15.0f);
+	}
 
-        //headerBox.drawAt(g, 0, 0, 100);
-		//g.drawRoundedRectangle(0, 15, 300, 175, 2, 1);
-
-	}    
-
+    //==============================================================================
     /**
     * @brief Manages the layout of AudioProcessorEditor when the window is resized
     *
@@ -116,18 +123,18 @@ namespace reverb
         auto graphBounds = bounds;
 
         graphBounds.setTop(headerBounds.getBottom());
-        graphBounds.setBottom(headerBounds.getBottom() + padding + (int)(0.485 * height));
+        graphBounds.setBottom(headerBounds.getBottom() + padding + (int)(0.52 * height));
         graphBounds.setRight((int)(0.75 * width));
 
         graphBounds.reduce(padding, padding);
 
-        graphButton.setBounds(graphBounds);
+        graphBlock.setBounds(graphBounds);
 
         // Reverb block
         auto reverbBounds = bounds;
 
         reverbBounds.setTop(headerBounds.getBottom());
-        reverbBounds.setBottom(headerBounds.getBottom() + padding + 0.485 * height);
+        reverbBounds.setBottom(headerBounds.getBottom() + padding + (int)std::round(0.52 * height));
         reverbBounds.setLeft(graphBounds.getRight() + padding);
 
         reverbBounds.reduce(padding, padding);
@@ -135,13 +142,10 @@ namespace reverb
         reverbBlock.setBounds(reverbBounds);
 
         // Filters
-        UIFilterBlock * filters[4] = { &lowShelfFilterBlock, &peakLowFilterBlock,
-                                       &peakHighFilterBlock, &highShelfFilterBlock };
-
         auto filterBounds = bounds;
 
         filterBounds.setTop(reverbBounds.getBottom());
-        filterBounds.setBottom(reverbBounds.getBottom() + padding + 0.385 * height);
+        filterBounds.setBottom(reverbBounds.getBottom() + padding + (int)std::round(0.35 * height));
 
         int filterBlockWidth = width / 4;
 
@@ -150,49 +154,8 @@ namespace reverb
             auto thisFilterBounds = filterBounds.removeFromLeft(filterBlockWidth);
             thisFilterBounds.reduce(padding, padding);
 
-            filters[i]->setBounds(thisFilterBounds);
+            filterBlocks[i]->setBounds(thisFilterBounds);
         }
 	}
-
-    // handler for button clicks
-    /*void AudioProcessorEditor::buttonClicked(juce::Button*) 
-    {
-        // Most buttons are handled by parameter tree attachments
-
-        // TODO: Handler for IR selection?
-    }*/
-
-    // Heavily inspired by JUCE standaloneFilterWindow.h askUserToLoadState()
-    /** Pops up a dialog letting the user re-load the processor's state from a file. */
-
-    // TODO: complete drop downmenu file explorer file selection
-    /*void AudioProcessorEditor::loadIR(int num)
-    {
-        FileChooser fc("Load IR file");
-
-        if (fc.browseForFileToOpen())
-        {
-
-            processor.irPipeline->irFilePath = fc.getResult().getFullPathName().toStdString();
-        }
-    }
-
-    void AudioProcessorEditor::handleMenuResult(int result)
-    {
-        switch (result)
-        {
-        case 1:  this->loadIR(0) ; break;
-        //case 2:  pluginHolder->askUserToSaveState(); break;
-        //case 3:  pluginHolder->askUserToLoadState(); break;
-        //case 4:  resetToDefaultState(); break;
-        default: break;
-        }
-    }
-
-    void AudioProcessorEditor::menuCallback(int result)
-    {
-        if (button != nullptr && result != 0)
-            button->handleMenuResult(result);
-    }*/
 
 }

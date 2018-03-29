@@ -11,6 +11,8 @@
 #include "PluginProcessor.h"
 
 #include <chrono>
+#include <cmath>
+#include <iostream>
 
 /**
  * How to write tests with Catch:
@@ -28,9 +30,6 @@ public:
 
     reverb::IRPipeline::Ptr getIRPipeline(int channelIdx) { return irPipelines[channelIdx]; }
     reverb::MainPipeline::Ptr getMainPipeline(int channelIdx) { return mainPipelines[channelIdx]; }
-
-    juce::AudioSampleBuffer& getIRChannel(int channelIdx) { return irChannels[channelIdx]; }
-    juce::AudioSampleBuffer& getAudioChannel(int channelIdx) { return audioChannels[channelIdx]; }
 };
 
 TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
@@ -75,65 +74,58 @@ TEST_CASE("Test whole-processor behaviours", "[AudioProcessor]") {
     juce::MidiBuffer midi;
 
 
-    SECTION("IRPipeline should be disabled after execution") {
-        // First exec (with IR pipeline)
-        for (int i = 0; i < NUM_CHANNELS; ++i)
-        {
-            REQUIRE(processor.getIRPipeline(i)->needsToRun());
-        }
-
-        auto start = std::chrono::high_resolution_clock::now();
-        processor.processBlock(audio, midi);
-        auto end = std::chrono::high_resolution_clock::now();
-
-        auto firstExecTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-        for (int i = 0; i < NUM_CHANNELS; ++i)
-        {
-            CHECK(!processor.getIRPipeline(i)->needsToRun());
-        }
-
-        // Second exec (no IR pipeline)
-        start = std::chrono::high_resolution_clock::now();
-        processor.processBlock(audio, midi);
-        end = std::chrono::high_resolution_clock::now();
-
-        auto secondExecTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        
-        for (int i = 0; i < NUM_CHANNELS; ++i)
-        {
-            CHECK(!processor.getIRPipeline(i)->needsToRun());
-        }
-
-        CHECK(secondExecTime.count() < firstExecTime.count() - 10);
-    }
-
-
     SECTION("Regular processing should be real-time") {
+#ifdef NDEBUG
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(BLOCK_DURATION_MS);
+        constexpr int NUM_ITERATIONS = 2000;
+#else
+        constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(5*BLOCK_DURATION_MS);
         constexpr int NUM_ITERATIONS = 100;
+#endif
 
         // Prepare impulse response
-        processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
         processor.processBlock(audio, midi);
+
+        std::array<std::chrono::milliseconds, NUM_ITERATIONS> execTimes;
 
         for (int i = 0; i < NUM_ITERATIONS; ++i)
         {
             // Measure total processing time for one block
             auto start = std::chrono::high_resolution_clock::now();
-
-            processor.prepareToPlay(SAMPLE_RATE, NUM_SAMPLES_PER_BLOCK);
             processor.processBlock(audio, midi);
-
             auto end = std::chrono::high_resolution_clock::now();
 
-            auto execTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            execTimes[i] = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
             
-#ifdef NDEBUG
-            CHECK(execTime.count() < MAX_EXEC_TIME_MS.count());
-#else
-            CHECK(execTime.count() < 2 * MAX_EXEC_TIME_MS.count());
-#endif
+            CHECK(execTimes[i].count() < MAX_EXEC_TIME_MS.count());
         }
+
+        // Calculate some basic stats
+        double execTimeAvg = 0;
+        double execTimeDev = 0;
+
+        for (auto& execTime : execTimes)
+        {
+            execTimeAvg += execTime.count();
+        }
+
+        execTimeAvg /= execTimes.size();
+
+        std::cout << std::endl;
+        std::cout << "Exec time average: " << execTimeAvg << " ms" << std::endl;
+
+        for (auto& execTime : execTimes)
+        {
+            execTimeDev += execTime.count() - execTimeAvg;
+            execTimeDev *= execTimeDev;
+            execTimeDev /= execTimes.size() - 1;
+        }
+
+        execTimeDev = sqrt(execTimeDev);
+
+        std::cout << "Exec time standard deviation: " << execTimeDev << " ms" << std::endl;
+        std::cout << std::endl;
+
+        REQUIRE(execTimeAvg < MAX_EXEC_TIME_MS.count());
     }
 }

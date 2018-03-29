@@ -11,7 +11,7 @@
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="quantumVerbAU"
               pluginRTASCategory="" aaxIdentifier="ca.quantum-music.quantumVERB"
-              pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.2.1"
+              pluginAAXCategory="AAX_ePlugInCategory_Reverb" jucerVersion="5.3.0"
               companyName="Quantum-Music" companyWebsite="http://quantum-music.ca/"
               companyEmail="mlafleur@quantum-music.ca" headerPath="..\..\vendor\soundtouch\include"
               defines="DONT_SET_USING_JUCE_NAMESPACE=1&#10;REVERB_MULTITHREADED=1">
@@ -39,9 +39,6 @@
       <FILE id="ZRYgLa" name="Convolution.h" compile="0" resource="0" file="Source/Convolution.h"/>
       <FILE id="NiupXX" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="d86bmX" name="Gain.h" compile="0" resource="0" file="Source/Gain.h"/>
-      <FILE id="z8cMdJ" name="UIFilterBlock.h" compile="0" resource="0" file="Source/UIFilterBlock.h"/>
-      <FILE id="hOdS1U" name="UIReverbBlock.h" compile="0" resource="0" file="Source/UIReverbBlock.h"/>
-      <FILE id="HdXyPO" name="UIHeaderBlock.h" compile="0" resource="0" file="Source/UIHeaderBlock.h"/>
       <FILE id="HauXtr" name="IRBank.h" compile="0" resource="0" file="Source/IRBank.h"/>
       <FILE id="G0uyVb" name="IRPipeline.h" compile="0" resource="0" file="Source/IRPipeline.h"/>
       <FILE id="RlqKqT" name="Logger.h" compile="0" resource="0" file="Source/Logger.h"/>
@@ -55,6 +52,10 @@
       <FILE id="Ml2EHl" name="Task.h" compile="0" resource="0" file="Source/Task.h"/>
       <FILE id="ZbZKE4" name="TimeStretch.h" compile="0" resource="0" file="Source/TimeStretch.h"/>
       <FILE id="StXbHw" name="UIBlock.h" compile="0" resource="0" file="Source/UIBlock.h"/>
+      <FILE id="z8cMdJ" name="UIFilterBlock.h" compile="0" resource="0" file="Source/UIFilterBlock.h"/>
+      <FILE id="yVqj2O" name="UIGraphBlock.h" compile="0" resource="0" file="Source/UIGraphBlock.h"/>
+      <FILE id="hOdS1U" name="UIReverbBlock.h" compile="0" resource="0" file="Source/UIReverbBlock.h"/>
+      <FILE id="HdXyPO" name="UIHeaderBlock.h" compile="0" resource="0" file="Source/UIHeaderBlock.h"/>
     </GROUP>
     <GROUP id="{DD9F08D3-896A-69D7-4B5C-1C9A13F59FFB}" name="source">
       <FILE id="ovcHFj" name="Convolution.cpp" compile="1" resource="0" file="Source/Convolution.cpp"/>
@@ -76,6 +77,8 @@
       <FILE id="izuFdU" name="UIBlock.cpp" compile="1" resource="0" file="Source/UIBlock.cpp"/>
       <FILE id="nALbRD" name="UIFilterBlock.cpp" compile="1" resource="0"
             file="Source/UIFilterBlock.cpp"/>
+      <FILE id="eu0LZd" name="UIGraphBlock.cpp" compile="1" resource="0"
+            file="Source/UIGraphBlock.cpp"/>
       <FILE id="eKzRpF" name="UIHeaderBlock.cpp" compile="1" resource="0"
             file="Source/UIHeaderBlock.cpp"/>
       <FILE id="yvMPMr" name="UIReverbBlock.cpp" compile="1" resource="0"
@@ -85,7 +88,7 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" windowsTargetPlatformVersion="10.0.16299.0"
             vst3Folder="vendor\vst3sdk" externalLibraries="SoundTouch.lib"
-            IPPLibrary="true" smallIcon="KdBY4m" bigIcon="KdBY4m">
+            IPPLibrary="Parallel_Dynamic" smallIcon="KdBY4m" bigIcon="KdBY4m">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"

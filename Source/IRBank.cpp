@@ -13,6 +13,16 @@ namespace reverb
 
     //==============================================================================
     /**
+     * Global IRBank object
+     */
+    const IRBank& IRBank::getInstance()
+    {
+        static IRBank irBank;
+        return irBank;
+    }
+
+    //==============================================================================
+    /**
      * @brief Construct IR bank
      *
      * Sets public buffer & sample rate references and calls build() method to populate
@@ -43,6 +53,10 @@ namespace reverb
             sampleRatesModifiable.clear();
         }
 
+        // Register basic audio formats
+        juce::AudioFormatManager formatMgr;
+        formatMgr.registerBasicFormats();
+
         for (int i = 0; i < BinaryData::namedResourceListSize; ++i)
         {
             // Prepare memory input stream
@@ -50,13 +64,9 @@ namespace reverb
             const char * data;
 
             data = BinaryData::getNamedResource(BinaryData::namedResourceList[i], dataSize);
-
             auto dataStream = new juce::MemoryInputStream(data, dataSize, false);
 
             // Attempt to create an audio format reader for stream
-            juce::AudioFormatManager formatMgr;
-            formatMgr.registerBasicFormats();
-
             std::unique_ptr<juce::AudioFormatReader> reader(formatMgr.createReaderFor(dataStream));
 
             // If reader was successfully created, this is a valid audio resource

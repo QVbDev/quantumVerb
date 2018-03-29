@@ -31,22 +31,40 @@ namespace reverb
         dryWetMixer = std::make_shared<Mixer>(processor);
     }
 
-    //==============================================================================
     /**
-     * @brief Read processor parameters and update child parameters as necessary
+     * @brief Updates parameters from processor parameter tree
      *
-     * @returns True if any parameters were changed, false otherwise.
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool MainPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
+    void MainPipeline::updateParams(const juce::AudioProcessorValueTreeState& params,
                                     const juce::String&)
     {
-        bool changedParams = false;
+        gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
+        dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
+    }
 
-        // Update child parameters
-        changedParams |= gain->updateParams(params, AudioProcessor::PID_AUDIO_OUT_GAIN);
-        changedParams |= dryWetMixer->updateParams(params, AudioProcessor::PID_WETRATIO);
+    //==============================================================================
+    /**
+     * @brief Update sample rate for pipeline and child tasks
+     * 
+     * Compares new sample rate with previous value. If different, sets mustExec to
+     * true in order to re-run pipeline for new sample rate. Store new sample rate
+     * value in object.
+     *
+     * @param [in] sr   Sample rate
+     */
+    void MainPipeline::updateSampleRate(double sr)
+    {
+        if (sr != sampleRate)
+        {
+            sampleRate = sr;
+            mustExec = true;
 
-        return changedParams;
+            convolution->updateSampleRate(sr);
+            gain->updateSampleRate(sr);
+            dryWetMixer->updateSampleRate(sr);
+        }
     }
 
     //==============================================================================
@@ -59,25 +77,29 @@ namespace reverb
      *
      * @param [in,out] audio    Audio sample buffer
      */
-    void MainPipeline::exec(juce::AudioSampleBuffer& audio)
+    AudioBlock MainPipeline::exec(AudioBlock audio)
     {
         dryWetMixer->loadDry(audio);
 
         convolution->exec(audio);
         dryWetMixer->exec(audio);
         gain->exec(audio);
+
+        return audio;
     }
 
     //==============================================================================
     /**
-     * @brief Move IR buffer into MainPipeline object
+     * @brief Copy reference to IR buffer
      *
-     * @param [in] irIn Input IR buffer, empty after this method is called
+     * Calls convolution block's loadIR method to pass along the given audio block
+     *
+     * @param [in] irIn Input IR block
      */
-    void MainPipeline::loadIR(juce::AudioSampleBuffer&& irIn)
+    void MainPipeline::loadIR(AudioBlock irIn)
     {
-        ir = std::move(irIn);
-		convolution->loadIR(ir);
+        ir = irIn;
+		convolution->loadIR(irIn);
     }
 
 }

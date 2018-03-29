@@ -18,8 +18,6 @@
  * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
  */
 
- // TODO: Test parameter changes
-
  //==============================================================================
  /**
  * Mocked PreDelay class to facilitate accessing protected members in unit tests.
@@ -49,6 +47,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
     REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
 
     PreDelayMocked preDelay(&processor);
+    preDelay.updateSampleRate(SAMPLE_RATE);
 
     // Prepare dummy IR
     constexpr int IR_SIZE = 2048;
@@ -67,6 +66,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         REQUIRE(preDelay.getDelayMs() == 0);
 
+        preDelay.prepareIR(ir);
         preDelay.exec(ir);
 
         CHECK(ir.getNumChannels() == 1);
@@ -87,6 +87,7 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
 
         REQUIRE(preDelay.getDelayMs() == DELAY_S * 1000);
 
+        preDelay.prepareIR(ir);
         preDelay.exec(ir);
 
         CHECK(ir.getNumChannels() == 1);
@@ -102,24 +103,24 @@ TEST_CASE("Use a PreDelay object to manipulate an impulse response", "[PreDelay]
             CHECK(ir.getSample(0, i) == IR_VAL_OFFSET + (i - EXPECTED_NUM_SAMPLES));
         }
     }
+  
 
+    SECTION("Performance_Testing") {
+        constexpr std::chrono::microseconds MAX_EXEC_TIME_US(1000);
+        static constexpr double DELAY_S = 1;
+        const int EXPECTED_NUM_SAMPLES = (int)std::ceil(SAMPLE_RATE * DELAY_S);
 
-    SECTION("When pre-delay exceeds 1s, block should throw an exception") {
-        preDelay.setDelayMs(preDelay.getMaxDelayMs() + 1.0f);
+        preDelay.setDelayMs(DELAY_S * 1000);
 
-        REQUIRE(preDelay.getDelayMs() == preDelay.getMaxDelayMs() + 1);
+        // Measure exec time
+        auto start = std::chrono::high_resolution_clock::now();
+        preDelay.prepareIR(ir);
+        preDelay.exec(ir);
+        auto end = std::chrono::high_resolution_clock::now();
 
-        bool gotException = false;
+        auto execTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        try
-        {
-            preDelay.exec(ir);
-        }
-        catch (std::invalid_argument)
-        {
-            gotException = true;
-        }
-
-        CHECK(gotException);
+        CHECK(execTime.count() < MAX_EXEC_TIME_US.count());
     }
+    
 }

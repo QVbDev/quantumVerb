@@ -25,6 +25,9 @@ namespace reverb
         IRBank& operator=(const IRBank&) = delete;
 
         //==============================================================================
+        static const IRBank& getInstance();
+
+        //==============================================================================
         const std::map<std::string, juce::AudioSampleBuffer>& buffers;
         const std::map<std::string, double>& sampleRates;
 

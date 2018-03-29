@@ -18,6 +18,7 @@
 
 namespace reverb {
 
+    //==============================================================================
     class UIReverbBlock : public UIBlock
     {
     public:
@@ -31,28 +32,30 @@ namespace reverb {
         void paint(juce::Graphics&) override;
         void resized() override;
 
+        //==============================================================================
+        juce::Slider irLength;
+        juce::Slider preDelay;
+        juce::Slider irGain;
+        juce::Slider outGain;
+        juce::Slider wetRatio;
+
     protected:
         //==============================================================================
         using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
         //==============================================================================
-        juce::Slider irLength;
         juce::Label irLengthLabel;
         std::unique_ptr<SliderAttachment> irLengthAttachment;
 
-        juce::Slider preDelay;
         juce::Label preDelayLabel;
         std::unique_ptr<SliderAttachment> preDelayAttachment;
 
-        juce::Slider irGain;
         juce::Label irGainLabel;
         std::unique_ptr<SliderAttachment> irGainAttachment;
 
-        juce::Slider outGain;
         juce::Label outGainLabel;
         std::unique_ptr<SliderAttachment> outGainAttachment;
 
-        juce::Slider wetRatio;
         juce::Label wetRatioLabel;
         std::unique_ptr<SliderAttachment> wetRatioAttachment;
 

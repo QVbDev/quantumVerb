@@ -34,25 +34,27 @@ namespace reverb
     {
     public:
         //==============================================================================
-        IRPipeline(juce::AudioProcessor * processor, const IRBank& irBank, int channelIdx);
+        IRPipeline(juce::AudioProcessor * processor, int channelIdx);
 
         //==============================================================================
         using Ptr = std::shared_ptr<IRPipeline>;
 
         //==============================================================================
-        virtual bool updateParams(const juce::AudioProcessorValueTreeState& params,
+        virtual void updateParams(const juce::AudioProcessorValueTreeState& params,
                                   const juce::String& = "") override;
 
-        virtual void exec(juce::AudioSampleBuffer& ir) override;
+        virtual AudioBlock exec(AudioBlock = AudioBlock()) override;
 
         //==============================================================================
         virtual bool needsToRun() const override;
 
         //==============================================================================
-        bool updateSampleRate(double sampleRate);
+        virtual void updateSampleRate(double sr) override;
 
         //==============================================================================
-        void loadIR(const std::string& irNameOrFilePath);
+        AudioBlock reloadIR();
+
+        static constexpr float MAX_IR_INTENSITY = 0.5f;
 
     protected:
         //==============================================================================
@@ -65,17 +67,15 @@ namespace reverb
         double lastSampleRate = 0;
 
         //==============================================================================
-        static std::mutex irMutex;
+        int channelIdx;
+
+        //==============================================================================
+        std::string irNameOrFilePath = "";
+
+        juce::AudioSampleBuffer ir;
 
         void loadIRFromBank(const std::string& irBuffer);
         void loadIRFromDisk(const std::string& irFilePath);
-
-        int channelIdx;
-        juce::AudioSampleBuffer irChannel;
-
-        //==============================================================================
-        const IRBank& irBank;
-        juce::String currentIR = "";
     };
 
 }

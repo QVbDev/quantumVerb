@@ -25,31 +25,23 @@ namespace reverb
         : Task(processor)
     {
     }
-    
-    //==============================================================================
+
     /**
-     * @brief Read processor parameters and update block parameters as necessary
+     * @brief Updates parameters from processor parameter tree
      *
-     * @returns True if any parameters were changed, false otherwise.
+     * @param [in] params   Processor parameter tree
+     * @param [in] blockId  ID of block whose paramters should be checked
      */
-    bool Gain::updateParams(const juce::AudioProcessorValueTreeState& params,
+    void Gain::updateParams(const juce::AudioProcessorValueTreeState& params,
                             const juce::String& blockId)
     {
-        // Gain factor
-        auto paramGain = params.getRawParameterValue(blockId);
+        float _gainFactor = getParam(params, blockId);
 
-        if (!paramGain)
+        if (gainFactor != _gainFactor)
         {
-            throw std::invalid_argument("Parameter not found for gain in Gain block");
-        }
-
-        if (*paramGain != gainFactor)
-        {
-            gainFactor = *paramGain;
+            gainFactor = _gainFactor;
             mustExec = true;
         }
-
-        return mustExec;
     }
 
     //==============================================================================
@@ -60,12 +52,14 @@ namespace reverb
      *
      * @param [in,out] buffer   Audio sample buffer to process
      */
-    void Gain::exec(juce::AudioSampleBuffer& buffer)
+    AudioBlock Gain::exec(AudioBlock buffer)
     {
-		buffer.applyGain (gainFactor);
+		buffer.multiply(gainFactor);
 
         // Reset mustExec flag
         mustExec = false;
+
+        return buffer;
     }
 
 }

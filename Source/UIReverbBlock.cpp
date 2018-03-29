@@ -11,6 +11,8 @@
 
 namespace reverb
 {
+
+    //==============================================================================
     /**
     * @brief Constructs an UIReverbBlock object
     *
@@ -20,7 +22,6 @@ namespace reverb
     * does most of the configuration for these sliders. It also adds its 
     * parameters to the AudioProcessorValueTreeState.
     */
-    //==============================================================================
     UIReverbBlock::UIReverbBlock(AudioProcessor& processor)
         : UIBlock(5, 2)
     {
@@ -92,19 +93,25 @@ namespace reverb
                                                       wetRatio.getComponentID(),
                                                       wetRatio));
 
+        // Tweak value box appearance
+        irLength.setNumDecimalPlacesToDisplay(2);
+        irLength.setTextValueSuffix(" s");
+
+        preDelay.setNumDecimalPlacesToDisplay(2);
+        preDelay.setTextValueSuffix(" ms");
+
+        irGain.setNumDecimalPlacesToDisplay(2);
+
+        outGain.setNumDecimalPlacesToDisplay(2);
+
+        wetRatio.setNumDecimalPlacesToDisplay(2);
+
         // Add sliders
         addAndMakeVisible(irLength);
         addAndMakeVisible(preDelay);
         addAndMakeVisible(irGain);
         addAndMakeVisible(outGain);
         addAndMakeVisible(wetRatio);
-
-        // Default values
-        irLength.setValue(2.5f);
-        preDelay.setValue(500.0f);
-        irGain.setValue(0.5f);
-        outGain.setValue(0.0f);
-        wetRatio.setValue(0.5f);
     }
 
     //==============================================================================
@@ -116,13 +123,13 @@ namespace reverb
         g.setFont(15.0f);
     }
 
+    //==============================================================================
     /**
     * @brief Manages the layout of UIReverbBlock when the block is resized
     *
     * This function defines all the relative positioning of the various UIReverbBlock
     * elements.
     */
-    //==============================================================================
     void reverb::UIReverbBlock::resized()
     {
         juce::Rectangle<int> bounds(getLocalBounds());

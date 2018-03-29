@@ -12,6 +12,10 @@
 #include "PluginEditor.h"
 #include "Logger.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include <thread>
 
 namespace reverb
@@ -39,6 +43,7 @@ namespace reverb
 
 	AudioProcessor::~AudioProcessor()
 	{
+        std::lock_guard<std::mutex> lock(updatingParams);
 	}
 
 	//==============================================================================
@@ -113,7 +118,7 @@ namespace reverb
      * the busLayout member variable to find out the number of channels your
      * processBlock callback must process.
      * 
-     * The maximumExpectedSamplesPerBlock value is a strong hint about the maximum
+     * The samplesPerBlock value is a strong hint about the maximum
      * number of samples that will be provided in each block. You may want to use
      * this value to resize internal buffers. You should program defensively in case
      * a buggy host exceeds this value. The actual block sizes that the host uses
@@ -123,7 +128,7 @@ namespace reverb
      * @param sampleRate [in]       Target sample rate (constant until playback stops)
      * @param samplesPerBlock [in]  Hint about max. expected samples in upcoming block
      */
-    void AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+    void AudioProcessor::prepareToPlay(double sampleRate, int)
     {
         size_t numChannels = getTotalNumInputChannels();
 
@@ -148,7 +153,7 @@ namespace reverb
 
         for (size_t i = irPipelines.size(); i < numChannels; ++i)
         {
-            irPipelines.emplace_back(new IRPipeline(this, irBank, (int)i));
+            irPipelines.emplace_back(new IRPipeline(this, (int)i));
         }
 
         for (size_t i = numChannels; i < mainPipelines.size(); ++i)
@@ -161,33 +166,8 @@ namespace reverb
             mainPipelines.emplace_back(new MainPipeline(this));
         }
 
-        // Update sample rate across pipelines
-        for (auto& pipeline : irPipelines)
-        {
-            pipeline->updateSampleRate(sampleRate);
-        }
-
-        // Add empty buffers to meet channel count if necessary
-        for (size_t i = irChannels.size(); i < numChannels; ++i)
-        {
-            irChannels.emplace_back();
-        }
-
-        // Clear existing audio buffers and add/remove buffers of appropriate size if necessary
-        for (size_t i = numChannels; i < audioChannels.size(); ++i)
-        {
-            audioChannels.pop_back();
-        }
-
-        for (auto& channel : audioChannels)
-        {
-            channel.setSize(1, samplesPerBlock);
-        }
-
-        for (size_t i = audioChannels.size(); i < numChannels; ++i)
-        {
-            audioChannels.emplace_back(1, samplesPerBlock);
-        }
+        // Update parameters across pipelines
+        updateParams(sampleRate);
     }
 
     /**
@@ -197,7 +177,6 @@ namespace reverb
      */
 	void AudioProcessor::releaseResources()
 	{
-        audioChannels.clear();
 	}
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -232,8 +211,10 @@ namespace reverb
      */
 	void AudioProcessor::processBlock(juce::AudioSampleBuffer& audio, juce::MidiBuffer&)
 	{
-        // Lock processor during use
-        std::lock_guard<std::mutex> guard(lock);
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_TIME_CRITICAL);
+#endif
 
         // Reset the bypass detection parameter
         auto activeParam = parameters.getParameter(PID_ACTIVE);
@@ -262,92 +243,66 @@ namespace reverb
         // We should have the right number of pipelines and channel buffers from
         // a previous call to prepareToPlay(), but just to be safe let's check
         // these values here.
-        for (size_t i = irPipelines.size(); i < audio.getNumChannels(); ++i)
+        for (size_t i = irPipelines.size(); i < totalNumInputChannels; ++i)
         {
-            irPipelines.emplace_back(new IRPipeline(this, irBank, (int)i));
+            irPipelines.emplace_back(new IRPipeline(this, (int)i));
         }
 
-        for (size_t i = mainPipelines.size(); i < audio.getNumChannels(); ++i)
+        for (size_t i = mainPipelines.size(); i < totalNumInputChannels; ++i)
         {
             mainPipelines.emplace_back(new MainPipeline(this));
         }
 
-        for (size_t i = irChannels.size(); i < audio.getNumChannels(); ++i)
-        {
-            irChannels.emplace_back(1, 0);
-        }
+        // Associate audio block with input
+        audioChannels = audio;
 
-        for (size_t i = audioChannels.size(); i < audio.getNumChannels(); ++i)
+        // Update parameters asynchronously
+        if (blocksProcessed % NUM_BLOCKS_PER_UPDATE_PARAMS)
         {
-            audioChannels.emplace_back(1, audio.getNumSamples());
-        }
+            std::unique_lock<std::mutex> lock(updatingParams, std::try_to_lock);
 
-        // Split input buffer into one buffer per channel
-        for (int i = 0; i < audio.getNumChannels(); ++i)
-        {
-            // Audio channel should have been prepared with the right size in
-            // prepareToPlay(), but we should play it safe in case the DAW gave
-            // us the wrong number of samples then.
-            if (audioChannels[i].getNumSamples() != audio.getNumSamples())
+            // If parameters are already being updated, skip this and go straight
+            // to processing.
+            if (lock.owns_lock())
             {
-                audioChannels[i].setSize(1, audio.getNumSamples(), true);
-            }
+                std::thread updateParamsThread(&AudioProcessor::updateParams,
+                                               this, getSampleRate());
 
-            memcpy(audioChannels[i].getWritePointer(0),
-                   audio.getReadPointer(i),
-                   audio.getNumSamples() * sizeof(audio.getReadPointer(0)[0]));
+                lock.unlock();
+
+                // updateParams() uses double buffering to update everything
+                // asynchronously, so we can let it do its own thing.
+                updateParamsThread.detach();
+            }
         }
 
-#ifdef REVERB_MULTITHREADED
+#if REVERB_MULTITHREADED > 0
         // Process each channel in its own thread
         std::vector<std::thread> channelThreads;
 
-        for (int i = 0; i < audio.getNumChannels(); ++i)
+        for (int i = 0; i < totalNumInputChannels; ++i)
         {
-            // Update parameters across pipelines
-            irPipelines[i]->updateParams(parameters);
-            mainPipelines[i]->updateParams(parameters);
-
             channelThreads.emplace_back(&AudioProcessor::processChannel, this, i);
         }
 
         // Wait for each thread to complete
-        for (auto& thread : channelThreads)
+        for (int i = 0; i < channelThreads.size(); ++i)
         {
-            thread.join();
+            channelThreads[i].join();
         }
 #else
-        for (int i = 0; i < audio.getNumChannels(); ++i)
+        for (int i = 0; i < totalNumInputChannels; ++i)
         {
             processChannel(i);
         }
 #endif
 
-        // Merge channels into output buffer
-        for (int i = 0; i < audio.getNumChannels(); ++i)
-        {
-            // Safety check, we shouldn't enter this section under normal circumstances
-            if (audio.getNumSamples() < audioChannels[i].getNumSamples())
-            {
-                std::string errMsg = "Processed audio unexpectedly contains more samples than"
-                                     "input buffer (input: " +
-                                     std::to_string(audio.getNumSamples()) +
-                                     " samples, output: " +
-                                     std::to_string(audioChannels[i].getNumSamples()) +
-                                     " samples)";
-                
-                audio.setSize(audio.getNumChannels(),
-                               audioChannels[i].getNumSamples(), true);
+        blocksProcessed++;
 
-                logger.dualPrint(Logger::Level::Error, errMsg);
-            }
-
-            auto channelReadPtr = audioChannels[i].getReadPointer(0);
-
-            memcpy(audio.getWritePointer(i),
-                   channelReadPtr,
-                   audioChannels[i].getNumSamples() * sizeof(channelReadPtr[0]));
-        }
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_NORMAL);
+#endif
 	}
 
     /**
@@ -357,37 +312,110 @@ namespace reverb
      */
     void AudioProcessor::processChannel(int channelIdx)
     {
-        // Execute IR pipeline (only runs if necessary, i.e. on first run or if one
-        // of its parameters was changed by the editor)
-        if (irPipelines[channelIdx]->needsToRun())
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_TIME_CRITICAL);
+#endif
+
+        AudioBlock channelAudio = audioChannels.getSingleChannelBlock(channelIdx);
+        mainPipelines[channelIdx]->exec(channelAudio);
+
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_PRIORITY_NORMAL);
+#endif
+    }
+
+    //==============================================================================
+    /**
+     * @brief Update parameters across all channels
+     *
+     * Update parameters in all IRPipeline and MainPipeline objects. If necessary,
+     * reprocess IR and add to MainPipeline.
+     *
+     * MainPipeline is double-buffered to avoid interfering with processChannel().
+     * IRPipeline is not used by any other methods, so it does not need protection.
+     *
+     * @param [in] sampleRate   Current sample rate
+     */
+    void AudioProcessor::updateParams(double sampleRate)
+    {
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_MODE_BACKGROUND_BEGIN);
+#endif
+
+        // Obtain lock
+        std::lock_guard<std::mutex> lock(updatingParams);
+
+        // Check number of channels
+        const int numChannels = (int)irPipelines.size();
+        
+        jassert(mainPipelines.size() == numChannels);
+
+        // Process parameters for each channel
+        for (int i = 0; i < numChannels; ++i)
         {
-            try
-            {
-                irPipelines[channelIdx]->exec(irChannels[channelIdx]);
-            }
-            catch (const std::exception& e)
-            {
-                std::string errMsg = "Skipping IR pipeline for channel " +
-                                     std::to_string(channelIdx) +
-                                     " due to exception: " +
-                                     e.what();
-
-                logger.dualPrint(Logger::Level::Error, errMsg);
-            }
-
-            mainPipelines[channelIdx]->loadIR(std::move(irChannels[channelIdx]));
+            updateParamsForChannel(i, sampleRate);
         }
 
-        // Execute main pipeline
-        mainPipelines[channelIdx]->exec(audioChannels[channelIdx]);
+#ifdef WIN32
+        SetThreadPriority(GetCurrentThread(),
+                          THREAD_MODE_BACKGROUND_END);
+#endif
+    }
+
+    /**
+     * @brief Update parameters for a given channel
+     *
+     * Update parameters in IRPipeline and Mainpipeline for given channel. If
+     * necessary, reprocess IR using new parameters and copy to MainPipeline.
+     *
+     * MainPipeline is double-buffered to avoid interfering with processChannel().
+     * IRPipeline is not used by any other methods, so it does not need protection.
+     *
+     * @param [in] channelIdx   Channel parameters should be updated for
+     * @param [in] sampleRate   Current sample rate
+     */
+    void AudioProcessor::updateParamsForChannel(int channelIdx, double sampleRate)
+    {
+        auto& processorLock = getCallbackLock();
+
+        auto& irPipeline = irPipelines[channelIdx];
+        auto& mainPipeline = mainPipelines[channelIdx];
+
+        AudioBlock irChannel;
+
+        // Update IR parameters
+        irPipeline->updateSampleRate(sampleRate);
+        irPipeline->updateParams(parameters);
+
+        // Reprocess IR if necessary
+        bool updateIR = irPipeline->needsToRun();
+
+        if (updateIR)
+        {
+            irChannel = irPipeline->exec();
+        }
+
+        // Update main parameters (critical section: mainPipeline is used by
+        // processChannel)
+        {
+            juce::ScopedLock lock(processorLock);
+
+            mainPipeline->updateParams(parameters);
+            mainPipeline->updateSampleRate(sampleRate);
+
+            if (updateIR)
+            {
+                mainPipeline->loadIR(irChannel);
+            }
+        }
     }
 
     //==============================================================================
     void AudioProcessor::processBlockBypassed(juce::AudioSampleBuffer& audio, juce::MidiBuffer& midi)
     {
-        // Lock processor during use
-        std::lock_guard<std::mutex> guard(lock);
-
         // Set the bypass detection parameter
         auto activeParam = parameters.getParameter(PID_ACTIVE);
 
@@ -631,6 +659,7 @@ namespace reverb
          */
         juce::ValueTree irFile(PID_IR_FILE_CHOICE);
 
+        auto& irBank = IRBank::getInstance();
         if (irBank.buffers.begin() != irBank.buffers.end())
         {
             const juce::String& firstBankedIR = irBank.buffers.begin()->first;
