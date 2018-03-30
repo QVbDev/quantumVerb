@@ -57,7 +57,7 @@ namespace reverb {
         virtual bool needsToRun() const override;
 
 
-    private:
+    protected:
         juce::OwnedArray<Filter> filterSet;
         std::vector<float> EQGains;
     };

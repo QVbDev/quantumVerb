@@ -50,8 +50,6 @@ namespace reverb {
             if (i != 0 && i != numFilters - 1) filterSet[i]->setQ(4);
         }
 
-        calibrateFilters();
-
         
 
         

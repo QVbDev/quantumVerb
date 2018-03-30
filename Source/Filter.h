@@ -27,6 +27,7 @@ namespace reverb
     {
 
         friend class Equalizer;
+        friend class EqualizerMocked;
 
     public:
         //==============================================================================

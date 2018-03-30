@@ -19,8 +19,40 @@ Test_Equalizer.cpp
 * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
 */
 
+namespace reverb {
+    class EqualizerMocked : public Equalizer {
+    public:
 
-TEST_CASE("Equalizer class is tested", "[equalizer]") 
+        using Equalizer::Equalizer;
+
+        void setFrequency(float freq, int id) {
+            filterSet[id]->frequency= freq;
+        }
+
+        void setGain(float gain, int id) {
+            EQGains[id] = gain;
+        }
+
+        void setQ(float q, int id) {
+            filterSet[id]->Q = q;
+        }
+
+        float getFrequency(float freq, int id) {
+            return filterSet[id]->frequency;
+        }
+
+        float getGain(float gain, int id) {
+            return filterSet[id]->gainFactor;
+        }
+
+        float getQ(float q, int id) {
+            return filterSet[id]->Q;
+        }
+    };
+}
+
+
+TEST_CASE("Equalizer class is tested", "[equalizer]")
 {
     //==============================================================================
     /**
@@ -75,7 +107,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
     float * dBPlot = new float[numSamples];
 
 
-    SECTION("Testing equalizer") 
+    SECTION("Testing equalizer")
     {
 
         reverb::Equalizer EQ(&processor);
@@ -89,19 +121,52 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
             dBPlot[i] = reverb::Filter::todB(fftBuffer[i]);
         }
 
-    //Test band gains (at 0, f1, f2 and fmax)
+        //Test band gains (at 0, f1, f2 and fmax)
 
-    REQUIRE(compareValues(fftBuffer[0], EQ.getEQGain(0)));
+        REQUIRE(compareValues(fftBuffer[0], EQ.getEQGain(0)));
 
-    REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(1) / freqRes)], EQ.getEQGain(1)));
+        REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(1) / freqRes)], EQ.getEQGain(1)));
 
-    REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(2) / freqRes)], EQ.getEQGain(2)));
+        REQUIRE(compareValues(fftBuffer[(int)(EQ.getFilterFrequency(2) / freqRes)], EQ.getEQGain(2)));
 
-    REQUIRE(compareValues(fftBuffer[(int)(21000 / freqRes)], EQ.getEQGain(3)));
+        REQUIRE(compareValues(fftBuffer[(int)(21000 / freqRes)], EQ.getEQGain(3)));
 
-    //Test getdBAmplitude()
+        //Test getdBAmplitude()
 
-    REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000)));
+        REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000)));
+
+    }
+
+    SECTION("Testing equalizer thoroughly")
+    {
+        reverb::EqualizerMocked EQ(&processor);
+
+        //Set low-shelf filter
+        EQ.setFrequency(1000, 0);
+        EQ.setGain(2, 0);
+        EQ.setQ(1.41, 0);
+
+        //Set first peak filter
+        EQ.setFrequency(6000, 1);
+        EQ.setGain(6, 1);
+        EQ.setQ(1, 1);
+
+        //Set second peak filter
+        EQ.setFrequency(6750, 2);
+        EQ.setGain(0.06, 2);
+        EQ.setQ(1, 2);
+
+        //Set high-shelf filter
+        EQ.setFrequency(10000, 3);
+        EQ.setGain(2, 3);
+        EQ.setQ(0.71, 3);
+
+        EQ.calibrateFilters();
+
+        EQ.exec(sampleBuffer);
+
+        memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
+        forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
 
     }
 
