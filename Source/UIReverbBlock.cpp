@@ -101,8 +101,10 @@ namespace reverb
         preDelay.setTextValueSuffix(" ms");
 
         irGain.setNumDecimalPlacesToDisplay(2);
+        irGain.setTextValueSuffix(" dB");
 
         outGain.setNumDecimalPlacesToDisplay(2);
+        outGain.setTextValueSuffix(" dB");
 
         wetRatio.setNumDecimalPlacesToDisplay(2);
 

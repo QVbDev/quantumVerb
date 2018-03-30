@@ -74,16 +74,16 @@ namespace reverb
         return font;
     }
 
-    juce::Font LookAndFeel::getLabelFont(juce::Label&)
+    juce::Font LookAndFeel::getLabelFont(juce::Label& label)
     {
         static juce::Font tmp;
         
         juce::Font font(getTypefaceForFont(tmp));
 
-        font.setSizeAndStyle(16.0f,
-                                font.getStyleFlags(),
-                                font.getHorizontalScale(),
-                                font.getExtraKerningFactor());
+        font.setSizeAndStyle(std::min(16.0f, 0.9f * label.getHeight()),
+                             font.getStyleFlags(),
+                             font.getHorizontalScale(),
+                             font.getExtraKerningFactor());
 
         return font;
     }

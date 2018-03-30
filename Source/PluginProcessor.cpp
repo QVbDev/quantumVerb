@@ -487,6 +487,8 @@ namespace reverb
         static const float gain50dBneg = juce::Decibels::decibelsToGain<float>(-50);
         static const float gain15dBInv = 1.0f / gain12dB;
 
+        auto fnGainTodBString = [](float gain) { return juce::String(juce::Decibels::gainToDecibels(gain), 2) + " dB"; };
+
         /**
          * Low-shelf filter
          */
@@ -507,96 +509,83 @@ namespace reverb
                                           "EQ: Low-shelf gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::Range<float>(gain24dBneg, gain12dB),
                                           gain6dBneg,
-                                          nullptr, nullptr );
+                                          fnGainTodBString, nullptr );
 
         
         /**
          * Peak filter 1
          */
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
                                           "EQ: Peak filter 1 cut-off frequency", "<16-1600 Hz>",
                                           juce::NormalisableRange<float>(16.0f, 16e2f),
                                           808.0f,
                                           nullptr, nullptr );
 
-        // TODO: Upper limit on Q factor?
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
                                           "EQ: Peak filter 1 Q factor", "<0.26-6.5>",
                                           juce::NormalisableRange<float>(0.26f, 6.5f),
                                           3.38f,
                                           nullptr, nullptr );
 
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_GAIN_SUFFIX,
                                           "EQ: Peak filter 1 gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(gain24dBneg, gain12dB),
                                           gain6dBneg,
-                                          nullptr, nullptr );
+                                          fnGainTodBString, nullptr );
 
         
         /**
          * Peak filter 2
          */
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
                                           "EQ: Peak filter 2 cut-off frequency", "<1000-21000 Hz>",
                                           juce::NormalisableRange<float>(1e3f, 21e3f),
                                           11e2f,
                                           nullptr, nullptr );
 
-        // TODO: Upper limit on Q factor?
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
                                           "EQ: Peak filter 2 Q factor", "<0.26-6.50>",
                                           juce::NormalisableRange<float>(0.26f, 6.50f),
                                           3.38f,
                                           nullptr, nullptr );
 
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_GAIN_SUFFIX,
                                           "EQ: Peak filter 2 gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(gain24dBneg, gain12dB),
                                           gain6dBneg,
-                                          nullptr, nullptr );
+                                          fnGainTodBString, nullptr );
 
 
         /**
          * High-shelf filter
          */
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_FREQ_SUFFIX,
                                           "EQ: High-shelf cut-off frequency", "<1000-21000 Hz>",
                                           juce::NormalisableRange<float>(1e3f, 21e3f),
                                           11e2f,
                                           nullptr, nullptr );
 
-        // TODO: Upper limit on Q factor?
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_Q_SUFFIX,
                                           "EQ: High-shelf Q factor", "<0.71-1.41>",
                                           juce::NormalisableRange<float>(0.71f, 1.41f),
                                           1.06f,
                                           nullptr, nullptr );
 
-        // TODO: Vary filter parameters by type (Alex?)
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_GAIN_SUFFIX,
                                           "EQ: High-shelf gain factor", "<" + juce::String(gain15dBInv) + " = no change>",
                                           juce::NormalisableRange<float>(gain24dBneg, gain12dB),
                                           gain6dBneg,
-                                          nullptr, nullptr );
+                                          fnGainTodBString, nullptr );
 
 
         /**
          * IR gain
          */
-        // TODO: Upper limit on IR gain?
         parameters.createAndAddParameter( PID_IR_GAIN,
                                           "Impulse response gain", "<" + juce::String(1.0) + " = no change>",
                                           juce::NormalisableRange<float>(0.0f, 1.0f),
                                           0.5f,
-                                          nullptr, nullptr );
+                                          fnGainTodBString, nullptr );
 
         /**
          * IR length
@@ -620,7 +609,6 @@ namespace reverb
         /**
          * Dry/wet mixer
          */
-        // TODO: Default wet ratio?
         parameters.createAndAddParameter( PID_WETRATIO,
                                           "Dry/wet ratio", "<0 = dry, 1 = wet>",
                                           juce::NormalisableRange<float>(0.0f, 1.0f),
@@ -635,7 +623,7 @@ namespace reverb
                                           "Output gain", "<" + juce::String(gain15dBInv) + "= no change>",
                                           juce::NormalisableRange<float>(gain50dBneg, 1.0f),
                                           1.0f,
-                                          nullptr, nullptr );
+                                          fnGainTodBString, nullptr );
 
 
         /**
