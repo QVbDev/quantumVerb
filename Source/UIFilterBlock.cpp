@@ -39,7 +39,7 @@ namespace reverb
 
 		freq.setSkewFactor(1.0, false); 
 		q.setSkewFactor(1.0, false);
-		gain.setSkewFactor(10, true); // Skew factor of 100 on all gain filter sliders
+		gain.setSkewFactor(0.5, true); // Skew factor of 0.5 on all gain filter sliders
 
         juce::String filterIDPrefix = processor.PID_FILTER_PREFIX + std::to_string(index);
 
