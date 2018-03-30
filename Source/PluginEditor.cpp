@@ -31,12 +31,12 @@ namespace reverb
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
           headerBlock(p), graphBlock(p), reverbBlock(p),
-          lowShelfFilterBlock(p,0), peakLowFilterBlock(p,1),
-          peakHighFilterBlock(p,2), highShelfFilterBlock(p,3),
+          lowShelfFilterBlock(p, 0, "low-shelf filter"), peakLowFilterBlock(p, 1, "low-peak filter"),
+          peakHighFilterBlock(p, 2, "high-peak filter"), highShelfFilterBlock(p, 3, "high-shelf filter"),
           filterBlocks({ &lowShelfFilterBlock, &peakLowFilterBlock, &peakHighFilterBlock, &highShelfFilterBlock })
-	{
-		// Make sure that before the constructor has finished, you've set the
-		// editor's size to whatever you need it to be.
+    {
+        // Make sure that before the constructor has finished, you've set the
+        // editor's size to whatever you need it to be.
         setResizable(true, true);
         setResizeLimits(800, 640, 1920, 1080);
 

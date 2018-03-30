@@ -17,7 +17,7 @@ namespace reverb
 {
 
     //==============================================================================
-    class UIGraphBlock : public juce::Component,
+    class UIGraphBlock : public juce::GroupComponent,
                          public juce::Button::Listener,
                          public juce::ComboBox::Listener,
                          public juce::Slider::Listener
