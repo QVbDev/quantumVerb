@@ -14,7 +14,7 @@ namespace reverb
 
     //==============================================================================
     UIHeaderBlock::UIHeaderBlock(AudioProcessor& p)
-        : UIBlock(3, 3, "Header", "reverb settings")
+        : UIBlock(3, 3, "Header", "reverb settings"), parameters(p.parameters)
     {
         // State button
         isOn.setButtonText("STATE");
