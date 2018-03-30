@@ -37,10 +37,6 @@ namespace reverb
         q.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
         gain.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, juce::Colour(0x00000000));
 
-		freq.setSkewFactor(1.0, false); 
-		q.setSkewFactor(1.0, false);
-		gain.setSkewFactor(0.5, true); // Skew factor of 0.5 on all gain filter sliders
-
         juce::String filterIDPrefix = processor.PID_FILTER_PREFIX + std::to_string(index);
 
         freq.setComponentID(filterIDPrefix + processor.PID_FILTER_FREQ_SUFFIX);
@@ -81,6 +77,11 @@ namespace reverb
         q.setNumDecimalPlacesToDisplay(2);
 
         gain.setNumDecimalPlacesToDisplay(2);
+
+        // Skew factor
+        freq.setSkewFactor(1.0, false);
+        q.setSkewFactor(1.0, false);
+        gain.setSkewFactor(0.5, false); // Skew factor of 0.5 on all gain filter sliders
 
         // Add sliders
         addAndMakeVisible(freq);
