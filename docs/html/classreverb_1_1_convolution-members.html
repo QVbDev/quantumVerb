@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quantum Verb: Member List</title>
+<title>quantumVERB: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Quantum Verb
+   <div id="projectname">quantumVERB
    </div>
   </td>
  </tr>
@@ -93,12 +93,17 @@ $(document).ready(function(){initNavTree('classreverb_1_1_convolution.html','');
 <p>This is the complete list of members for <a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_convolution.html#add2cad81c1b9d07a9d4d5675993f6b8c">Convolution</a>(juce::AudioProcessor *processor)</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classreverb_1_1_convolution.html#a8ded61ed64f66539311db6e04fbfd2de">exec</a>(juce::AudioSampleBuffer &amp;audio) override</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_convolution.html#aa5102937374d14b00dc61550de79ea5a">loadIR</a>(juce::AudioSampleBuffer &amp;ir)</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_convolution.html#ab9b9abb92cfd11b0d88af7bfdd34771b">exec</a>(AudioBlock audio) override</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#a282fccd317be37d796da5f41fd88b303">getParam</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_convolution.html#ac2c5cffde27f052b9f32202a8b1f4d68">loadIR</a>(AudioBlock ir)</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mustExec</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">needsToRun</a>() const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sampleRate</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>Task</b>(juce::AudioProcessor *processor) (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_convolution.html#a944277adeba1b61365058e0c797d30e8">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;=&quot;&quot;) override</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_convolution.html#a3392ea5cfcbbdcb0b75e16eaf8a6ba0a">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;=&quot;&quot;) override</td><td class="entry"><a class="el" href="classreverb_1_1_convolution.html">reverb::Convolution</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">updateSampleRate</a>(double sr)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

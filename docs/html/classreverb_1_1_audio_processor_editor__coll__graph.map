@@ -1,2 +1,10 @@
 <map id="reverb::AudioProcessorEditor" name="reverb::AudioProcessorEditor">
+<area shape="rect" id="node3" href="$classreverb_1_1_audio_processor.html" title="reverb::AudioProcessor" alt="" coords="591,340,747,367"/>
+<area shape="rect" id="node11" href="$classreverb_1_1_u_i_graph_block.html" title="reverb::UIGraphBlock" alt="" coords="911,239,1055,265"/>
+<area shape="rect" id="node7" href="$classreverb_1_1_u_i_reverb_block.html" title="reverb::UIReverbBlock" alt="" coords="595,649,743,676"/>
+<area shape="rect" id="node8" href="$classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="239,491,348,517"/>
+<area shape="rect" id="node19" href="$classreverb_1_1_u_i_header_block.html" title="reverb::UIHeaderBlock" alt="" coords="593,413,744,440"/>
+<area shape="rect" id="node25" href="$classreverb_1_1_u_i_filter_block.html" title="reverb::UIFilterBlock" alt="" coords="599,555,738,581"/>
+<area shape="rect" id="node18" title="STL class. " alt="" coords="251,129,335,156"/>
+<area shape="rect" id="node22" href="$classreverb_1_1_look_and_feel.html" title="reverb::LookAndFeel" alt="" coords="913,761,1053,788"/>
 </map>

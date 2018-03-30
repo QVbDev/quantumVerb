@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quantum Verb: reverb::Convolution Class Reference</title>
+<title>quantumVERB: reverb::Convolution Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Quantum Verb
+   <div id="projectname">quantumVERB
    </div>
   </td>
  </tr>
@@ -125,31 +125,50 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::share
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:add2cad81c1b9d07a9d4d5675993f6b8c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_convolution.html#add2cad81c1b9d07a9d4d5675993f6b8c">Convolution</a> (juce::AudioProcessor *processor)</td></tr>
-<tr class="memdesc:add2cad81c1b9d07a9d4d5675993f6b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">(TODO) Brief description  <a href="#add2cad81c1b9d07a9d4d5675993f6b8c">More...</a><br /></td></tr>
+<tr class="memdesc:add2cad81c1b9d07a9d4d5675993f6b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. Creates a <a class="el" href="classreverb_1_1_convolution.html">Convolution</a> object.  <a href="#add2cad81c1b9d07a9d4d5675993f6b8c">More...</a><br /></td></tr>
 <tr class="separator:add2cad81c1b9d07a9d4d5675993f6b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a944277adeba1b61365058e0c797d30e8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_convolution.html#a944277adeba1b61365058e0c797d30e8">updateParams</a> (const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;=&quot;&quot;) override</td></tr>
-<tr class="memdesc:a944277adeba1b61365058e0c797d30e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">No parameters to update, do nothing.  <a href="#a944277adeba1b61365058e0c797d30e8">More...</a><br /></td></tr>
-<tr class="separator:a944277adeba1b61365058e0c797d30e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ded61ed64f66539311db6e04fbfd2de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_convolution.html#a8ded61ed64f66539311db6e04fbfd2de">exec</a> (juce::AudioSampleBuffer &amp;audio) override</td></tr>
-<tr class="memdesc:a8ded61ed64f66539311db6e04fbfd2de"><td class="mdescLeft">&#160;</td><td class="mdescRight">(TODO) Brief description  <a href="#a8ded61ed64f66539311db6e04fbfd2de">More...</a><br /></td></tr>
-<tr class="separator:a8ded61ed64f66539311db6e04fbfd2de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5102937374d14b00dc61550de79ea5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_convolution.html#aa5102937374d14b00dc61550de79ea5a">loadIR</a> (juce::AudioSampleBuffer &amp;ir)</td></tr>
-<tr class="memdesc:aa5102937374d14b00dc61550de79ea5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Brief description.  <a href="#aa5102937374d14b00dc61550de79ea5a">More...</a><br /></td></tr>
-<tr class="separator:aa5102937374d14b00dc61550de79ea5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3392ea5cfcbbdcb0b75e16eaf8a6ba0a"><td class="memItemLeft" align="right" valign="top"><a id="a3392ea5cfcbbdcb0b75e16eaf8a6ba0a"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_convolution.html#a3392ea5cfcbbdcb0b75e16eaf8a6ba0a">updateParams</a> (const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;=&quot;&quot;) override</td></tr>
+<tr class="memdesc:a3392ea5cfcbbdcb0b75e16eaf8a6ba0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">No parameters to update, do nothing. <br /></td></tr>
+<tr class="separator:a3392ea5cfcbbdcb0b75e16eaf8a6ba0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9b9abb92cfd11b0d88af7bfdd34771b"><td class="memItemLeft" align="right" valign="top">virtual AudioBlock&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_convolution.html#ab9b9abb92cfd11b0d88af7bfdd34771b">exec</a> (AudioBlock audio) override</td></tr>
+<tr class="memdesc:ab9b9abb92cfd11b0d88af7bfdd34771b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main function of the <a class="el" href="classreverb_1_1_convolution.html">Convolution</a> class. Executes the convolution of the audio buffer with the IR.  <a href="#ab9b9abb92cfd11b0d88af7bfdd34771b">More...</a><br /></td></tr>
+<tr class="separator:ab9b9abb92cfd11b0d88af7bfdd34771b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2c5cffde27f052b9f32202a8b1f4d68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_convolution.html#ac2c5cffde27f052b9f32202a8b1f4d68">loadIR</a> (AudioBlock ir)</td></tr>
+<tr class="memdesc:ac2c5cffde27f052b9f32202a8b1f4d68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the main characteristics of the convolution process and loads the IR into the juce::dsp::Convolution object.  <a href="#ac2c5cffde27f052b9f32202a8b1f4d68">More...</a><br /></td></tr>
+<tr class="separator:ac2c5cffde27f052b9f32202a8b1f4d68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreverb_1_1_task"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreverb_1_1_task')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td></tr>
 <tr class="memitem:a0174a85a47df59ba7d68f319ea129be5 inherit pub_methods_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top"><a id="a0174a85a47df59ba7d68f319ea129be5"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Task</b> (juce::AudioProcessor *processor)</td></tr>
 <tr class="separator:a0174a85a47df59ba7d68f319ea129be5 inherit pub_methods_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ea9235ad4e57f97ca4e239df51c82bc inherit pub_methods_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">needsToRun</a> () const</td></tr>
+<tr class="memdesc:a3ea9235ad4e57f97ca4e239df51c82bc inherit pub_methods_classreverb_1_1_task"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells caller whether block must be run for current block.  <a href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">More...</a><br /></td></tr>
+<tr class="separator:a3ea9235ad4e57f97ca4e239df51c82bc inherit pub_methods_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae989d540d63acac46ce9b5655d28f37c inherit pub_methods_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">updateSampleRate</a> (double sr)</td></tr>
+<tr class="memdesc:ae989d540d63acac46ce9b5655d28f37c inherit pub_methods_classreverb_1_1_task"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update sample rate for task block.  <a href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">More...</a><br /></td></tr>
+<tr class="separator:ae989d540d63acac46ce9b5655d28f37c inherit pub_methods_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_classreverb_1_1_task"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classreverb_1_1_task')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td></tr>
+<tr class="memitem:a6f32bf996cd1e74cfadcfc65ca6d791b inherit pub_attribs_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top"><a id="a6f32bf996cd1e74cfadcfc65ca6d791b"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td></tr>
+<tr class="separator:a6f32bf996cd1e74cfadcfc65ca6d791b inherit pub_attribs_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classreverb_1_1_task"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classreverb_1_1_task')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td></tr>
+<tr class="memitem:a282fccd317be37d796da5f41fd88b303 inherit pro_methods_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top"><a id="a282fccd317be37d796da5f41fd88b303"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_task.html#a282fccd317be37d796da5f41fd88b303">getParam</a> (const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) const</td></tr>
+<tr class="memdesc:a282fccd317be37d796da5f41fd88b303 inherit pro_methods_classreverb_1_1_task"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal method used to get (and check) a parameter's value. <br /></td></tr>
+<tr class="separator:a282fccd317be37d796da5f41fd88b303 inherit pro_methods_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classreverb_1_1_task"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classreverb_1_1_task')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td></tr>
 <tr class="memitem:af7543bd76ee85a08e4f1868a81dfff4e inherit pro_attribs_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top"><a id="af7543bd76ee85a08e4f1868a81dfff4e"></a>
 juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><b>processor</b></td></tr>
 <tr class="separator:af7543bd76ee85a08e4f1868a81dfff4e inherit pro_attribs_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a230b62194fa3e55141f966dda79d1c48 inherit pro_attribs_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top"><a id="a230b62194fa3e55141f966dda79d1c48"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>mustExec</b> = true</td></tr>
+<tr class="separator:a230b62194fa3e55141f966dda79d1c48 inherit pro_attribs_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>TODO: Description </p>
+<div class="textblock"><p>Derives from JUCE's <a class="el" href="classreverb_1_1_convolution.html">Convolution</a> base class. Computes the convolution algorithm between the audio signal and the IR buffer. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="add2cad81c1b9d07a9d4d5675993f6b8c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#add2cad81c1b9d07a9d4d5675993f6b8c">&#9670;&nbsp;</a></span>Convolution()</h2>
@@ -167,11 +186,11 @@ juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><b>pro
       </table>
 </div><div class="memdoc">
 
-<p>(TODO) Brief description </p>
-<p>(TODO) Detailed description</p>
+<p>Constructor. Creates a <a class="el" href="classreverb_1_1_convolution.html">Convolution</a> object. </p>
+<p>Creates a <a class="el" href="classreverb_1_1_convolution.html">Convolution</a> object associated to an <a class="el" href="classreverb_1_1_audio_processor.html">AudioProcessor</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">processor</td><td>Pointer to main processor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">processor</td><td>Pointer to main processor. </td></tr>
   </table>
   </dd>
 </dl>
@@ -179,8 +198,8 @@ juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><b>pro
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8ded61ed64f66539311db6e04fbfd2de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ded61ed64f66539311db6e04fbfd2de">&#9670;&nbsp;</a></span>exec()</h2>
+<a id="ab9b9abb92cfd11b0d88af7bfdd34771b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9b9abb92cfd11b0d88af7bfdd34771b">&#9670;&nbsp;</a></span>exec()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,9 +208,9 @@ juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><b>pro
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void reverb::Convolution::exec </td>
+          <td class="memname">AudioBlock reverb::Convolution::exec </td>
           <td>(</td>
-          <td class="paramtype">juce::AudioSampleBuffer &amp;&#160;</td>
+          <td class="paramtype">AudioBlock&#160;</td>
           <td class="paramname"><em>audio</em></td><td>)</td>
           <td></td>
         </tr>
@@ -203,21 +222,21 @@ juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><b>pro
 </table>
 </div><div class="memdoc">
 
-<p>(TODO) Brief description </p>
-<p>(TODO) Detailed description</p>
+<p>Main function of the <a class="el" href="classreverb_1_1_convolution.html">Convolution</a> class. Executes the convolution of the audio buffer with the IR. </p>
+<p>Creates a ProcessContext object that specifies the audio buffer to convolve and the buffer to contain the resulted signal. Calls the juce::dsp::Convolution::process() function to compute the convolution.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">audio</td><td>(TODO) Parameter description </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">audio</td><td>The audio buffer to be convolved with the IR. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>.</p>
+<p>Implements <a class="el" href="classreverb_1_1_task.html#a79f6094e4d025a183e5ecf46146de7b0">reverb::Task</a>.</p>
 
 </div>
 </div>
-<a id="aa5102937374d14b00dc61550de79ea5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5102937374d14b00dc61550de79ea5a">&#9670;&nbsp;</a></span>loadIR()</h2>
+<a id="ac2c5cffde27f052b9f32202a8b1f4d68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2c5cffde27f052b9f32202a8b1f4d68">&#9670;&nbsp;</a></span>loadIR()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,68 +244,27 @@ juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><b>pro
         <tr>
           <td class="memname">void reverb::Convolution::loadIR </td>
           <td>(</td>
-          <td class="paramtype">juce::AudioSampleBuffer &amp;&#160;</td>
+          <td class="paramtype">AudioBlock&#160;</td>
           <td class="paramname"><em>ir</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Brief description. </p>
-<p>Detailed description</p>
+<p>Defines the main characteristics of the convolution process and loads the IR into the juce::dsp::Convolution object. </p>
+<p>Calls JUCE <a class="el" href="classreverb_1_1_convolution.html">Convolution</a> class's functions prepare() and copyAndLoadImpulseResponseFromBuffer().</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">ir</td><td>Parameter description </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ir</td><td>The IR signal to convolve with the audio buffer. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a944277adeba1b61365058e0c797d30e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a944277adeba1b61365058e0c797d30e8">&#9670;&nbsp;</a></span>updateParams()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool reverb::Convolution::updateParams </td>
-          <td>(</td>
-          <td class="paramtype">const juce::AudioProcessorValueTreeState &amp;&#160;</td>
-          <td class="paramname"><em>params</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"> = <code>&quot;&quot;</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No parameters to update, do nothing. </p>
-<dl class="section return"><dt>Returns</dt><dd>False </dd></dl>
-
-<p>Implements <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>.</p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Eric Seguin/Source/Repos/QuantumReverb/Source/<a class="el" href="_convolution_8h_source.html">Convolution.h</a></li>
-<li>C:/Users/Eric Seguin/Source/Repos/QuantumReverb/Source/Convolution.cpp</li>
+<li>Source/<a class="el" href="_convolution_8h_source.html">Convolution.h</a></li>
+<li>Source/Convolution.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

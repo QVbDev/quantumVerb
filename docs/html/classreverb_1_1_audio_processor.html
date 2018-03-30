@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quantum Verb: reverb::AudioProcessor Class Reference</title>
+<title>quantumVERB: reverb::AudioProcessor Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Quantum Verb
+   <div id="projectname">quantumVERB
    </div>
   </td>
  </tr>
@@ -91,6 +91,7 @@ $(document).ready(function(){initNavTree('classreverb_1_1_audio_processor.html',
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classreverb_1_1_audio_processor-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reverb::AudioProcessor Class Reference</div>  </div>
@@ -110,9 +111,6 @@ Collaboration diagram for reverb::AudioProcessor:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreverb_1_1_audio_processor__coll__graph.png" border="0" usemap="#reverb_1_1_audio_processor_coll__map" alt="Collaboration graph"/></div>
 <map name="reverb_1_1_audio_processor_coll__map" id="reverb_1_1_audio_processor_coll__map">
-<area shape="rect" id="node4" href="classreverb_1_1_i_r_bank.html" title="reverb::IRBank" alt="" coords="740,123,847,149"/>
-<area shape="rect" id="node6" title="STL class. " alt="" coords="181,119,261,145"/>
-<area shape="rect" id="node7" title="STL class. " alt="" coords="5,111,132,153"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -128,9 +126,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4e045bd9a56cb3f8f5ad0200bbce5ce4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_audio_processor.html#a4e045bd9a56cb3f8f5ad0200bbce5ce4">releaseResources</a> () override</td></tr>
 <tr class="memdesc:a4e045bd9a56cb3f8f5ad0200bbce5ce4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release resource when playback stops.  <a href="#a4e045bd9a56cb3f8f5ad0200bbce5ce4">More...</a><br /></td></tr>
 <tr class="separator:a4e045bd9a56cb3f8f5ad0200bbce5ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad96273d6b8031fa7fd8cd61c9e926e7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_audio_processor.html#ad96273d6b8031fa7fd8cd61c9e926e7c">processBlock</a> (juce::AudioSampleBuffer &amp;, juce::MidiBuffer &amp;=juce::MidiBuffer()) override</td></tr>
-<tr class="memdesc:ad96273d6b8031fa7fd8cd61c9e926e7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies reverb effect on audio buffer using parameters given through the editor.  <a href="#ad96273d6b8031fa7fd8cd61c9e926e7c">More...</a><br /></td></tr>
-<tr class="separator:ad96273d6b8031fa7fd8cd61c9e926e7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60a78880c7ceda15f0bff52d9f516ca9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_audio_processor.html#a60a78880c7ceda15f0bff52d9f516ca9">processBlock</a> (juce::AudioSampleBuffer &amp;audio, juce::MidiBuffer &amp;) override</td></tr>
+<tr class="memdesc:a60a78880c7ceda15f0bff52d9f516ca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies reverb effect on audio buffer using parameters given through the editor.  <a href="#a60a78880c7ceda15f0bff52d9f516ca9">More...</a><br /></td></tr>
+<tr class="separator:a60a78880c7ceda15f0bff52d9f516ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af63a3da18679adeed47363af7381ac01"><td class="memItemLeft" align="right" valign="top"><a id="af63a3da18679adeed47363af7381ac01"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>processBlockBypassed</b> (juce::AudioSampleBuffer &amp;audio, juce::MidiBuffer &amp;midi) override</td></tr>
+<tr class="separator:af63a3da18679adeed47363af7381ac01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8f021cfa6b303d81f94e7fbd6814deb"><td class="memItemLeft" align="right" valign="top"><a id="aa8f021cfa6b303d81f94e7fbd6814deb"></a>
 juce::AudioProcessorEditor *&#160;</td><td class="memItemRight" valign="bottom"><b>createEditor</b> () override</td></tr>
 <tr class="separator:aa8f021cfa6b303d81f94e7fbd6814deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,21 +177,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setStateInformation</
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a65b812458b9958119debc9db0219acd5"><td class="memItemLeft" align="right" valign="top"><a id="a65b812458b9958119debc9db0219acd5"></a>
-std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>lock</b></td></tr>
-<tr class="separator:a65b812458b9958119debc9db0219acd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c802c411a63cf0f0506506baa54aaa5"><td class="memItemLeft" align="right" valign="top"><a id="a8c802c411a63cf0f0506506baa54aaa5"></a>
-<a class="el" href="classreverb_1_1_i_r_bank.html">IRBank</a>&#160;</td><td class="memItemRight" valign="bottom"><b>irBank</b></td></tr>
-<tr class="separator:a8c802c411a63cf0f0506506baa54aaa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabe01bd1615322619103b312b0596933"><td class="memItemLeft" align="right" valign="top"><a id="aabe01bd1615322619103b312b0596933"></a>
 juce::AudioProcessorValueTreeState&#160;</td><td class="memItemRight" valign="bottom"><b>parameters</b></td></tr>
 <tr class="separator:aabe01bd1615322619103b312b0596933"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8091d2ba777be5e57ffe02ed6f8ebb4"><td class="memItemLeft" align="right" valign="top"><a id="ac8091d2ba777be5e57ffe02ed6f8ebb4"></a>
+std::vector&lt; IRPipeline::Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>irPipelines</b></td></tr>
+<tr class="separator:ac8091d2ba777be5e57ffe02ed6f8ebb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a685c4dac27fa11dd8e82b39645197927"><td class="memItemLeft" align="right" valign="top"><a id="a685c4dac27fa11dd8e82b39645197927"></a>
+std::vector&lt; MainPipeline::Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mainPipelines</b></td></tr>
+<tr class="separator:a685c4dac27fa11dd8e82b39645197927"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a24f8503ea51844a1256de23eb41061"><td class="memItemLeft" align="right" valign="top"><a id="a3a24f8503ea51844a1256de23eb41061"></a>
+std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>updatingParams</b></td></tr>
+<tr class="separator:a3a24f8503ea51844a1256de23eb41061"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
+<tr class="memitem:ab3648401f60e329efe81f995ec8afe64"><td class="memItemLeft" align="right" valign="top"><a id="ab3648401f60e329efe81f995ec8afe64"></a>
+static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>PID_ACTIVE</b> = &quot;is_active&quot;</td></tr>
+<tr class="separator:ab3648401f60e329efe81f995ec8afe64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a089b2349019a19cfc67ad4875d923d6f"><td class="memItemLeft" align="right" valign="top"><a id="a089b2349019a19cfc67ad4875d923d6f"></a>
 static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>PID_IR_FILE_CHOICE</b> = &quot;ir_file_choice&quot;</td></tr>
 <tr class="separator:a089b2349019a19cfc67ad4875d923d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1a00a91423ec0d81ed99ed6bde34826"><td class="memItemLeft" align="right" valign="top"><a id="ae1a00a91423ec0d81ed99ed6bde34826"></a>
+static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>PID_IR_LENGTH</b> = &quot;ir_length&quot;</td></tr>
+<tr class="separator:ae1a00a91423ec0d81ed99ed6bde34826"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa413652e82bd6fa2e497d79f2290d68a"><td class="memItemLeft" align="right" valign="top"><a id="aa413652e82bd6fa2e497d79f2290d68a"></a>
 static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>PID_FILTER_PREFIX</b> = &quot;filter&quot;</td></tr>
 <tr class="separator:aa413652e82bd6fa2e497d79f2290d68a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,24 +230,33 @@ static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a817f4e8652d063b217fb4cdcbe101992"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_audio_processor.html#a817f4e8652d063b217fb4cdcbe101992">initParams</a> ()</td></tr>
 <tr class="separator:a817f4e8652d063b217fb4cdcbe101992"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33045f2bb8b9a915efc77e3cfec0cac5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_audio_processor.html#a33045f2bb8b9a915efc77e3cfec0cac5">updateParams</a> (double sampleRate)</td></tr>
+<tr class="memdesc:a33045f2bb8b9a915efc77e3cfec0cac5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update parameters across all channels.  <a href="#a33045f2bb8b9a915efc77e3cfec0cac5">More...</a><br /></td></tr>
+<tr class="separator:a33045f2bb8b9a915efc77e3cfec0cac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1e051e5b178bc6bc37e1f7cc54573cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_audio_processor.html#ae1e051e5b178bc6bc37e1f7cc54573cf">updateParamsForChannel</a> (int channelIdx, double sampleRate)</td></tr>
+<tr class="memdesc:ae1e051e5b178bc6bc37e1f7cc54573cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update parameters for a given channel.  <a href="#ae1e051e5b178bc6bc37e1f7cc54573cf">More...</a><br /></td></tr>
+<tr class="separator:ae1e051e5b178bc6bc37e1f7cc54573cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e7b8d778599ce995d8117fae123f77b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_audio_processor.html#a3e7b8d778599ce995d8117fae123f77b">processChannel</a> (int channelIdx)</td></tr>
+<tr class="memdesc:a3e7b8d778599ce995d8117fae123f77b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies reverb effect on single channel using preconfigured pipelines.  <a href="#a3e7b8d778599ce995d8117fae123f77b">More...</a><br /></td></tr>
+<tr class="separator:a3e7b8d778599ce995d8117fae123f77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a98bddf8a0130b6b2c9e2433c93fdfbde"><td class="memItemLeft" align="right" valign="top"><a id="a98bddf8a0130b6b2c9e2433c93fdfbde"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>paramsInitialised</b> = false</td></tr>
 <tr class="separator:a98bddf8a0130b6b2c9e2433c93fdfbde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8091d2ba777be5e57ffe02ed6f8ebb4"><td class="memItemLeft" align="right" valign="top"><a id="ac8091d2ba777be5e57ffe02ed6f8ebb4"></a>
-std::vector&lt; IRPipeline::Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>irPipelines</b></td></tr>
-<tr class="separator:ac8091d2ba777be5e57ffe02ed6f8ebb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a685c4dac27fa11dd8e82b39645197927"><td class="memItemLeft" align="right" valign="top"><a id="a685c4dac27fa11dd8e82b39645197927"></a>
-std::vector&lt; MainPipeline::Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mainPipelines</b></td></tr>
-<tr class="separator:a685c4dac27fa11dd8e82b39645197927"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16a4f1c7cd9fcb7b7b6073c8c53f2b83"><td class="memItemLeft" align="right" valign="top"><a id="a16a4f1c7cd9fcb7b7b6073c8c53f2b83"></a>
-std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>irChannels</b></td></tr>
-<tr class="separator:a16a4f1c7cd9fcb7b7b6073c8c53f2b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71e12db46c12d426032968c5201a7fdf"><td class="memItemLeft" align="right" valign="top"><a id="a71e12db46c12d426032968c5201a7fdf"></a>
-std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>audioChannels</b></td></tr>
-<tr class="separator:a71e12db46c12d426032968c5201a7fdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af92edf6e16f49a457f0082714c97fa4d"><td class="memItemLeft" align="right" valign="top"><a id="af92edf6e16f49a457f0082714c97fa4d"></a>
+int64_t&#160;</td><td class="memItemRight" valign="bottom"><b>blocksProcessed</b> = 0</td></tr>
+<tr class="separator:af92edf6e16f49a457f0082714c97fa4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad165cde15187d555b73bf1a14b2bc632"><td class="memItemLeft" align="right" valign="top"><a id="ad165cde15187d555b73bf1a14b2bc632"></a>
+AudioBlock&#160;</td><td class="memItemRight" valign="bottom"><b>audioChannels</b></td></tr>
+<tr class="separator:ad165cde15187d555b73bf1a14b2bc632"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a7e2a48dab0b40ecbaaafdb88aefef4cd"><td class="memItemLeft" align="right" valign="top"><a id="a7e2a48dab0b40ecbaaafdb88aefef4cd"></a>
+static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_BLOCKS_PER_UPDATE_PARAMS</b> = 5</td></tr>
+<tr class="separator:a7e2a48dab0b40ecbaaafdb88aefef4cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main reverb audio processor class. Contains all processing steps and provides a user- facing editor for parameter adjustment. </p>
@@ -267,11 +286,13 @@ std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" 
 <p>Low-shelf filter</p>
 <p>Peak filter 1</p>
 <p>Peak filter 2</p>
-<p>Low-shelf filter</p>
+<p>High-shelf filter</p>
 <p>IR gain</p>
+<p>IR length</p>
 <p>Pre-delay</p>
 <p>Dry/wet mixer</p>
 <p>Output gain</p>
+<p>Meta: Bypass detection flag</p>
 <p>Impulse responses</p>
 <p>IR file choice is given by a string that may be one of the following: 1) name of a valid audio resource in BinaryData.h 2) full path to user-provided IR file</p>
 <p>END: Processor is responsible for deleting parameters on destruction</p>
@@ -315,7 +336,7 @@ std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" 
 <p>Prepare the processor before playback starts. </p>
 <p>Called before playback starts, to let the processor prepare itself.</p>
 <p>You can call getTotalNumInputChannels and getTotalNumOutputChannels or query the busLayout member variable to find out the number of channels your processBlock callback must process.</p>
-<p>The maximumExpectedSamplesPerBlock value is a strong hint about the maximum number of samples that will be provided in each block. You may want to use this value to resize internal buffers. You should program defensively in case a buggy host exceeds this value. The actual block sizes that the host uses may be different each time the callback happens: completely variable block sizes can be expected from some hosts.</p>
+<p>The samplesPerBlock value is a strong hint about the maximum number of samples that will be provided in each block. You may want to use this value to resize internal buffers. You should program defensively in case a buggy host exceeds this value. The actual block sizes that the host uses may be different each time the callback happens: completely variable block sizes can be expected from some hosts.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sampleRate</td><td>[in] Target sample rate (constant until playback stops) </td></tr>
@@ -326,8 +347,8 @@ std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
-<a id="ad96273d6b8031fa7fd8cd61c9e926e7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad96273d6b8031fa7fd8cd61c9e926e7c">&#9670;&nbsp;</a></span>processBlock()</h2>
+<a id="a60a78880c7ceda15f0bff52d9f516ca9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60a78880c7ceda15f0bff52d9f516ca9">&#9670;&nbsp;</a></span>processBlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -339,13 +360,13 @@ std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" 
           <td class="memname">void reverb::AudioProcessor::processBlock </td>
           <td>(</td>
           <td class="paramtype">juce::AudioSampleBuffer &amp;&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
+          <td class="paramname"><em>audio</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">juce::MidiBuffer &amp;&#160;</td>
-          <td class="paramname"> = <code>juce::MidiBuffer()</code>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -365,6 +386,40 @@ std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" 
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>Audio buffer containing samples to process </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">midiMessages</td><td>Unused </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3e7b8d778599ce995d8117fae123f77b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e7b8d778599ce995d8117fae123f77b">&#9670;&nbsp;</a></span>processChannel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reverb::AudioProcessor::processChannel </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>channelIdx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Applies reverb effect on single channel using preconfigured pipelines. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">channelIdx</td><td>Index of channel to process </td></tr>
   </table>
   </dd>
 </dl>
@@ -399,9 +454,92 @@ std::vector&lt; juce::AudioSampleBuffer &gt;&#160;</td><td class="memItemRight" 
 
 </div>
 </div>
+<a id="a33045f2bb8b9a915efc77e3cfec0cac5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33045f2bb8b9a915efc77e3cfec0cac5">&#9670;&nbsp;</a></span>updateParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reverb::AudioProcessor::updateParams </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update parameters across all channels. </p>
+<p>Update parameters in all <a class="el" href="classreverb_1_1_i_r_pipeline.html">IRPipeline</a> and <a class="el" href="classreverb_1_1_main_pipeline.html">MainPipeline</a> objects. If necessary, reprocess IR and add to <a class="el" href="classreverb_1_1_main_pipeline.html">MainPipeline</a>.</p>
+<p><a class="el" href="classreverb_1_1_main_pipeline.html">MainPipeline</a> is double-buffered to avoid interfering with <a class="el" href="classreverb_1_1_audio_processor.html#a3e7b8d778599ce995d8117fae123f77b" title="Applies reverb effect on single channel using preconfigured pipelines. ">processChannel()</a>. <a class="el" href="classreverb_1_1_i_r_pipeline.html">IRPipeline</a> is not used by any other methods, so it does not need protection.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">sampleRate</td><td>Current sample rate </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae1e051e5b178bc6bc37e1f7cc54573cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1e051e5b178bc6bc37e1f7cc54573cf">&#9670;&nbsp;</a></span>updateParamsForChannel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reverb::AudioProcessor::updateParamsForChannel </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>channelIdx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update parameters for a given channel. </p>
+<p>Update parameters in <a class="el" href="classreverb_1_1_i_r_pipeline.html">IRPipeline</a> and Mainpipeline for given channel. If necessary, reprocess IR using new parameters and copy to <a class="el" href="classreverb_1_1_main_pipeline.html">MainPipeline</a>.</p>
+<p><a class="el" href="classreverb_1_1_main_pipeline.html">MainPipeline</a> is double-buffered to avoid interfering with <a class="el" href="classreverb_1_1_audio_processor.html#a3e7b8d778599ce995d8117fae123f77b" title="Applies reverb effect on single channel using preconfigured pipelines. ">processChannel()</a>. <a class="el" href="classreverb_1_1_i_r_pipeline.html">IRPipeline</a> is not used by any other methods, so it does not need protection.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">channelIdx</td><td>Channel parameters should be updated for </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sampleRate</td><td>Current sample rate </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Eric Seguin/Source/Repos/QuantumReverb/Source/<a class="el" href="_plugin_processor_8h_source.html">PluginProcessor.h</a></li>
-<li>C:/Users/Eric Seguin/Source/Repos/QuantumReverb/Source/PluginProcessor.cpp</li>
+<li>Source/<a class="el" href="_plugin_processor_8h_source.html">PluginProcessor.h</a></li>
+<li>Source/PluginProcessor.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

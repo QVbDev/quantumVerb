@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quantum Verb: Member List</title>
+<title>quantumVERB: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Quantum Verb
+   <div id="projectname">quantumVERB
    </div>
   </td>
  </tr>
@@ -94,15 +94,21 @@ $(document).ready(function(){initNavTree('classreverb_1_1_main_pipeline.html',''
 <table class="directory">
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>convolution</b> (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>dryWetMixer</b> (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#a1eb5231748d4eaac01172d609d971d31">exec</a>(juce::AudioSampleBuffer &amp;audio) override</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#a4ce5bb122de66524adb1a26dd600025c">exec</a>(AudioBlock audio) override</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>gain</b> (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ir</b> (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#a2d05354d1e70b7c5fdb2376646f25171">loadIR</a>(juce::AudioSampleBuffer &amp;&amp;ir)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#addf209664cd9fcdebb3a1034aadd29fb">MainPipeline</a>(juce::AudioProcessor *processor)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#a282fccd317be37d796da5f41fd88b303">getParam</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>ir</b> (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#a202a520ff3f48033d4d1e5ab30e63693">loadIR</a>(AudioBlock irIn)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#addf209664cd9fcdebb3a1034aadd29fb">MainPipeline</a>(juce::AudioProcessor *processor)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mustExec</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#acf86208ed1e8b71a884979a3454b8b0f">needsToRun</a>() const override</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>sampleRate</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>Task</b>(juce::AudioProcessor *processor) (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#abcbb19a86428af0146907ef4f49996c9">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;=&quot;&quot;) override</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#a4ac56965a577a786c7702485a87b2736">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;=&quot;&quot;) override</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html#a008c6a8a358602f516dc5c2bb6219667">updateSampleRate</a>(double sr) override</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~MainPipeline</b>()=default (defined in <a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_main_pipeline.html">reverb::MainPipeline</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

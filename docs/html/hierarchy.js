@@ -6,12 +6,16 @@ var hierarchy =
     [ "AudioProcessorEditor", null, [
       [ "reverb::AudioProcessorEditor", "classreverb_1_1_audio_processor_editor.html", null ]
     ] ],
+    [ "Component", null, [
+      [ "reverb::UIBlock", "classreverb_1_1_u_i_block.html", [
+        [ "reverb::UIFilterBlock", "classreverb_1_1_u_i_filter_block.html", null ],
+        [ "reverb::UIHeaderBlock", "classreverb_1_1_u_i_header_block.html", null ],
+        [ "reverb::UIReverbBlock", "classreverb_1_1_u_i_reverb_block.html", null ]
+      ] ],
+      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
+    ] ],
     [ "Convolution", null, [
       [ "reverb::Convolution", "classreverb_1_1_convolution.html", null ]
-    ] ],
-    [ "std::exception", null, [
-      [ "reverb::ChannelNumberException", "structreverb_1_1_channel_number_exception.html", null ],
-      [ "reverb::WrongParameter", "structreverb_1_1_wrong_parameter.html", null ]
     ] ],
     [ "Filter", null, [
       [ "reverb::Filter", "classreverb_1_1_filter.html", [
@@ -21,7 +25,19 @@ var hierarchy =
       ] ]
     ] ],
     [ "reverb::IRBank", "classreverb_1_1_i_r_bank.html", null ],
+    [ "Listener", null, [
+      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
+    ] ],
+    [ "Listener", null, [
+      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
+    ] ],
+    [ "Listener", null, [
+      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
+    ] ],
     [ "reverb::Logger", "classreverb_1_1_logger.html", null ],
+    [ "LookAndFeel_V4", null, [
+      [ "reverb::LookAndFeel", "classreverb_1_1_look_and_feel.html", null ]
+    ] ],
     [ "reverb::Task", "classreverb_1_1_task.html", [
       [ "reverb::Convolution", "classreverb_1_1_convolution.html", null ],
       [ "reverb::Filter", "classreverb_1_1_filter.html", null ],

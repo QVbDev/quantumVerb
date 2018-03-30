@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quantum Verb: Member List</title>
+<title>quantumVERB: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Quantum Verb
+   <div id="projectname">quantumVERB
    </div>
   </td>
  </tr>
@@ -93,13 +93,20 @@ $(document).ready(function(){initNavTree('classreverb_1_1_pre_delay.html','');})
 <p>This is the complete list of members for <a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a>, including all inherited members.</p>
 <table class="directory">
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>delayMs</b> (defined in <a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html#a605b9c9de5dd11ec70063442d8d30ad5">exec</a>(juce::AudioSampleBuffer &amp;ir) override</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html#ada2904839243c96f1caa25de66e94554">exec</a>(AudioBlock ir) override</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html#add56073017828416c304820ae2392648">getNumSamplesToAdd</a>()</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_task.html#a282fccd317be37d796da5f41fd88b303">getParam</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>MAX_DELAY_MS</b> (defined in <a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">static</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>mustExec</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">needsToRun</a>() const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html#a5f2557d2c9f8f4e905630a1025242e3b">PreDelay</a>(juce::AudioProcessor *processor)</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html#a48701133a8b83f77bdbd4f8f3ad45fe0">prepareIR</a>(juce::AudioSampleBuffer &amp;ir)</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>sampleRate</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Task</b>(juce::AudioProcessor *processor) (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html#a0ab4ddd192fd0af4e0e2cb8704ffccd6">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) override</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html#a3223bf6d5a064967e8222c29cb2f418d">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) override</td><td class="entry"><a class="el" href="classreverb_1_1_pre_delay.html">reverb::PreDelay</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">updateSampleRate</a>(double sr)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

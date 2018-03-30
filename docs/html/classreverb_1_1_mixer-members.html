@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quantum Verb: Member List</title>
+<title>quantumVERB: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Quantum Verb
+   <div id="projectname">quantumVERB
    </div>
   </td>
  </tr>
@@ -92,14 +92,21 @@ $(document).ready(function(){initNavTree('classreverb_1_1_mixer.html','');});
 
 <p>This is the complete list of members for <a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_mixer.html#a83b41e0b865c69dba7d58a2c28d1fb7c">exec</a>(juce::AudioSampleBuffer &amp;wetAudio) override</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classreverb_1_1_mixer.html#a61ec3439996faf560df543c1191c6362">loadDry</a>(const juce::AudioSampleBuffer &amp;dryAudio)</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>dryAudioCopy</b> (defined in <a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_mixer.html#a1a562dcbf461e7a363e48b7773206ae6">exec</a>(AudioBlock wetAudio) override</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#a282fccd317be37d796da5f41fd88b303">getParam</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_mixer.html#a29cd657006cdf0b933ace6269fe927f8">loadDry</a>(AudioBlock audio)</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_mixer.html#aa05e3d23577bf9e2ebb3b427d8357bb0">Mixer</a>(juce::AudioProcessor *processor)</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>mustExec</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">needsToRun</a>() const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>Task</b>(juce::AudioProcessor *processor) (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_mixer.html#a98dc517edf48454e275a6b75aa9471e6">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) override</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>sampleRate</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Task</b>(juce::AudioProcessor *processor) (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_mixer.html#aaf61cf34a7b8973ad3a4349b84f91464">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) override</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">updateSampleRate</a>(double sr)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>wetRatio</b> (defined in <a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Mixer</b>()=default (defined in <a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_mixer.html">reverb::Mixer</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

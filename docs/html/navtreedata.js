@@ -23,7 +23,7 @@ for the JavaScript code in this file
 */
 var NAVTREE =
 [
-  [ "Quantum Verb", "index.html", [
+  [ "quantumVERB", "index.html", [
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -41,7 +41,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-".html"
+".html",
+"classreverb_1_1_u_i_header_block.html#a5dac64c4abb9c39118f42b2bc57439ca"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

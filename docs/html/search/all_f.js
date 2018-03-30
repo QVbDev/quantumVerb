@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['updateparams',['updateParams',['../classreverb_1_1_convolution.html#a944277adeba1b61365058e0c797d30e8',1,'reverb::Convolution::updateParams()'],['../classreverb_1_1_filter.html#a6079a22dd2934b2417746fc3c975585d',1,'reverb::Filter::updateParams()'],['../classreverb_1_1_gain.html#af93311e3560ed038a2300c538696198a',1,'reverb::Gain::updateParams()'],['../classreverb_1_1_i_r_pipeline.html#afea2c88b48cbbab677696fdcb202e34a',1,'reverb::IRPipeline::updateParams()'],['../classreverb_1_1_main_pipeline.html#abcbb19a86428af0146907ef4f49996c9',1,'reverb::MainPipeline::updateParams()'],['../classreverb_1_1_mixer.html#a98dc517edf48454e275a6b75aa9471e6',1,'reverb::Mixer::updateParams()'],['../classreverb_1_1_pre_delay.html#a0ab4ddd192fd0af4e0e2cb8704ffccd6',1,'reverb::PreDelay::updateParams()'],['../classreverb_1_1_time_stretch.html#aa311af097ab64cc95c80003f5df1c566',1,'reverb::TimeStretch::updateParams()']]],
-  ['updatesamplerate',['updateSampleRate',['../classreverb_1_1_i_r_pipeline.html#adfdc1056b40679ee7329a17e095ad78c',1,'reverb::IRPipeline']]]
+  ['task',['Task',['../classreverb_1_1_task.html',1,'reverb']]],
+  ['timestretch',['TimeStretch',['../classreverb_1_1_time_stretch.html',1,'reverb::TimeStretch'],['../classreverb_1_1_time_stretch.html#a563893817ebbf255833f1dd6ada44766',1,'reverb::TimeStretch::TimeStretch()']]]
 ];
