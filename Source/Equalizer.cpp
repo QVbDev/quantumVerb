@@ -106,7 +106,7 @@ namespace reverb {
     * @param [in] ir   AudioBuffer to be processed
     */
 
-    void Equalizer::exec(juce::AudioSampleBuffer& ir) 
+    AudioBlock Equalizer::exec(AudioBlock ir) 
     {
 
         for (int i = 0; i < filterSet.size(); i++) 
@@ -115,6 +115,14 @@ namespace reverb {
         }
 
         mustExec = false;
+
+        return ir;
+    }
+
+    void Equalizer::updateSampleRate(double sr) {
+        for (int i = 0; i < filterSet.size(); i++) {
+            filterSet[i]->updateSampleRate(sr);
+        }
     }
 
     /**
