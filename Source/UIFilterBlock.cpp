@@ -77,6 +77,7 @@ namespace reverb
         q.setNumDecimalPlacesToDisplay(2);
 
         gain.setNumDecimalPlacesToDisplay(2);
+        gain.setTextValueSuffix(" dB");
 
         // Add sliders
         addAndMakeVisible(freq);
