@@ -179,12 +179,14 @@ namespace reverb {
         {
             filterSet[i]->setGain(Filter::invdB(1.0f));
         }
+
+        bool unitaryGain = false;
         
 
 
         //Correction algorithm (5 iterations)
 
-        for (int k = 0; k < 5; k++) 
+        for (int k = 0; k < 5; k++)
         {
 
             memcpy(lambda_data, gamma_data, dim * sizeof(float));
@@ -202,10 +204,21 @@ namespace reverb {
 
             B.solve(lambda);
 
-            for (int i = 0; i < dim; i++) 
+            for (int i = 0; i < dim; i++)
             {
+                //Check if one of the values is too close to 0, which happens when one or more of the gains is equal to 1
+                if (std::abs(lambda_data[i]) < 0.001f)
+                {
+                    unitaryGain = true;
+                }
 
-                filterSet[i]->setGain(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)));
+                
+                    filterSet[i]->setGain(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)));
+            }
+
+            if (unitaryGain)
+            {
+                break;
             }
         }
 
