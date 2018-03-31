@@ -516,7 +516,7 @@ namespace reverb
          * Peak filter 1
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 1 cut-off frequency", "<16-1600 Hz>",
+                                          "EQ: Peak filter 1 cut-off frequency", "<260-1600 Hz>",
                                           juce::NormalisableRange<float>(260.0f, 1040.0f),
                                           808.0f,
                                           nullptr, nullptr );
@@ -538,13 +538,13 @@ namespace reverb
          * Peak filter 2
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 2 cut-off frequency", "<1000-21000 Hz>",
+                                          "EQ: Peak filter 2 cut-off frequency", "<4000-16000 Hz>",
                                           juce::NormalisableRange<float>(4000.0f, 16000.0f),
                                           8000.0f,
                                           nullptr, nullptr );
 
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 2 Q factor", "<0.26-6.50>",
+                                          "EQ: Peak filter 2 Q factor", "<1.0-6.50>",
                                           juce::NormalisableRange<float>(1.0f, 6.50f),
                                           3.38f,
                                           nullptr, nullptr );
@@ -560,7 +560,7 @@ namespace reverb
          * High-shelf filter
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: High-shelf cut-off frequency", "<1000-21000 Hz>",
+                                          "EQ: High-shelf cut-off frequency", "<8000-21000 Hz>",
                                           juce::NormalisableRange<float>(8000.0f, 21000.0f),
                                           10000.0f,
                                           nullptr, nullptr );
