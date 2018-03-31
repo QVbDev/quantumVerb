@@ -64,4 +64,12 @@ namespace reverb {
             return "Equalizer: Filter ID is invalid";
         }
     };
+
+    struct ConvergenceException : public std::exception
+    {
+        const char * what() const throw ()
+        {
+            return "Equalizer: The calibration algorithm did not converge";
+        }
+    };
 }

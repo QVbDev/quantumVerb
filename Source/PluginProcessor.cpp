@@ -516,14 +516,14 @@ namespace reverb
          * Peak filter 1
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 1 cut-off frequency", "<260-1600 Hz>",
-                                          juce::NormalisableRange<float>(260.0f, 1040.0f),
+                                          "EQ: Peak filter 1 cut-off frequency", "<260-1500 Hz>",
+                                          juce::NormalisableRange<float>(250.0f, 1500.0f),
                                           808.0f,
                                           nullptr, nullptr );
 
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 1 Q factor", "<0.26-6.5>",
-                                          juce::NormalisableRange<float>(1.0f, 6.5f),
+                                          "EQ: Peak filter 1 Q factor", "<0.71-6.5>",
+                                          juce::NormalisableRange<float>(0.71f, 6.5f),
                                           3.38f,
                                           nullptr, nullptr );
 
@@ -538,14 +538,14 @@ namespace reverb
          * Peak filter 2
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 2 cut-off frequency", "<4000-16000 Hz>",
-                                          juce::NormalisableRange<float>(4000.0f, 16000.0f),
+                                          "EQ: Peak filter 2 cut-off frequency", "<4000-15600 Hz>",
+                                          juce::NormalisableRange<float>(2600.0f, 15600.0f),
                                           8000.0f,
                                           nullptr, nullptr );
 
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 2 Q factor", "<1.0-6.50>",
-                                          juce::NormalisableRange<float>(1.0f, 6.50f),
+                                          "EQ: Peak filter 2 Q factor", "<0.71-6.50>",
+                                          juce::NormalisableRange<float>(0.71f, 6.50f),
                                           3.38f,
                                           nullptr, nullptr );
 

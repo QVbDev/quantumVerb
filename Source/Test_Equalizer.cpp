@@ -137,31 +137,43 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
     }*/
 
-    SECTION("Testing equalizer thoroughly")
+    SECTION("Testing equalizer")
     {
         reverb::EqualizerMocked EQ(&processor);
 
+        //Testing borderline case
+
         //Set low-shelf filter
-        EQ.setFrequency(1000, 0);
+        EQ.setFrequency(500, 0);
         EQ.setGain(1, 0);
         EQ.setQ(0.71, 0);
 
-        //Set first peak filter
-        EQ.setFrequency(6000, 1);
-        EQ.setGain(1, 1);
-        EQ.setQ(1, 1);
+        //Set first peak filter to minimum gain, minimum Q as close as can be to peak 2
+        EQ.setFrequency(1500, 1);
+        EQ.setGain(0.06, 1);
+        EQ.setQ(0.71, 1);
 
-        //Set second peak filter
-        EQ.setFrequency(6750, 2);
-        EQ.setGain(1, 2);
-        EQ.setQ(1, 2);
+        //Set second peak filter to maximum gain, minimum Q as close as can be to peak 1
+        EQ.setFrequency(2600, 2);
+        EQ.setGain(5.2, 2);
+        EQ.setQ(0.71, 2);
 
         //Set high-shelf filter
-        EQ.setFrequency(10000, 3);
+        EQ.setFrequency(8000, 3);
         EQ.setGain(1, 3);
         EQ.setQ(0.71, 3);
 
-        EQ.calibrateFilters();
+        bool converged = true;
+        try
+        {
+            EQ.calibrateFilters();
+        }
+        catch (const std::exception & e)
+        {
+            converged = false;
+        }
+
+        REQUIRE(converged);
 
         EQ.exec(sampleBuffer);
 

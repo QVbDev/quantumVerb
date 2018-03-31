@@ -212,6 +212,11 @@ namespace reverb {
                     unitaryGain = true;
                 }
 
+                if (!(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)) > 0))
+                {
+                    throw ConvergenceException();
+                }
+
                 
                     filterSet[i]->setGain(Filter::invdB(lambda_data[i] * Filter::todB(filterSet[i]->gainFactor)));
             }
