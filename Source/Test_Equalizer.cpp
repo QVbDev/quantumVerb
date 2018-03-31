@@ -107,7 +107,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
     float * dBPlot = new float[numSamples];
 
 
-    SECTION("Testing equalizer")
+    /*SECTION("Testing equalizer")
     {
 
         reverb::Equalizer EQ(&processor);
@@ -135,7 +135,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
         REQUIRE(compareValues(reverb::Filter::todB(fftBuffer[(int)(1000 / freqRes)]), EQ.getdBAmplitude(1000)));
 
-    }
+    }*/
 
     SECTION("Testing equalizer thoroughly")
     {
