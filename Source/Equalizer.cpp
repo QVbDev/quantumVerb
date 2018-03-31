@@ -33,7 +33,7 @@ namespace reverb {
         }
 
         /*
-        * The following is the default configuration of the Equalizer: 
+        * The following is the default configuration of the Equalizer class: 
         * all filter frequencies are equally spaced between 0 and 10000 Hz 
         * with a gain of 2, and a Q of 0.71 for the shelf filters and 4 for the peak filters.
         */
@@ -179,10 +179,9 @@ namespace reverb {
             filterSet[i]->setGain(Filter::invdB(1.0f));
         }
 
+
         bool unitaryGain = false;
         
-
-
         //Correction algorithm (5 iterations)
 
         for (int k = 0; k < 5; k++)

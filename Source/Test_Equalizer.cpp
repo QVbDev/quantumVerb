@@ -20,7 +20,9 @@ Test_Equalizer.cpp
 */
 
 namespace reverb {
-    class EqualizerMocked : public Equalizer {
+    class EqualizerMocked : public Equalizer 
+    
+    {
     public:
 
         using Equalizer::Equalizer;
@@ -141,7 +143,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
     {
         reverb::EqualizerMocked EQ(&processor);
 
-        //Testing borderline case
+        /*-----------------------------------------Testing borderline case---------------------------------------*/
 
         //Set low-shelf filter at maximum frequency, maximum gain and minimum Q
         EQ.setFrequency(500, 0);
@@ -179,6 +181,38 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
         memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
         forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+        //Set breakpoint here to observe FFT in fftBuffer
+
+        /*----------------------------------------------Convergence test----------------------------------------------*/
+
+        converged = true;
+        int i = 0;
+        int frequency = 2600;
+
+        //Check at which frequency the peak filters are too close for the calibration to converge (loop capped at 200)
+
+        while (converged && i < 200) 
+        {
+            frequency -= 10;
+            EQ.setFrequency(frequency, 2);
+
+            try
+            {
+                EQ.calibrateFilters();
+            }
+            catch (const std::exception & e)
+            {
+                converged = false;
+            }
+
+            i++;
+        }
+
+        //Check if margin is large enough
+        REQUIRE((2600.0f / (float)frequency) > 1.3);
+
+
 
     }
 
