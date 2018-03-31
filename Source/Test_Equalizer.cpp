@@ -143,9 +143,9 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
         //Testing borderline case
 
-        //Set low-shelf filter
+        //Set low-shelf filter at maximum frequency, maximum gain and minimum Q
         EQ.setFrequency(500, 0);
-        EQ.setGain(1, 0);
+        EQ.setGain(5.2, 0);
         EQ.setQ(0.71, 0);
 
         //Set first peak filter to minimum gain, minimum Q as close as can be to peak 2
@@ -158,9 +158,9 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
         EQ.setGain(5.2, 2);
         EQ.setQ(0.71, 2);
 
-        //Set high-shelf filter
+        //Set high-shelf filter at minimum frequency, minimum gain and minimum Q
         EQ.setFrequency(8000, 3);
-        EQ.setGain(1, 3);
+        EQ.setGain(0.06, 3);
         EQ.setQ(0.71, 3);
 
         bool converged = true;
