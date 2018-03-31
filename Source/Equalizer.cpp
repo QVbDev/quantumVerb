@@ -35,7 +35,7 @@ namespace reverb {
         /*
         * The following is the default configuration of the Equalizer: 
         * all filter frequencies are equally spaced between 0 and 10000 Hz 
-        * with a gain of 2, and a Q of 0.71 for the shelf filters and 4 for the peak filters 
+        * with a gain of 2, and a Q of 0.71 for the shelf filters and 4 for the peak filters.
         */
 
         filterSet[0]->setQ(0.71);
@@ -206,8 +206,6 @@ namespace reverb {
 
             for (int i = 0; i < dim; i++)
             {
-                //Check if one of the values is too close to 0, which happens when one or more of the gains is equal to 1
-                //If one of the values is zero, the next iteration could lead to undefined values, so the algorithm is stopped there.
 
                 if (std::abs(lambda_data[i]) < 0.001f)
                 {
@@ -247,51 +245,7 @@ namespace reverb {
     }
 
     /**
-    * @brief Returns the specified filter frequency (Meant to be used in tests only)
-    *
-    * @param [in] num Id of the filter
-    */
-
-    float Equalizer::getFilterFrequency(int num) 
-    {
-
-        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
-
-        return filterSet[num]->frequency;
-    }
-
-    /**
-    * @brief Enables the specified filter
-    */
-    
-    void Equalizer::enableFilter(int num) 
-    {
-        filterSet[num]->enable();
-    }
-
-    /**
-    * @brief Disables the specified filter
-    */
-    void Equalizer::disableFilter(int num)
-    {
-        filterSet[num]->disable();
-    }
-
-    /**
-    * @brief Returns the EQ gains as specified by the user (Meant to be used in tests only)
-    *
-    * @param [in] num   Filter ID
-    * @return           EQ nominal gain
-    */
-    float Equalizer::getEQGain(int num) 
-    {
-        if (num < 0 || num >= filterSet.size()) throw InvalidFilterException();
-
-        return EQGains[num];
-    }
-
-    /**
-    * @brief Returns the number of filters in the EQ
+    * @brief Returns the number of filters in the equalizer
     *
     */
 

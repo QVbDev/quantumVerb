@@ -169,16 +169,6 @@ TEST_CASE("Filter class is tested", "[filters]")
         REQUIRE(compareValues(filter.getAmplitude(0), 1.0f));
     }
 
-    /*
-    SECTION("Testing filter toggle") 
-    {
-        reverb::LowShelfFilter filter(&processor, 5000, 0.71, (float)reverb::Filter::invdB(14));
-        filter.disable();
-        filter.exec(sampleBuffer);
-
-    }
-    */
-
     SECTION("Performance_Testing") {
         constexpr std::chrono::milliseconds MAX_EXEC_TIME_MS(30);
         constexpr std::chrono::milliseconds MAX_TOTAL_EXEC_TIME_MS(50);

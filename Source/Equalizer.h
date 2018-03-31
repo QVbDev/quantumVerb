@@ -48,15 +48,7 @@ namespace reverb {
 
         float getdBAmplitude(float freq);
 
-        float getFilterFrequency(int num);
-
-        void enableFilter(int num);
-        void disableFilter(int num);
-
-        float getEQGain(int num);
-
         int getNumFilters();
-
         virtual bool needsToRun() const override;
 
 
