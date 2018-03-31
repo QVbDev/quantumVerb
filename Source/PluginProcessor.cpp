@@ -516,9 +516,9 @@ namespace reverb
          * Peak filter 1
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 1 cut-off frequency", "<260-1500 Hz>",
+                                          "EQ: Peak filter 1 cut-off frequency", "<250-1500 Hz>",
                                           juce::NormalisableRange<float>(250.0f, 1500.0f),
-                                          808.0f,
+                                          800.0f,
                                           nullptr, nullptr );
 
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
@@ -538,7 +538,7 @@ namespace reverb
          * Peak filter 2
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 2 cut-off frequency", "<4000-15600 Hz>",
+                                          "EQ: Peak filter 2 cut-off frequency", "<2600-15600 Hz>",
                                           juce::NormalisableRange<float>(2600.0f, 15600.0f),
                                           8000.0f,
                                           nullptr, nullptr );
