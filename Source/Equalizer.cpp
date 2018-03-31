@@ -207,6 +207,8 @@ namespace reverb {
             for (int i = 0; i < dim; i++)
             {
                 //Check if one of the values is too close to 0, which happens when one or more of the gains is equal to 1
+                //If one of the values is zero, the next iteration could lead to undefined values, so the algorithm is stopped there.
+
                 if (std::abs(lambda_data[i]) < 0.001f)
                 {
                     unitaryGain = true;
