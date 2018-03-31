@@ -27,7 +27,7 @@ namespace reverb
      * @param [in] q    Q factor
      */
     Filter::Filter(juce::AudioProcessor * processor, float freq, float q, float gain)
-        : Task(processor), isOn(true), frequency(freq), Q(q), gainFactor(gain)
+        : Task(processor), frequency(freq), Q(q), gainFactor(gain)
     {
 
     }
@@ -88,14 +88,12 @@ namespace reverb
             return ir;
         }
 
-        if (isOn)
-        {
-            juce::dsp::ProcessContextReplacing<float> context(ir);
-            juce::dsp::IIR::Filter<float>::process(context);
+        juce::dsp::ProcessContextReplacing<float> context(ir);
+        juce::dsp::IIR::Filter<float>::process(context);
 
-            // Reset mustExec flag
-            mustExec = false;
-        }
+        // Reset mustExec flag
+        mustExec = false;
+        
 
         return ir;
     }
@@ -189,41 +187,6 @@ namespace reverb
         gainFactor = gain;
 
         buildFilter();
-    }
-
-    //==============================================================================
-    /**
-    * @brief Indicates whether the filter is enabled or not
-    *
-    * @return   True if filter is enabled or false if filter is disabled
-    */
-
-    bool Filter::isEnabled()
-    {
-        return isOn;
-    }
-
-    //==============================================================================
-    /**
-    * @brief Enables the filter
-    *
-    */
-
-    void Filter::enable()
-    {
-        isOn = true;
-    }
-
-    //==============================================================================
-    /**
-    * @brief Disables the filter
-    *
-    */
-
-    void Filter::disable()
-    {
-        isOn = false;
-
     }
 
     //==============================================================================
