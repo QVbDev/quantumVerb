@@ -84,7 +84,6 @@ namespace reverb {
         if (*paramGain != EQGains[filterId])
         {
             EQGains[filterId] = *paramGain;
-            calibrateFilters();
             mustExec = true;
         }
 
@@ -94,7 +93,7 @@ namespace reverb {
 
         if (mustExec)
         {
-            filterSet[filterId]->buildFilter();
+            calibrateFilters();
         }
 
 
