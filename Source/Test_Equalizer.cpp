@@ -143,22 +143,22 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
         //Set low-shelf filter
         EQ.setFrequency(1000, 0);
-        EQ.setGain(2, 0);
+        EQ.setGain(1, 0);
         EQ.setQ(0.71, 0);
 
         //Set first peak filter
         EQ.setFrequency(6000, 1);
-        EQ.setGain(6, 1);
+        EQ.setGain(1, 1);
         EQ.setQ(1, 1);
 
         //Set second peak filter
         EQ.setFrequency(6750, 2);
-        EQ.setGain(0.06, 2);
+        EQ.setGain(1, 2);
         EQ.setQ(1, 2);
 
         //Set high-shelf filter
         EQ.setFrequency(10000, 3);
-        EQ.setGain(2, 3);
+        EQ.setGain(1, 3);
         EQ.setQ(0.71, 3);
 
         EQ.calibrateFilters();

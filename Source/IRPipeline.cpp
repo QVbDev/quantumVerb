@@ -93,11 +93,7 @@ namespace reverb
             sampleRate = sr;
             mustExec = true;
 
-            for (auto& filter : filters)
-            {
-                filter->updateSampleRate(sr);
-            }
-
+            equalizer->updateSampleRate(sr);
             gain->updateSampleRate(sr);
             preDelay->updateSampleRate(sr);
             timeStretch->updateSampleRate(sr);
@@ -160,7 +156,7 @@ namespace reverb
         AudioBlock irBlock = reloadIR();
 
         // Apply filters
-        equalizer->exec(irChannel);
+        equalizer->exec(irBlock);
 
         // Apply gain
         gain->exec(irBlock);

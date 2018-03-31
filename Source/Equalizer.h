@@ -39,7 +39,10 @@ namespace reverb {
         using Ptr = std::shared_ptr<Equalizer>;
 
 
-        virtual void exec(juce::AudioSampleBuffer& ir) override;
+        virtual AudioBlock exec(AudioBlock ir) override;
+
+        virtual void updateSampleRate(double sr) override;
+
 
         void calibrateFilters();
 
