@@ -37,8 +37,7 @@ namespace reverb
      *
      * @param [in] params   Processor parameter tree
      * @param [in] blockId  ID of block whose paramters should be checked
-     * @throws ChannelNumberException
-     * @throws WrongParameterException
+     *
      */
     void Filter::updateParams(const juce::AudioProcessorValueTreeState& params,
         const juce::String& blockId)
@@ -77,8 +76,7 @@ namespace reverb
     * This function filters an AudioBuffer using the IIR filter's coefficients
     *
     * @param [in,out] ir   Contains the audio to be filtered, the output is placed in that same buffer
-    * @throws ChannelNumberException
-    * @throws WrongParameterException
+    *
     */
     AudioBlock Filter::exec(AudioBlock ir)
     {
@@ -92,7 +90,7 @@ namespace reverb
 
         if (isOn)
         {
-			juce::dsp::ProcessContextReplacing<float> context(ir);
+            juce::dsp::ProcessContextReplacing<float> context(ir);
             juce::dsp::IIR::Filter<float>::process(context);
 
             // Reset mustExec flag

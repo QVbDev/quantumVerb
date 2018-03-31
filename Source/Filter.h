@@ -9,7 +9,6 @@ Filter.h
 #include "Task.h"
 
 #include <memory>
-#include <exception>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
@@ -113,7 +112,7 @@ namespace reverb
 
     //==============================================================================
     /**
-    * This PeakFilter class implements a high-shelf IIR filter
+    * This PeakFilter class implements a peaking IIR filter
     * The inherited exec() function is used to process samples.
     */
     class PeakFilter : public Filter

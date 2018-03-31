@@ -498,7 +498,7 @@ namespace reverb
                                           100.0f,
                                           nullptr, nullptr );
 
-        // TODO: Upper limit on Q factor?
+        
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_Q_SUFFIX,
                                           "EQ: Low-shelf Q factor", "<0.71-1.41>",
                                           juce::Range<float>(0.71f, 1.41f),

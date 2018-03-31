@@ -61,8 +61,6 @@ namespace reverb {
     * @param [in] params   the value tree containing the parameters
     * @param [in] blockId  the Id of the relevant parameter block
     * @returns True if any parameters were changed, false otherwise.
-    * @throws ChannelNumberException
-    * @throws WrongParameterException
     */
 
     void Equalizer::updateParams(const juce::AudioProcessorValueTreeState& params,
@@ -132,6 +130,8 @@ namespace reverb {
     *
     * The use of decibels is necessary for the gain stacks to behave linearly. The algorithm can be used iteratively and is detailed
     * in the Standford University lecture note available at https://ccrma.stanford.edu/courses/424/handouts.2004/424_Handout22_Filters4_LectureNotes.pdf
+    *
+    * @throws ConvergenceException
     */
 
 
@@ -166,16 +166,11 @@ namespace reverb {
         float * gamma_data = gamma.getRawDataPointer();
         float * lambda_data = lambda.getRawDataPointer();
 
-        //Compute gamma column
+        //Compute gamma column and set gains to 1 dB for B matrix
 
         for (int i = 0; i < dim; i++) 
         {
             gamma_data[i] = Filter::todB(EQGains[i]);
-        }
-
-        //Set gains to 1 dB for B matrix
-        for (int i = 0; i < dim; i++) 
-        {
             filterSet[i]->setGain(Filter::invdB(1.0f));
         }
 
