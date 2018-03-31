@@ -137,7 +137,6 @@ TEST_CASE("Filter class is tested", "[filters]")
         CHECK(compareFloats(fftBuffer[cutOffIndex], std::sqrt(gain)));
 
         //Test for getAmplitude()
-        float amplitude = filter.getAmplitude(freq);
         REQUIRE(compareValues(filter.getAmplitude(freq), std::sqrt(gain)));
         REQUIRE(compareValues(filter.getAmplitude(0), 1.0f));
         REQUIRE(compareValues(filter.getAmplitude(30000), gain));
