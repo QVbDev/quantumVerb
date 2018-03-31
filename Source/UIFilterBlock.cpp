@@ -79,6 +79,11 @@ namespace reverb
         gain.setNumDecimalPlacesToDisplay(2);
         gain.setTextValueSuffix(" dB");
 
+        // Skew factor
+        freq.setSkewFactor(1.0, false);
+        q.setSkewFactor(1.0, false);
+        gain.setSkewFactor(0.5, false); // Skew factor of 0.5 on all gain filter sliders
+
         // Add sliders
         addAndMakeVisible(freq);
         addAndMakeVisible(q);

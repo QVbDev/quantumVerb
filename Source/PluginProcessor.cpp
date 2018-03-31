@@ -145,7 +145,7 @@ namespace reverb
             logger.dualPrint(Logger::Level::Error, errMsg);
         }
 
-        // Add/remove pipelines as needed to meet requeted number of channels
+        // Add/remove pipelines as needed to meet requested number of channels
         for (size_t i = numChannels; i < irPipelines.size(); ++i)
         {
             irPipelines.pop_back();
