@@ -36,6 +36,7 @@ namespace reverb
         juce::TextButton sampleRate;
 
         juce::AudioProcessorValueTreeState& parameters;
+        juce::StringArray previousSelectedIRs;
 
     protected:
         //==============================================================================

@@ -14,7 +14,9 @@ namespace reverb
 
     //==============================================================================
     UIHeaderBlock::UIHeaderBlock(AudioProcessor& p)
-        : UIBlock(3, 3, "Header", "reverb settings"), parameters(p.parameters)
+        : UIBlock(3, 3, "Header", "reverb settings"),
+        parameters(p.parameters),
+        previousSelectedIRs(juce::StringArray())
     {
         // State button
         isOn.setButtonText("STATE");
@@ -43,8 +45,6 @@ namespace reverb
         irChoiceLabel.setText("impulse response", juce::NotificationType::dontSendNotification);
         irChoiceLabel.setJustificationType(juce::Justification::topLeft);
         irChoiceLabel.attachToComponent(&irChoice, false);
-
-        // TODO: Ensure IR file box tracks the IR choice parameter
 
         // Sample rate box
         auto sampleRateTemp = std::to_string(p.getSampleRate() / 1000);

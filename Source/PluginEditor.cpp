@@ -174,7 +174,16 @@ namespace reverb
             juce::PopupMenu m;
             m.addItem(1, "Load custom IR...");
             m.addSeparator();
-            for (auto irFile : IRBank::getInstance().buffers) {
+
+            for (int i = 0; i < headerBlock.previousSelectedIRs.size(); i++)
+            {
+                m.addItem(i + 2, headerBlock.previousSelectedIRs[i]);
+            }
+
+            m.addSeparator();
+
+            for (auto irFile : IRBank::getInstance().buffers)
+            {
                 m.addItem(m.getNumItems() + 1, irFile.first);
             }
 
@@ -184,7 +193,7 @@ namespace reverb
     }
 
     /**
-    * @brief   Callback function to open the popup menu asynchronously. 
+    * @brief   Callback function to open the popup menu asynchronously.
     *
     * @details This function will open a file browser if the user clicked on the first
     *          item in the dropdown menu. Any other item will load the appropriate IR
@@ -194,8 +203,12 @@ namespace reverb
     */
     void AudioProcessorEditor::menuCallback(int result, UIHeaderBlock* headerBlock)
     {
-        if (headerBlock != nullptr && result != 0) {
-            if (result == 1) {
+        if (headerBlock != nullptr && result != 0)
+        {
+            auto irName = headerBlock->parameters.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE);
+            juce::String selectedIR;
+            if (result == 1)
+            {
                 juce::AudioFormatManager formatManager;
                 formatManager.registerBasicFormats();
                 // Accepts the following file types: .wav, .bwf, .aiff, .flac, .ogg, .mp3, .wmv, .asf, .wm, .wma
@@ -203,18 +216,26 @@ namespace reverb
                     juce::File::getCurrentWorkingDirectory(),
                     formatManager.getWildcardForAllFormats(),
                     false);
-                if (fileChooser.browseForFileToOpen()) {
-                    juce::File selectedFile = fileChooser.getResult();
-                    headerBlock->parameters.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE)
-                        .setProperty("value", selectedFile.getFullPathName(), nullptr);
-                    headerBlock->irChoice.setButtonText(selectedFile.getFullPathName());
+                if (fileChooser.browseForFileToOpen())
+                {
+                    selectedIR = fileChooser.getResult().getFullPathName();
+                    irName.setProperty("value", selectedIR, nullptr);
+                    headerBlock->irChoice.setButtonText(selectedIR);
+                    headerBlock->previousSelectedIRs.add(selectedIR);
                 }
             }
-            else {
-                juce::String irFile = std::next(IRBank::getInstance().buffers.begin(), result - 2)->first;
-                headerBlock->parameters.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE)
-                    .setProperty("value", irFile, nullptr);
-                headerBlock->irChoice.setButtonText(irFile);
+            else if (result <= (headerBlock->previousSelectedIRs.size() + 1))
+            {
+                selectedIR = headerBlock->previousSelectedIRs[result - 2];
+                irName.setProperty("value", selectedIR, nullptr);
+                headerBlock->irChoice.setButtonText(selectedIR);
+            }
+            else
+            {
+                selectedIR = std::next(IRBank::getInstance().buffers.begin(),
+                    result - headerBlock->previousSelectedIRs.size() - 2)->first;
+                irName.setProperty("value", selectedIR, nullptr);
+                headerBlock->irChoice.setButtonText(selectedIR);
             }
         }
     }

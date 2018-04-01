@@ -43,9 +43,9 @@ namespace reverb
         //==============================================================================
         static constexpr double PADDING_REL = 0.02;   // 2% padding
 
-	protected:
+    protected:
         //==============================================================================
-		AudioProcessor& processor;
+        AudioProcessor& processor;
         juce::AudioProcessorValueTreeState& parameters;
 
         //==============================================================================

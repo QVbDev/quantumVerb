@@ -20,7 +20,7 @@ namespace reverb
     * is updated periodically and on notify in a separate thread.
     */
     UIGraphBlock::UIGraphBlock(AudioProcessor& processor)
-        : processor(processor), juce::GroupComponent("IR Graph", "spectrum - impulse response")
+        : processor(processor), juce::GroupComponent("IR Graph", "waveform - impulse response")
     {
         graphThread.reset(new std::thread(&UIGraphBlock::updateGraph, this, 100));
     }
