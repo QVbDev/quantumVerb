@@ -13,6 +13,9 @@
     <ClInclude Include="..\..\Source\catch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Test_Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Test_AudioProcessor.cpp">
@@ -46,6 +49,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Test_PreDelay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Test_Equalizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Test_Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

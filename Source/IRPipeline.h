@@ -10,7 +10,7 @@
 
 #include "Task.h"
 
-#include "Filter.h"
+#include "Equalizer.h"
 #include "Gain.h"
 #include "IRBank.h"
 #include "PreDelay.h"
@@ -58,7 +58,7 @@ namespace reverb
 
     protected:
         //==============================================================================
-        std::array<Filter::Ptr, 4> filters;
+        Equalizer::Ptr equalizer;
         TimeStretch::Ptr timeStretch;
         Gain::Ptr gain;
         PreDelay::Ptr preDelay;

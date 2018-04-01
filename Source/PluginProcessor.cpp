@@ -493,12 +493,12 @@ namespace reverb
          * Low-shelf filter
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Low-shelf cut-off frequency", "<16-1600 Hz>",
-                                          juce::Range<float>(16.0f, 16e2f),
-                                          808.0f,
+                                          "EQ: Low-shelf cut-off frequency", "<16-520 Hz>",
+                                          juce::Range<float>(16.0f, 520.0f),
+                                          100.0f,
                                           nullptr, nullptr );
 
-        // TODO: Upper limit on Q factor?
+        
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(0) + PID_FILTER_Q_SUFFIX,
                                           "EQ: Low-shelf Q factor", "<0.71-1.41>",
                                           juce::Range<float>(0.71f, 1.41f),
@@ -516,14 +516,14 @@ namespace reverb
          * Peak filter 1
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 1 cut-off frequency", "<16-1600 Hz>",
-                                          juce::NormalisableRange<float>(16.0f, 16e2f),
-                                          808.0f,
+                                          "EQ: Peak filter 1 cut-off frequency", "<250-1500 Hz>",
+                                          juce::NormalisableRange<float>(250.0f, 1500.0f),
+                                          800.0f,
                                           nullptr, nullptr );
 
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(1) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 1 Q factor", "<0.26-6.5>",
-                                          juce::NormalisableRange<float>(0.26f, 6.5f),
+                                          "EQ: Peak filter 1 Q factor", "<0.71-6.5>",
+                                          juce::NormalisableRange<float>(0.71f, 6.5f),
                                           3.38f,
                                           nullptr, nullptr );
 
@@ -538,14 +538,14 @@ namespace reverb
          * Peak filter 2
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: Peak filter 2 cut-off frequency", "<1000-21000 Hz>",
-                                          juce::NormalisableRange<float>(1e3f, 21e3f),
-                                          11e2f,
+                                          "EQ: Peak filter 2 cut-off frequency", "<2600-15600 Hz>",
+                                          juce::NormalisableRange<float>(2600.0f, 15600.0f),
+                                          8000.0f,
                                           nullptr, nullptr );
 
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(2) + PID_FILTER_Q_SUFFIX,
-                                          "EQ: Peak filter 2 Q factor", "<0.26-6.50>",
-                                          juce::NormalisableRange<float>(0.26f, 6.50f),
+                                          "EQ: Peak filter 2 Q factor", "<0.71-6.50>",
+                                          juce::NormalisableRange<float>(0.71f, 6.50f),
                                           3.38f,
                                           nullptr, nullptr );
 
@@ -560,9 +560,9 @@ namespace reverb
          * High-shelf filter
          */
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_FREQ_SUFFIX,
-                                          "EQ: High-shelf cut-off frequency", "<1000-21000 Hz>",
-                                          juce::NormalisableRange<float>(1e3f, 21e3f),
-                                          11e2f,
+                                          "EQ: High-shelf cut-off frequency", "<8000-21000 Hz>",
+                                          juce::NormalisableRange<float>(8000.0f, 21000.0f),
+                                          10000.0f,
                                           nullptr, nullptr );
 
         parameters.createAndAddParameter( PID_FILTER_PREFIX + std::to_string(3) + PID_FILTER_Q_SUFFIX,

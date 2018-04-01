@@ -31,11 +31,7 @@ namespace reverb
           channelIdx(channelIdx)
     {
         // Initialise pipeline steps
-        filters[0] = std::make_shared<LowShelfFilter>(processor);
-        filters[1] = std::make_shared<PeakFilter>(processor);
-        filters[2] = std::make_shared<PeakFilter>(processor);
-        filters[3] = std::make_shared<HighShelfFilter>(processor);
-
+        equalizer = std::make_shared<Equalizer>(processor);
         timeStretch = std::make_shared<TimeStretch>(processor);
         gain = std::make_shared<Gain>(processor);
         preDelay = std::make_shared<PreDelay>(processor);
@@ -59,10 +55,20 @@ namespace reverb
         }
 
         // Update child parameters
-        for (int i = 0; i < filters.size(); ++i)
+        for (int i = 0; i < equalizer->getNumFilters(); i++)
         {
             std::string filterId = AudioProcessor::PID_FILTER_PREFIX + std::to_string(i);
-            filters[i]->updateParams(params, filterId);
+            try 
+            {
+               equalizer->updateParams(params, filterId);
+            }
+            catch (const std::exception& e)
+            {
+                std::string errMsg = "Could not update filters due to exception: ";
+                errMsg += e.what();
+
+                logger.dualPrint(Logger::Level::Error, errMsg);
+            }
         }
 
         gain->updateParams(params, AudioProcessor::PID_IR_GAIN);
@@ -87,11 +93,7 @@ namespace reverb
             sampleRate = sr;
             mustExec = true;
 
-            for (auto& filter : filters)
-            {
-                filter->updateSampleRate(sr);
-            }
-
+            equalizer->updateSampleRate(sr);
             gain->updateSampleRate(sr);
             preDelay->updateSampleRate(sr);
             timeStretch->updateSampleRate(sr);
@@ -114,13 +116,9 @@ namespace reverb
             return true;
         }
 
-        for (auto& filter : filters)
+        if (equalizer->needsToRun())
         {
-            if (filter->needsToRun() &&
-                filter->isEnabled())
-            {
-                return true;
-            }
+            return true;
         }
 
         if (timeStretch->needsToRun())
@@ -158,10 +156,7 @@ namespace reverb
         AudioBlock irBlock = reloadIR();
 
         // Apply filters
-        for (auto& filter : filters)
-        {
-            filter->exec(irBlock);
-        }
+        equalizer->exec(irBlock);
 
         // Apply gain
         gain->exec(irBlock);
