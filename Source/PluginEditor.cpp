@@ -31,12 +31,12 @@ namespace reverb
     AudioProcessorEditor::AudioProcessorEditor(AudioProcessor& p)
         : juce::AudioProcessorEditor(&p), processor(p), parameters(p.parameters),
           headerBlock(p), graphBlock(p), reverbBlock(p),
-          lowShelfFilterBlock(p,0), peakLowFilterBlock(p,1),
-          peakHighFilterBlock(p,2), highShelfFilterBlock(p,3),
+          lowShelfFilterBlock(p, 0, "low-shelf filter"), peakLowFilterBlock(p, 1, "low-peak filter"),
+          peakHighFilterBlock(p, 2, "high-peak filter"), highShelfFilterBlock(p, 3, "high-shelf filter"),
           filterBlocks({ &lowShelfFilterBlock, &peakLowFilterBlock, &peakHighFilterBlock, &highShelfFilterBlock })
-	{
-		// Make sure that before the constructor has finished, you've set the
-		// editor's size to whatever you need it to be.
+    {
+        // Make sure that before the constructor has finished, you've set the
+        // editor's size to whatever you need it to be.
         setResizable(true, true);
         setResizeLimits(800, 640, 1920, 1080);
 
@@ -62,6 +62,7 @@ namespace reverb
 
         // Set listeners for IR graph
         headerBlock.irChoice.addListener(&graphBlock);
+        headerBlock.irChoice.addListener(this);
 
         reverbBlock.irLength.addListener(&graphBlock);
         reverbBlock.preDelay.addListener(&graphBlock);
@@ -157,5 +158,86 @@ namespace reverb
             filterBlocks[i]->setBounds(thisFilterBounds);
         }
 	}
+
+    /**
+    * @brief   Callback function to open the popup menu asynchronously.
+    *
+    * @details This function will open a popup menu when the user clicks
+    *          on the IR selection's button. The first item in the menu
+    *          will let the user choose a custom IR from a file browser,
+    *          while the other items will display the IRs from the IR bank.
+    * @param   [in] clickedButton  Pointer to the button clicked by the user.
+    */
+    void AudioProcessorEditor::buttonClicked(juce::Button* clickedButton)
+    {
+        if (clickedButton != nullptr && clickedButton == &headerBlock.irChoice) {
+            juce::PopupMenu m;
+            m.addItem(1, "Load custom IR...");
+            m.addSeparator();
+
+            for (int i = 0; i < headerBlock.previousSelectedIRs.size(); i++)
+            {
+                m.addItem(i + 2, headerBlock.previousSelectedIRs[i]);
+            }
+
+            m.addSeparator();
+
+            for (auto irFile : IRBank::getInstance().buffers)
+            {
+                m.addItem(m.getNumItems() + 1, irFile.first);
+            }
+
+            m.showMenuAsync(juce::PopupMenu::Options(),
+                juce::ModalCallbackFunction::forComponent(menuCallback, &headerBlock));
+        }
+    }
+
+    /**
+    * @brief   Callback function to open the popup menu asynchronously.
+    *
+    * @details This function will open a file browser if the user clicked on the first
+    *          item in the dropdown menu. Any other item will load the appropriate IR
+    *          from the IR bank.
+    * @param   [in] result        The index of the item selected by the user.
+    *          [in] headerBlock   Pointer to the header block.
+    */
+    void AudioProcessorEditor::menuCallback(int result, UIHeaderBlock* headerBlock)
+    {
+        if (headerBlock != nullptr && result != 0)
+        {
+            auto irName = headerBlock->parameters.state.getChildWithName(AudioProcessor::PID_IR_FILE_CHOICE);
+            juce::String selectedIR;
+            if (result == 1)
+            {
+                juce::AudioFormatManager formatManager;
+                formatManager.registerBasicFormats();
+                // Accepts the following file types: .wav, .bwf, .aiff, .flac, .ogg, .mp3, .wmv, .asf, .wm, .wma
+                juce::FileChooser fileChooser("Select an impulse response",
+                    juce::File::getCurrentWorkingDirectory(),
+                    formatManager.getWildcardForAllFormats(),
+                    false);
+                if (fileChooser.browseForFileToOpen())
+                {
+                    selectedIR = fileChooser.getResult().getFullPathName();
+                    irName.setProperty("value", selectedIR, nullptr);
+                    headerBlock->irChoice.setButtonText(selectedIR);
+                    headerBlock->previousSelectedIRs.add(selectedIR);
+                }
+            }
+            else if (result <= (headerBlock->previousSelectedIRs.size() + 1))
+            {
+                selectedIR = headerBlock->previousSelectedIRs[result - 2];
+                irName.setProperty("value", selectedIR, nullptr);
+                headerBlock->irChoice.setButtonText(selectedIR);
+            }
+            else
+            {
+                selectedIR = std::next(IRBank::getInstance().buffers.begin(),
+                    result - headerBlock->previousSelectedIRs.size() - 2)->first;
+                irName.setProperty("value", selectedIR, nullptr);
+                headerBlock->irChoice.setButtonText(selectedIR);
+            }
+        }
+    }
 
 }

@@ -20,7 +20,7 @@ namespace reverb
     * is updated periodically and on notify in a separate thread.
     */
     UIGraphBlock::UIGraphBlock(AudioProcessor& processor)
-        : processor(processor)
+        : processor(processor), juce::GroupComponent("IR Graph", "waveform - impulse response")
     {
         graphThread.reset(new std::thread(&UIGraphBlock::updateGraph, this, 100));
     }
@@ -53,6 +53,10 @@ namespace reverb
         {
             g.strokePath(irPlot, juce::PathStrokeType(1.0f));
         }
+
+        juce::Rectangle<int> bounds(getLocalBounds());
+        getLookAndFeel().drawGroupComponentOutline(g, bounds.getWidth(), bounds.getHeight(), getText(),
+            juce::Justification(juce::Justification::centredTop), *this);
     }
 
     //==============================================================================

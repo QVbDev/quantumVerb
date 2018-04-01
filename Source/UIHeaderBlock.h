@@ -35,6 +35,9 @@ namespace reverb
         juce::TextButton irChoice;
         juce::TextButton sampleRate;
 
+        juce::AudioProcessorValueTreeState& parameters;
+        juce::StringArray previousSelectedIRs;
+
     protected:
         //==============================================================================
         using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
