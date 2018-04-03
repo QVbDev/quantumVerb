@@ -37,6 +37,7 @@
     </GROUP>
     <GROUP id="{16E68198-2536-31A4-D4D0-776A279C4A7E}" name="include">
       <FILE id="ZRYgLa" name="Convolution.h" compile="0" resource="0" file="Source/Convolution.h"/>
+      <FILE id="QxugG7" name="Equalizer.h" compile="0" resource="0" file="Source/Equalizer.h"/>
       <FILE id="NiupXX" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="d86bmX" name="Gain.h" compile="0" resource="0" file="Source/Gain.h"/>
       <FILE id="HauXtr" name="IRBank.h" compile="0" resource="0" file="Source/IRBank.h"/>
@@ -59,6 +60,7 @@
     </GROUP>
     <GROUP id="{DD9F08D3-896A-69D7-4B5C-1C9A13F59FFB}" name="source">
       <FILE id="ovcHFj" name="Convolution.cpp" compile="1" resource="0" file="Source/Convolution.cpp"/>
+      <FILE id="x1C1HC" name="Equalizer.cpp" compile="1" resource="0" file="Source/Equalizer.cpp"/>
       <FILE id="FSa5IZ" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
       <FILE id="MMwaIE" name="Gain.cpp" compile="1" resource="0" file="Source/Gain.cpp"/>
       <FILE id="cXaEak" name="IRBank.cpp" compile="1" resource="0" file="Source/IRBank.cpp"/>
