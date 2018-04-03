@@ -108,4 +108,39 @@ TEST_CASE("Use a TimeStretch object to manipulate a buffer", "[TimeStretch]") {
         CHECK(ir.getNumSamples() == IR_EXPECTED_NUM_SAMPLES);
     }
 
+
+    SECTION("Compress a 5s buffer to various lengths") {
+        constexpr double IR_ORIG_SAMPLE_RATE = 96000;
+        constexpr std::chrono::seconds IR_ORIG_DURATION_S(5);
+        const int IR_ORIG_NUM_SAMPLES = (int)std::ceil(IR_ORIG_DURATION_S.count() * IR_ORIG_SAMPLE_RATE);
+
+        static constexpr float IR_TARGET_DURATION_S[] = { 0.1, 0.5, 1, 3, 5 };
+
+        for (float targetLengthS : IR_TARGET_DURATION_S)
+        {
+            const int IR_EXPECTED_NUM_SAMPLES = (int)std::ceil(targetLengthS * (double)SAMPLE_RATE);
+
+            // Prepare "audio" buffer
+            juce::AudioSampleBuffer ir(NUM_CHANNELS, IR_ORIG_NUM_SAMPLES);
+
+            REQUIRE(ir.getNumChannels() == NUM_CHANNELS);
+            REQUIRE(ir.getNumSamples() == IR_ORIG_NUM_SAMPLES);
+
+            // Prepare TimeStretch
+            auto irLength = processor.parameters.getParameterAsValue(processor.PID_IR_LENGTH);
+            irLength.setValue(targetLengthS);
+
+            timeStretch.updateParams(processor.parameters, processor.PID_IR_LENGTH);
+
+            REQUIRE(timeStretch.getIRLengthS() == Approx(targetLengthS));
+
+            // Run TimeStretch
+            timeStretch.prepareIR(ir);
+            timeStretch.exec(ir);
+
+            CHECK(ir.getNumChannels() == NUM_CHANNELS);
+            CHECK(ir.getNumSamples() == IR_EXPECTED_NUM_SAMPLES);
+        }
+    }
+
 }

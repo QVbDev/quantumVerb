@@ -116,8 +116,17 @@ namespace reverb
             curSample += nbSamplesReceived;
         }
         while (nbSamplesReceived != 0);
+        
+        // SoundTouch can miss some samples when we ask a lot of it. Since we don't want to
+        // wait around forever here, this step zeros out any remaining samples in the IR
+        // to avoid weird default values affecting the signal.
+        if (curSample < ir.getNumSamples())
+        {
+            size_t samplesRemaining = ir.getNumSamples() - curSample;
 
-        jassert(curSample == ir.getNumSamples());
+            auto irPtr = ir.getChannelPointer(0);
+            std::memset(&irPtr[curSample], 0, samplesRemaining * sizeof(irPtr[0]));
+        }
 
         // Reset mustExec flag
         mustExec = false;
