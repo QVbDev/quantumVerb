@@ -21,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_extra.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -28,9 +29,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_dial.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">quantumVERB
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">A FOSS convolution reverb plugin</div>
   </td>
  </tr>
  </tbody>
@@ -106,10 +110,16 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 , <a class="el" href="classreverb_1_1_low_shelf_filter.html#ae111738c07a53a92b3f85cf7c919c4e4">reverb::LowShelfFilter</a>
 , <a class="el" href="classreverb_1_1_peak_filter.html#aadc824ff8faa8284d3ccc2ec76af675a">reverb::PeakFilter</a>
 </li>
+<li>buttonClicked()
+: <a class="el" href="classreverb_1_1_audio_processor_editor.html#a9855b2464415d2d65dfb721ab41c4f78">reverb::AudioProcessorEditor</a>
+</li>
 </ul>
 
 
 <h3><a id="index_c"></a>- c -</h3><ul>
+<li>calibrateFilters()
+: <a class="el" href="classreverb_1_1_equalizer.html#a9d5ed2bb24dccb6e9f81f82631e3cd85">reverb::Equalizer</a>
+</li>
 <li>Convolution()
 : <a class="el" href="classreverb_1_1_convolution.html#add2cad81c1b9d07a9d4d5675993f6b8c">reverb::Convolution</a>
 </li>
@@ -117,9 +127,6 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 
 <h3><a id="index_d"></a>- d -</h3><ul>
-<li>disable()
-: <a class="el" href="classreverb_1_1_filter.html#af80d35155799ef97ee15fd7d324f1577">reverb::Filter</a>
-</li>
 <li>dualPrint()
 : <a class="el" href="classreverb_1_1_logger.html#a78124dc341d2f307fd0b1acf1f6049a7">reverb::Logger</a>
 </li>
@@ -127,11 +134,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 
 <h3><a id="index_e"></a>- e -</h3><ul>
-<li>enable()
-: <a class="el" href="classreverb_1_1_filter.html#a44235df714dc06eded9494b337806258">reverb::Filter</a>
-</li>
 <li>exec()
 : <a class="el" href="classreverb_1_1_convolution.html#ab9b9abb92cfd11b0d88af7bfdd34771b">reverb::Convolution</a>
+, <a class="el" href="classreverb_1_1_equalizer.html#af8ad6a7a84ba78e6f264b85e4d51e6cb">reverb::Equalizer</a>
 , <a class="el" href="classreverb_1_1_filter.html#ac540833d6e459aa3c9b4354c4c02648d">reverb::Filter</a>
 , <a class="el" href="classreverb_1_1_gain.html#a5ec4213ff976b00c3dc9164770c50079">reverb::Gain</a>
 , <a class="el" href="classreverb_1_1_i_r_pipeline.html#ab71eeefda1118d201c50986660c2a652">reverb::IRPipeline</a>
@@ -146,7 +151,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 <h3><a id="index_f"></a>- f -</h3><ul>
 <li>Filter()
-: <a class="el" href="classreverb_1_1_filter.html#a6ea36f2b8220cef4bc2211cf64c78e84">reverb::Filter</a>
+: <a class="el" href="classreverb_1_1_filter.html#a92b0637858f2887a773db10de4c254cf">reverb::Filter</a>
 </li>
 </ul>
 
@@ -155,8 +160,18 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>Gain()
 : <a class="el" href="classreverb_1_1_gain.html#ac1045d80763208f8206b5ef20c1cd344">reverb::Gain</a>
 </li>
+<li>getAmplitude()
+: <a class="el" href="classreverb_1_1_filter.html#a371c1785540786d8172a8331625ac41a">reverb::Filter</a>
+</li>
+<li>getdBAmplitude()
+: <a class="el" href="classreverb_1_1_equalizer.html#a100f66a58e2691c5aa3f6b949d5c7bd9">reverb::Equalizer</a>
+, <a class="el" href="classreverb_1_1_filter.html#a1941ad2f10b4ca582d11ded156148dd8">reverb::Filter</a>
+</li>
 <li>getInstance()
 : <a class="el" href="classreverb_1_1_i_r_bank.html#a7adf6b18a1273eb5acd016d711177df8">reverb::IRBank</a>
+</li>
+<li>getNumFilters()
+: <a class="el" href="classreverb_1_1_equalizer.html#aac66941b81c9df22e3d8124f4787f2a7">reverb::Equalizer</a>
 </li>
 <li>getNumSamplesToAdd()
 : <a class="el" href="classreverb_1_1_pre_delay.html#add56073017828416c304820ae2392648">reverb::PreDelay</a>
@@ -179,9 +194,6 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 </li>
 <li>IRPipeline()
 : <a class="el" href="classreverb_1_1_i_r_pipeline.html#ad7af0d4554991708d58dcd51cba4ec3a">reverb::IRPipeline</a>
-</li>
-<li>isEnabled()
-: <a class="el" href="classreverb_1_1_filter.html#a86d79bf64d86cacd44f74a448a87837d">reverb::Filter</a>
 </li>
 </ul>
 
@@ -210,6 +222,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>MainPipeline()
 : <a class="el" href="classreverb_1_1_main_pipeline.html#addf209664cd9fcdebb3a1034aadd29fb">reverb::MainPipeline</a>
 </li>
+<li>menuCallback()
+: <a class="el" href="classreverb_1_1_audio_processor_editor.html#a1373555a487b2d298acf7064d3e6deab">reverb::AudioProcessorEditor</a>
+</li>
 <li>Mixer()
 : <a class="el" href="classreverb_1_1_mixer.html#aa05e3d23577bf9e2ebb3b427d8357bb0">reverb::Mixer</a>
 </li>
@@ -218,7 +233,8 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 <h3><a id="index_n"></a>- n -</h3><ul>
 <li>needsToRun()
-: <a class="el" href="classreverb_1_1_i_r_pipeline.html#a8c79a26404520d37db5ab6dfcf8b4f08">reverb::IRPipeline</a>
+: <a class="el" href="classreverb_1_1_equalizer.html#a062e3668cae49cbcf8728be69c8a50a4">reverb::Equalizer</a>
+, <a class="el" href="classreverb_1_1_i_r_pipeline.html#a8c79a26404520d37db5ab6dfcf8b4f08">reverb::IRPipeline</a>
 , <a class="el" href="classreverb_1_1_main_pipeline.html#acf86208ed1e8b71a884979a3454b8b0f">reverb::MainPipeline</a>
 , <a class="el" href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">reverb::Task</a>
 </li>
@@ -269,6 +285,15 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 
 <h3><a id="index_s"></a>- s -</h3><ul>
+<li>setFrequency()
+: <a class="el" href="classreverb_1_1_filter.html#a5ccd8c770dce1143b35086de97cb6482">reverb::Filter</a>
+</li>
+<li>setGain()
+: <a class="el" href="classreverb_1_1_filter.html#a58dffe8d6f95c99d121d6ffff1da8cde">reverb::Filter</a>
+</li>
+<li>setQ()
+: <a class="el" href="classreverb_1_1_filter.html#a82249e01896b8f80efe5c285779b13c7">reverb::Filter</a>
+</li>
 <li>setVerbosity()
 : <a class="el" href="classreverb_1_1_logger.html#a748ff3746f15013500568c7368374b44">reverb::Logger</a>
 </li>
@@ -284,7 +309,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 <h3><a id="index_u"></a>- u -</h3><ul>
 <li>UIFilterBlock()
-: <a class="el" href="classreverb_1_1_u_i_filter_block.html#a482493db4115abe2b0bdf50907fcc369">reverb::UIFilterBlock</a>
+: <a class="el" href="classreverb_1_1_u_i_filter_block.html#a437a393b1f420976b8f20d1a7e5ac4cc">reverb::UIFilterBlock</a>
 </li>
 <li>UIGraphBlock()
 : <a class="el" href="classreverb_1_1_u_i_graph_block.html#ab301d9f4afc18515a22b278d703e5501">reverb::UIGraphBlock</a>
@@ -298,6 +323,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>updateParams()
 : <a class="el" href="classreverb_1_1_audio_processor.html#a33045f2bb8b9a915efc77e3cfec0cac5">reverb::AudioProcessor</a>
 , <a class="el" href="classreverb_1_1_convolution.html#a3392ea5cfcbbdcb0b75e16eaf8a6ba0a">reverb::Convolution</a>
+, <a class="el" href="classreverb_1_1_equalizer.html#ad54060ecbd99c200845f73f6e41f8b91">reverb::Equalizer</a>
 , <a class="el" href="classreverb_1_1_filter.html#a5896d6340af2f6c625b102ea6570e9c7">reverb::Filter</a>
 , <a class="el" href="classreverb_1_1_gain.html#a242f4ceb8a66a39cc93bb68e6f3ba443">reverb::Gain</a>
 , <a class="el" href="classreverb_1_1_i_r_pipeline.html#a89935bae1b914ea1ddfa9863a15463dc">reverb::IRPipeline</a>
@@ -311,7 +337,8 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="classreverb_1_1_audio_processor.html#ae1e051e5b178bc6bc37e1f7cc54573cf">reverb::AudioProcessor</a>
 </li>
 <li>updateSampleRate()
-: <a class="el" href="classreverb_1_1_i_r_pipeline.html#a896759909aff94d2ff29620d671dd631">reverb::IRPipeline</a>
+: <a class="el" href="classreverb_1_1_equalizer.html#a22d09aae64f17e3594cf3833ea42ccef">reverb::Equalizer</a>
+, <a class="el" href="classreverb_1_1_i_r_pipeline.html#a896759909aff94d2ff29620d671dd631">reverb::IRPipeline</a>
 , <a class="el" href="classreverb_1_1_main_pipeline.html#a008c6a8a358602f516dc5c2bb6219667">reverb::MainPipeline</a>
 , <a class="el" href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">reverb::Task</a>
 </li>
@@ -328,7 +355,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated by
+    <li class="footer">Generated on Tue Apr 3 2018 18:57:13 for quantumVERB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

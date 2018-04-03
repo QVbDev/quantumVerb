@@ -21,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_extra.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -28,9 +29,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_dial.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">quantumVERB
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">A FOSS convolution reverb plugin</div>
   </td>
  </tr>
  </tbody>
@@ -188,6 +192,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main audio processing pipeline. Contains various steps applied on every processing cycle, in particular convolution with the associated impulse response and some cleanup steps afterwards. This pipeline constitutes the critical path (i.e. it limits plugin performance) and thus is more heavily optimised than its IR counterpart. </p>
+
+<p class="definition">Definition at line <a class="el" href="_main_pipeline_8h_source.html#l00027">27</a> of file <a class="el" href="_main_pipeline_8h_source.html">MainPipeline.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="addf209664cd9fcdebb3a1034aadd29fb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#addf209664cd9fcdebb3a1034aadd29fb">&#9670;&nbsp;</a></span>MainPipeline()</h2>
@@ -213,6 +219,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="_main_pipeline_8cpp_source.html#l00025">25</a> of file <a class="el" href="_main_pipeline_8cpp_source.html">MainPipeline.cpp</a>.</p>
 
 </div>
 </div>
@@ -252,6 +260,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 <p>Implements <a class="el" href="classreverb_1_1_task.html#a79f6094e4d025a183e5ecf46146de7b0">reverb::Task</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="_main_pipeline_8cpp_source.html#l00080">80</a> of file <a class="el" href="_main_pipeline_8cpp_source.html">MainPipeline.cpp</a>.</p>
+
 </div>
 </div>
 <a id="a202a520ff3f48033d4d1e5ab30e63693"></a>
@@ -278,6 +288,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   </table>
   </dd>
 </dl>
+
+<p class="definition">Definition at line <a class="el" href="_main_pipeline_8cpp_source.html#l00099">99</a> of file <a class="el" href="_main_pipeline_8cpp_source.html">MainPipeline.cpp</a>.</p>
 
 </div>
 </div>
@@ -308,6 +320,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <dl class="section return"><dt>Returns</dt><dd>True </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">reverb::Task</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_main_pipeline_8h_source.html#l00052">52</a> of file <a class="el" href="_main_pipeline_8h_source.html">MainPipeline.h</a>.</p>
 
 </div>
 </div>
@@ -356,6 +370,8 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 <p>Implements <a class="el" href="classreverb_1_1_task.html#af640dc99b532a99fe87458b02765bc57">reverb::Task</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="_main_pipeline_8cpp_source.html#l00040">40</a> of file <a class="el" href="_main_pipeline_8cpp_source.html">MainPipeline.cpp</a>.</p>
+
 </div>
 </div>
 <a id="a008c6a8a358602f516dc5c2bb6219667"></a>
@@ -393,11 +409,13 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 <p>Reimplemented from <a class="el" href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">reverb::Task</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="_main_pipeline_8cpp_source.html#l00057">57</a> of file <a class="el" href="_main_pipeline_8cpp_source.html">MainPipeline.cpp</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>Source/<a class="el" href="_main_pipeline_8h_source.html">MainPipeline.h</a></li>
-<li>Source/MainPipeline.cpp</li>
+<li>Source/<a class="el" href="_main_pipeline_8cpp_source.html">MainPipeline.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -405,7 +423,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>reverb</b></li><li class="navelem"><a class="el" href="classreverb_1_1_main_pipeline.html">MainPipeline</a></li>
-    <li class="footer">Generated by
+    <li class="footer">Generated on Tue Apr 3 2018 18:57:11 for quantumVERB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

@@ -21,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_extra.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -28,9 +29,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_dial.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">quantumVERB
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">A FOSS convolution reverb plugin</div>
   </td>
  </tr>
  </tbody>
@@ -93,24 +97,26 @@ $(document).ready(function(){initNavTree('classreverb_1_1_low_shelf_filter.html'
 <p>This is the complete list of members for <a class="el" href="classreverb_1_1_low_shelf_filter.html">reverb::LowShelfFilter</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_low_shelf_filter.html#ae111738c07a53a92b3f85cf7c919c4e4">buildFilter</a>() override</td><td class="entry"><a class="el" href="classreverb_1_1_low_shelf_filter.html">reverb::LowShelfFilter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classreverb_1_1_filter.html#af80d35155799ef97ee15fd7d324f1577">disable</a>()</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a44235df714dc06eded9494b337806258">enable</a>()</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classreverb_1_1_filter.html#ac540833d6e459aa3c9b4354c4c02648d">exec</a>(AudioBlock ir) override</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_low_shelf_filter.html#a6ea36f2b8220cef4bc2211cf64c78e84">Filter</a>(juce::AudioProcessor *processor, float freq=1000.0f, float q=0.71f, float gain=1.0f)</td><td class="entry"><a class="el" href="classreverb_1_1_low_shelf_filter.html">reverb::LowShelfFilter</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a6ea36f2b8220cef4bc2211cf64c78e84">reverb::Filter::Filter</a>(juce::AudioProcessor *processor, float freq=1000.0f, float q=0.71f, float gain=1.0f)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_low_shelf_filter.html#a92b0637858f2887a773db10de4c254cf">Filter</a>(juce::AudioProcessor *processor, float freq=1000.0f, float q=0.71f, float gain=1.5f)</td><td class="entry"><a class="el" href="classreverb_1_1_low_shelf_filter.html">reverb::LowShelfFilter</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a92b0637858f2887a773db10de4c254cf">reverb::Filter::Filter</a>(juce::AudioProcessor *processor, float freq=1000.0f, float q=0.71f, float gain=1.5f)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>frequency</b> (defined in <a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>gainFactor</b> (defined in <a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a371c1785540786d8172a8331625ac41a">getAmplitude</a>(float freq)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a1941ad2f10b4ca582d11ded156148dd8">getdBAmplitude</a>(float freq)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#a282fccd317be37d796da5f41fd88b303">getParam</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>invdB</b>(float dB) (defined in <a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a86d79bf64d86cacd44f74a448a87837d">isEnabled</a>()</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>isOn</b> (defined in <a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mustExec</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="classreverb_1_1_task.html#a3ea9235ad4e57f97ca4e239df51c82bc">needsToRun</a>() const</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>processor</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Q</b> (defined in <a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>sampleRate</b> (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>Task</b>(juce::AudioProcessor *processor) (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a5ccd8c770dce1143b35086de97cb6482">setFrequency</a>(float)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a58dffe8d6f95c99d121d6ffff1da8cde">setGain</a>(float)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a82249e01896b8f80efe5c285779b13c7">setQ</a>(float)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>Task</b>(juce::AudioProcessor *processor) (defined in <a class="el" href="classreverb_1_1_task.html">reverb::Task</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>todB</b>(float m) (defined in <a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a>)</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
   <tr><td class="entry"><a class="el" href="classreverb_1_1_filter.html#a5896d6340af2f6c625b102ea6570e9c7">updateParams</a>(const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) override</td><td class="entry"><a class="el" href="classreverb_1_1_filter.html">reverb::Filter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classreverb_1_1_task.html#ae989d540d63acac46ce9b5655d28f37c">updateSampleRate</a>(double sr)</td><td class="entry"><a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
 </table></div><!-- contents -->
@@ -118,7 +124,7 @@ $(document).ready(function(){initNavTree('classreverb_1_1_low_shelf_filter.html'
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated by
+    <li class="footer">Generated on Tue Apr 3 2018 18:57:11 for quantumVERB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

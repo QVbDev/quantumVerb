@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node2" href="$classreverb_1_1_audio_processor_editor.html" title="reverb::AudioProcessorEditor" alt="" coords="201,5,392,32"/>
+<area shape="rect" id="node1" title="STL class. " alt="" coords="5,31,109,57"/>
+<area shape="rect" id="node2" href="$structreverb_1_1_convergence_exception.html" title="reverb::ConvergenceException" alt="" coords="157,5,353,32"/>
+<area shape="rect" id="node3" href="$structreverb_1_1_invalid_filter_exception.html" title="reverb::InvalidFilterException" alt="" coords="162,56,349,83"/>
 </map>

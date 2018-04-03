@@ -2,7 +2,7 @@ var classreverb_1_1_u_i_filter_block =
 [
     [ "Ptr", "classreverb_1_1_u_i_filter_block.html#a9028880871c28193c4302ba5903dbda1", null ],
     [ "SliderAttachment", "classreverb_1_1_u_i_filter_block.html#ad7d2bfefe03dd14acb73793f3748b72c", null ],
-    [ "UIFilterBlock", "classreverb_1_1_u_i_filter_block.html#a482493db4115abe2b0bdf50907fcc369", null ],
+    [ "UIFilterBlock", "classreverb_1_1_u_i_filter_block.html#a437a393b1f420976b8f20d1a7e5ac4cc", null ],
     [ "paint", "classreverb_1_1_u_i_filter_block.html#a9f82dc54fe8ad06c7d047cc00ecb0b30", null ],
     [ "resized", "classreverb_1_1_u_i_filter_block.html#acb7683c8da6c0a6d446d4c5be267b13a", null ],
     [ "freq", "classreverb_1_1_u_i_filter_block.html#a419eeb4c560c39a69d5fafe72888f0dd", null ],

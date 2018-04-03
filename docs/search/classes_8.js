@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['peakfilter',['PeakFilter',['../classreverb_1_1_peak_filter.html',1,'reverb']]],
-  ['predelay',['PreDelay',['../classreverb_1_1_pre_delay.html',1,'reverb']]]
+  ['mainpipeline',['MainPipeline',['../classreverb_1_1_main_pipeline.html',1,'reverb']]],
+  ['mixer',['Mixer',['../classreverb_1_1_mixer.html',1,'reverb']]]
 ];

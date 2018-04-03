@@ -21,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_extra.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -28,9 +29,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_dial.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">quantumVERB
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">A FOSS convolution reverb plugin</div>
   </td>
  </tr>
  </tbody>
@@ -91,6 +95,7 @@ $(document).ready(function(){initNavTree('classreverb_1_1_filter.html','');});
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classreverb_1_1_filter-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">reverb::Filter Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -130,24 +135,21 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::share
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6ea36f2b8220cef4bc2211cf64c78e84"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a6ea36f2b8220cef4bc2211cf64c78e84">Filter</a> (juce::AudioProcessor *processor, float freq=1000.0f, float q=0.71f, float gain=1.0f)</td></tr>
-<tr class="memdesc:a6ea36f2b8220cef4bc2211cf64c78e84"><td class="mdescLeft">&#160;</td><td class="mdescRight">(TODO) Brief description  <a href="#a6ea36f2b8220cef4bc2211cf64c78e84">More...</a><br /></td></tr>
-<tr class="separator:a6ea36f2b8220cef4bc2211cf64c78e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92b0637858f2887a773db10de4c254cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a92b0637858f2887a773db10de4c254cf">Filter</a> (juce::AudioProcessor *processor, float freq=1000.0f, float q=0.71f, float gain=1.5f)</td></tr>
+<tr class="memdesc:a92b0637858f2887a773db10de4c254cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classreverb_1_1_filter.html">Filter</a> object with optional frequency/gain/Q parameters.  <a href="#a92b0637858f2887a773db10de4c254cf">More...</a><br /></td></tr>
+<tr class="separator:a92b0637858f2887a773db10de4c254cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5896d6340af2f6c625b102ea6570e9c7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a5896d6340af2f6c625b102ea6570e9c7">updateParams</a> (const juce::AudioProcessorValueTreeState &amp;params, const juce::String &amp;blockId) override</td></tr>
 <tr class="memdesc:a5896d6340af2f6c625b102ea6570e9c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates parameters from processor parameter tree.  <a href="#a5896d6340af2f6c625b102ea6570e9c7">More...</a><br /></td></tr>
 <tr class="separator:a5896d6340af2f6c625b102ea6570e9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac540833d6e459aa3c9b4354c4c02648d"><td class="memItemLeft" align="right" valign="top">virtual AudioBlock&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#ac540833d6e459aa3c9b4354c4c02648d">exec</a> (AudioBlock ir) override</td></tr>
-<tr class="memdesc:ac540833d6e459aa3c9b4354c4c02648d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Brief description.  <a href="#ac540833d6e459aa3c9b4354c4c02648d">More...</a><br /></td></tr>
+<tr class="memdesc:ac540833d6e459aa3c9b4354c4c02648d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filters the audio in AudioSampleBuffer.  <a href="#ac540833d6e459aa3c9b4354c4c02648d">More...</a><br /></td></tr>
 <tr class="separator:ac540833d6e459aa3c9b4354c4c02648d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86d79bf64d86cacd44f74a448a87837d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a86d79bf64d86cacd44f74a448a87837d">isEnabled</a> ()</td></tr>
-<tr class="memdesc:a86d79bf64d86cacd44f74a448a87837d"><td class="mdescLeft">&#160;</td><td class="mdescRight">(TODO) Brief description  <a href="#a86d79bf64d86cacd44f74a448a87837d">More...</a><br /></td></tr>
-<tr class="separator:a86d79bf64d86cacd44f74a448a87837d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44235df714dc06eded9494b337806258"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a44235df714dc06eded9494b337806258">enable</a> ()</td></tr>
-<tr class="memdesc:a44235df714dc06eded9494b337806258"><td class="mdescLeft">&#160;</td><td class="mdescRight">(TODO) Brief description  <a href="#a44235df714dc06eded9494b337806258">More...</a><br /></td></tr>
-<tr class="separator:a44235df714dc06eded9494b337806258"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af80d35155799ef97ee15fd7d324f1577"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#af80d35155799ef97ee15fd7d324f1577">disable</a> ()</td></tr>
-<tr class="memdesc:af80d35155799ef97ee15fd7d324f1577"><td class="mdescLeft">&#160;</td><td class="mdescRight">(TODO) Brief description  <a href="#af80d35155799ef97ee15fd7d324f1577">More...</a><br /></td></tr>
-<tr class="separator:af80d35155799ef97ee15fd7d324f1577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a371c1785540786d8172a8331625ac41a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a371c1785540786d8172a8331625ac41a">getAmplitude</a> (float freq)</td></tr>
+<tr class="memdesc:a371c1785540786d8172a8331625ac41a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the filter absolute amplitude response at a given frequency.  <a href="#a371c1785540786d8172a8331625ac41a">More...</a><br /></td></tr>
+<tr class="separator:a371c1785540786d8172a8331625ac41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1941ad2f10b4ca582d11ded156148dd8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a1941ad2f10b4ca582d11ded156148dd8">getdBAmplitude</a> (float freq)</td></tr>
+<tr class="memdesc:a1941ad2f10b4ca582d11ded156148dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the filter amplitude response in dB at a given frequency.  <a href="#a1941ad2f10b4ca582d11ded156148dd8">More...</a><br /></td></tr>
+<tr class="separator:a1941ad2f10b4ca582d11ded156148dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreverb_1_1_task"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreverb_1_1_task')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td></tr>
 <tr class="memitem:a0174a85a47df59ba7d68f319ea129be5 inherit pub_methods_classreverb_1_1_task"><td class="memItemLeft" align="right" valign="top"><a id="a0174a85a47df59ba7d68f319ea129be5"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Task</b> (juce::AudioProcessor *processor)</td></tr>
@@ -161,12 +163,24 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a1736c08ad39aceceb5da313a928f7ea1"><td class="memItemLeft" align="right" valign="top"><a id="a1736c08ad39aceceb5da313a928f7ea1"></a>
+static float&#160;</td><td class="memItemRight" valign="bottom"><b>todB</b> (float m)</td></tr>
+<tr class="separator:a1736c08ad39aceceb5da313a928f7ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bef1598e8ac1440208227a269f59c0d"><td class="memItemLeft" align="right" valign="top"><a id="a4bef1598e8ac1440208227a269f59c0d"></a>
 static float&#160;</td><td class="memItemRight" valign="bottom"><b>invdB</b> (float dB)</td></tr>
 <tr class="separator:a4bef1598e8ac1440208227a269f59c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a5ccd8c770dce1143b35086de97cb6482"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a5ccd8c770dce1143b35086de97cb6482">setFrequency</a> (float)</td></tr>
+<tr class="memdesc:a5ccd8c770dce1143b35086de97cb6482"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the filter frequency and updates the IIR filter coefficients (Meant to be used by <a class="el" href="classreverb_1_1_equalizer.html">Equalizer</a> class)  <a href="#a5ccd8c770dce1143b35086de97cb6482">More...</a><br /></td></tr>
+<tr class="separator:a5ccd8c770dce1143b35086de97cb6482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82249e01896b8f80efe5c285779b13c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a82249e01896b8f80efe5c285779b13c7">setQ</a> (float)</td></tr>
+<tr class="memdesc:a82249e01896b8f80efe5c285779b13c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the filter Q factor and updates the IIR filter coefficients (Meant to be used by <a class="el" href="classreverb_1_1_equalizer.html">Equalizer</a> class)  <a href="#a82249e01896b8f80efe5c285779b13c7">More...</a><br /></td></tr>
+<tr class="separator:a82249e01896b8f80efe5c285779b13c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58dffe8d6f95c99d121d6ffff1da8cde"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreverb_1_1_filter.html#a58dffe8d6f95c99d121d6ffff1da8cde">setGain</a> (float)</td></tr>
+<tr class="memdesc:a58dffe8d6f95c99d121d6ffff1da8cde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the filter band gain and updates the IIR filter coefficients (Meant to be used by <a class="el" href="classreverb_1_1_equalizer.html">Equalizer</a> class)  <a href="#a58dffe8d6f95c99d121d6ffff1da8cde">More...</a><br /></td></tr>
+<tr class="separator:a58dffe8d6f95c99d121d6ffff1da8cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2df8556d354c92545eb4e9e00a5d45d"><td class="memItemLeft" align="right" valign="top"><a id="aa2df8556d354c92545eb4e9e00a5d45d"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>buildFilter</b> ()=0</td></tr>
 <tr class="separator:aa2df8556d354c92545eb4e9e00a5d45d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,9 +192,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a6bd7b705095674e528f0530571c6c75e"><td class="memItemLeft" align="right" valign="top"><a id="a6bd7b705095674e528f0530571c6c75e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOn</b></td></tr>
-<tr class="separator:a6bd7b705095674e528f0530571c6c75e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e36e37c600a14cf64c31df5617c86c9"><td class="memItemLeft" align="right" valign="top"><a id="a3e36e37c600a14cf64c31df5617c86c9"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>frequency</b></td></tr>
 <tr class="separator:a3e36e37c600a14cf64c31df5617c86c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,6 +209,15 @@ juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><b>pro
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>mustExec</b> = true</td></tr>
 <tr class="separator:a230b62194fa3e55141f966dda79d1c48 inherit pro_attribs_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a298d15b1a9ba512b136fb40808673d71"><td class="memItemLeft" align="right" valign="top"><a id="a298d15b1a9ba512b136fb40808673d71"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Equalizer</b></td></tr>
+<tr class="separator:a298d15b1a9ba512b136fb40808673d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb5b27757692ffa89c6a9b22bed022f"><td class="memItemLeft" align="right" valign="top"><a id="a6bb5b27757692ffa89c6a9b22bed022f"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>EqualizerMocked</b></td></tr>
+<tr class="separator:a6bb5b27757692ffa89c6a9b22bed022f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_attribs_classreverb_1_1_task"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classreverb_1_1_task')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classreverb_1_1_task.html">reverb::Task</a></td></tr>
@@ -206,10 +226,12 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td>
 <tr class="separator:a6f32bf996cd1e74cfadcfc65ca6d791b inherit pub_attribs_classreverb_1_1_task"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>TODO: Description </p>
+<div class="textblock"><p>The <a class="el" href="classreverb_1_1_filter.html">Filter</a> class is the abstract class from which the three filter types of the plugin are derived. </p>
+
+<p class="definition">Definition at line <a class="el" href="_filter_8h_source.html#l00024">24</a> of file <a class="el" href="_filter_8h_source.html">Filter.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6ea36f2b8220cef4bc2211cf64c78e84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ea36f2b8220cef4bc2211cf64c78e84">&#9670;&nbsp;</a></span>Filter()</h2>
+<a id="a92b0637858f2887a773db10de4c254cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92b0637858f2887a773db10de4c254cf">&#9670;&nbsp;</a></span>Filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,7 +258,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>gain</em> = <code>1.0f</code>&#160;</td>
+          <td class="paramname"><em>gain</em> = <code>1.5f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -246,58 +268,23 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td>
       </table>
 </div><div class="memdoc">
 
-<p>(TODO) Brief description </p>
-<p>(TODO) Detailed description</p>
+<p>Constructs a <a class="el" href="classreverb_1_1_filter.html">Filter</a> object with optional frequency/gain/Q parameters. </p>
+<p>The <a class="el" href="classreverb_1_1_filter.html">Filter</a> object is constructed from the processor pointer and from the optional frequency/gain/Q parameters. The frequency is the cut-off frequency of the derived LowShelfFilter/HighShelfFilter and the center frequency of the <a class="el" href="classreverb_1_1_peak_filter.html">PeakFilter</a> class.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">processor</td><td>Pointer to main processor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">freq</td><td>Band frequency </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">gain</td><td>Band gain </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">q</td><td>Q factor </td></tr>
   </table>
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00029">29</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af80d35155799ef97ee15fd7d324f1577"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af80d35155799ef97ee15fd7d324f1577">&#9670;&nbsp;</a></span>disable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reverb::Filter::disable </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>(TODO) Brief description </p>
-<p>(TODO) Detailed description </p>
-
-</div>
-</div>
-<a id="a44235df714dc06eded9494b337806258"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44235df714dc06eded9494b337806258">&#9670;&nbsp;</a></span>enable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reverb::Filter::enable </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>(TODO) Brief description </p>
-<p>(TODO) Detailed description </p>
-
-</div>
-</div>
 <a id="ac540833d6e459aa3c9b4354c4c02648d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac540833d6e459aa3c9b4354c4c02648d">&#9670;&nbsp;</a></span>exec()</h2>
 
@@ -322,36 +309,183 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td>
 </table>
 </div><div class="memdoc">
 
-<p>Brief description. </p>
-<p>Detailed description</p>
+<p>Filters the audio in AudioSampleBuffer. </p>
+<p>This function filters an AudioBuffer using the IIR filter's coefficients</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">ir</td><td>Parameter description </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">ir</td><td>Contains the audio to be filtered, the output is placed in that same buffer </td></tr>
   </table>
   </dd>
 </dl>
 
 <p>Implements <a class="el" href="classreverb_1_1_task.html#a79f6094e4d025a183e5ecf46146de7b0">reverb::Task</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00081">81</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
+
 </div>
 </div>
-<a id="a86d79bf64d86cacd44f74a448a87837d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86d79bf64d86cacd44f74a448a87837d">&#9670;&nbsp;</a></span>isEnabled()</h2>
+<a id="a371c1785540786d8172a8331625ac41a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a371c1785540786d8172a8331625ac41a">&#9670;&nbsp;</a></span>getAmplitude()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool reverb::Filter::isEnabled </td>
+          <td class="memname">float reverb::Filter::getAmplitude </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>freq</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>(TODO) Brief description </p>
-<p>(TODO) Detailed description </p>
+<p>Returns the filter absolute amplitude response at a given frequency. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">freq</td><td>Frequency at which the filter magnitude is evaluated </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00109">109</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a1941ad2f10b4ca582d11ded156148dd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1941ad2f10b4ca582d11ded156148dd8">&#9670;&nbsp;</a></span>getdBAmplitude()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float reverb::Filter::getdBAmplitude </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>freq</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the filter amplitude response in dB at a given frequency. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">freq</td><td>Frequency at which the filter magnitude is evaluated</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classreverb_1_1_filter.html">Filter</a> amplitude response in dB </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00142">142</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a5ccd8c770dce1143b35086de97cb6482"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ccd8c770dce1143b35086de97cb6482">&#9670;&nbsp;</a></span>setFrequency()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reverb::Filter::setFrequency </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>freq</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the filter frequency and updates the IIR filter coefficients (Meant to be used by <a class="el" href="classreverb_1_1_equalizer.html">Equalizer</a> class) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">freq</td><td>Frequency to be set </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00155">155</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a58dffe8d6f95c99d121d6ffff1da8cde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58dffe8d6f95c99d121d6ffff1da8cde">&#9670;&nbsp;</a></span>setGain()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reverb::Filter::setGain </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>gain</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the filter band gain and updates the IIR filter coefficients (Meant to be used by <a class="el" href="classreverb_1_1_equalizer.html">Equalizer</a> class) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">freq</td><td>Band gain to be set </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00184">184</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a82249e01896b8f80efe5c285779b13c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82249e01896b8f80efe5c285779b13c7">&#9670;&nbsp;</a></span>setQ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reverb::Filter::setQ </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>q</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the filter Q factor and updates the IIR filter coefficients (Meant to be used by <a class="el" href="classreverb_1_1_equalizer.html">Equalizer</a> class) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">freq</td><td>Q factor to be set </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00170">170</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
 
 </div>
 </div>
@@ -400,11 +534,13 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td>
 
 <p>Implements <a class="el" href="classreverb_1_1_task.html#af640dc99b532a99fe87458b02765bc57">reverb::Task</a>.</p>
 
+<p class="definition">Definition at line <a class="el" href="_filter_8cpp_source.html#l00042">42</a> of file <a class="el" href="_filter_8cpp_source.html">Filter.cpp</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>Source/<a class="el" href="_filter_8h_source.html">Filter.h</a></li>
-<li>Source/Filter.cpp</li>
+<li>Source/<a class="el" href="_filter_8cpp_source.html">Filter.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -412,7 +548,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>reverb</b></li><li class="navelem"><a class="el" href="classreverb_1_1_filter.html">Filter</a></li>
-    <li class="footer">Generated by
+    <li class="footer">Generated on Tue Apr 3 2018 18:57:11 for quantumVERB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

@@ -21,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_extra.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -28,9 +29,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_dial.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">quantumVERB
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">A FOSS convolution reverb plugin</div>
   </td>
  </tr>
  </tbody>
@@ -101,7 +105,7 @@ Inheritance diagram for reverb::UIReverbBlock:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreverb_1_1_u_i_reverb_block__inherit__graph.png" border="0" usemap="#reverb_1_1_u_i_reverb_block_inherit__map" alt="Inheritance graph"/></div>
 <map name="reverb_1_1_u_i_reverb_block_inherit__map" id="reverb_1_1_u_i_reverb_block_inherit__map">
-<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="25,80,134,107"/>
+<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="28,80,137,107"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -109,7 +113,7 @@ Collaboration diagram for reverb::UIReverbBlock:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreverb_1_1_u_i_reverb_block__coll__graph.png" border="0" usemap="#reverb_1_1_u_i_reverb_block_coll__map" alt="Collaboration graph"/></div>
 <map name="reverb_1_1_u_i_reverb_block_coll__map" id="reverb_1_1_u_i_reverb_block_coll__map">
-<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="11,81,120,108"/>
+<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="28,81,137,108"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -135,9 +139,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>paint</b> (juce::Grap
 <tr class="memdesc:a2a49aebcbc06264abceaba87a36d6fe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages the layout of <a class="el" href="classreverb_1_1_u_i_reverb_block.html">UIReverbBlock</a> when the block is resized.  <a href="#a2a49aebcbc06264abceaba87a36d6fe2">More...</a><br /></td></tr>
 <tr class="separator:a2a49aebcbc06264abceaba87a36d6fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreverb_1_1_u_i_block"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreverb_1_1_u_i_block')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreverb_1_1_u_i_block.html">reverb::UIBlock</a></td></tr>
-<tr class="memitem:a9a4d190acd4ba1897f5eedae533e9526 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memItemLeft" align="right" valign="top"><a id="a9a4d190acd4ba1897f5eedae533e9526"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UIBlock</b> (int numComponents, int numComponentsPerRow)</td></tr>
-<tr class="separator:a9a4d190acd4ba1897f5eedae533e9526 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a350b93934f72e8c8d351a96cd5cf849b inherit pub_methods_classreverb_1_1_u_i_block"><td class="memItemLeft" align="right" valign="top"><a id="a350b93934f72e8c8d351a96cd5cf849b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UIBlock</b> (int numComponents, int numComponentsPerRow, const juce::String &amp;componentName=juce::String(), const juce::String &amp;labelText=juce::String())</td></tr>
+<tr class="separator:a350b93934f72e8c8d351a96cd5cf849b inherit pub_methods_classreverb_1_1_u_i_block"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedd942ea80432af4aead9e4107392216 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memItemLeft" align="right" valign="top"><a id="aedd942ea80432af4aead9e4107392216"></a>
 std::vector&lt; juce::Rectangle&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getComponentCells</b> (juce::Rectangle&lt; int &gt; bounds)</td></tr>
 <tr class="separator:aedd942ea80432af4aead9e4107392216 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,7 +213,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>numComponents</b></td>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>numComponentsPerRow</b></td></tr>
 <tr class="separator:ad1057e2d0b04114a1572df44a3752349 inherit pro_attribs_classreverb_1_1_u_i_block"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="_u_i_reverb_block_8h_source.html#l00022">22</a> of file <a class="el" href="_u_i_reverb_block_8h_source.html">UIReverbBlock.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a004caae138c3007559c3dbbb2a726351"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a004caae138c3007559c3dbbb2a726351">&#9670;&nbsp;</a></span>UIReverbBlock()</h2>
 
@@ -228,6 +235,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>numComponentsPerRow</b
 
 <p>Constructs an <a class="el" href="classreverb_1_1_u_i_reverb_block.html">UIReverbBlock</a> object. </p>
 <p>Creates a <a class="el" href="classreverb_1_1_u_i_reverb_block.html">UIReverbBlock</a> and each of its components. Constructs a building block for the UI. This block includes all sliders required for the impulse response parameters and output parammeters. It also does most of the configuration for these sliders. It also adds its parameters to the AudioProcessorValueTreeState. </p>
+
+<p class="definition">Definition at line <a class="el" href="_u_i_reverb_block_8cpp_source.html#l00025">25</a> of file <a class="el" href="_u_i_reverb_block_8cpp_source.html">UIReverbBlock.cpp</a>.</p>
 
 </div>
 </div>
@@ -258,11 +267,13 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>numComponentsPerRow</b
 <p>Manages the layout of <a class="el" href="classreverb_1_1_u_i_reverb_block.html">UIReverbBlock</a> when the block is resized. </p>
 <p>This function defines all the relative positioning of the various <a class="el" href="classreverb_1_1_u_i_reverb_block.html">UIReverbBlock</a> elements. </p>
 
+<p class="definition">Definition at line <a class="el" href="_u_i_reverb_block_8cpp_source.html#l00139">139</a> of file <a class="el" href="_u_i_reverb_block_8cpp_source.html">UIReverbBlock.cpp</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>Source/<a class="el" href="_u_i_reverb_block_8h_source.html">UIReverbBlock.h</a></li>
-<li>Source/UIReverbBlock.cpp</li>
+<li>Source/<a class="el" href="_u_i_reverb_block_8cpp_source.html">UIReverbBlock.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -270,7 +281,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>numComponentsPerRow</b
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>reverb</b></li><li class="navelem"><a class="el" href="classreverb_1_1_u_i_reverb_block.html">UIReverbBlock</a></li>
-    <li class="footer">Generated by
+    <li class="footer">Generated on Tue Apr 3 2018 18:57:12 for quantumVERB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>
