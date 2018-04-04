@@ -27,7 +27,7 @@ public:
 	void setGainFactor (float f) { gainFactor = f; }
 };
 
-TEST_CASE ("Gain Class is tested", "[Gain]") {
+TEST_CASE ("Volume IR is tested", "[Gain]") {
 	constexpr int SAMPLE_RATE = 88200;
 	constexpr int NUM_CHANNELS = 1;
 	constexpr std::chrono::milliseconds DURATION_MS (300);
