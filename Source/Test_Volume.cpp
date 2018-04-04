@@ -46,8 +46,9 @@ TEST_CASE ("Volume IR is tested", "[Gain]") {
 
 	SECTION ("Apply gain to audio buffer") {
 
+		
+		float TB_AMPLITUDE[] = { 0, 0.1, 0,2 , 0,35 , 0.5,0,75, 1};
 		constexpr float MAX_AMPLITUDE = 10.0;
-
 		for(float j = 0.0; j < MAX_AMPLITUDE; ++j)
 		{
 
@@ -63,8 +64,8 @@ TEST_CASE ("Volume IR is tested", "[Gain]") {
 			}
 
 			// Run gain
-			gain.setGainFactor (j);
-			REQUIRE (compareFloats (gain.getGainFactor (), j));
+			gain.setGainFactor (TB_AMPLITUDE[j]);
+			REQUIRE (compareFloats (gain.getGainFactor (), TB_AMPLITUDE[j]));
 
 			gain.exec (ir);
 
@@ -75,15 +76,16 @@ TEST_CASE ("Volume IR is tested", "[Gain]") {
 			// should now have ir(i) = TB_AMPLITUDE[j] for all i < NUM_SAMPLES.
 			for(int i = 0; i < NUM_SAMPLES; ++i)
 			{
-				CHECK (compareFloats (ir.getSample (0, i), j));
+				CHECK (compareFloats (ir.getSample (0, i), TB_AMPLITUDE[j]));
 			}
 		}
 	}
 
 	SECTION ("Performance_Testing") {
-		constexpr float MAX_AMPLITUDE = 10;
+		float TB_AMPLITUDE[] = { 0, 0.1, 0,2 , 0,35 , 0.5,0,75, 1 };
+		constexpr float MAX_AMPLITUDE = 10.0;
 
-		for(float j = 1.0; j <MAX_AMPLITUDE; ++j)
+		for(float j = 0; j <MAX_AMPLITUDE; ++j)
 		{
 			constexpr std::chrono::microseconds MAX_EXEC_TIME_US (2000);
 
@@ -96,7 +98,7 @@ TEST_CASE ("Volume IR is tested", "[Gain]") {
 			}
 
 			// Run gain
-			gain.setGainFactor (j);
+			gain.setGainFactor (TB_AMPLITUDE[j]);
 
 			// Measure exec time
 			auto start = std::chrono::high_resolution_clock::now ();
