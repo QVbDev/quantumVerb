@@ -1,9 +1,10 @@
+
 /*
-  ==============================================================================
+==============================================================================
 
-    Test_Gain.cpp
+Test_Volume.cpp
 
-  ==============================================================================
+==============================================================================
 */
 
 #include "catch.hpp"
@@ -14,89 +15,98 @@
 #define compareFloats(a1, a2) std::abs(a2 - a1) <= 0.01
 
 /**
- * How to write tests with Catch:
- * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
- */
+* How to write tests with Catch:
+* https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
+*/
 
-class GainMocked : public reverb::Gain
-{
+class GainMocked : public reverb::Gain {
 public:
-    using Gain::Gain;
+	using Gain::Gain;
 
-    float getGainFactor() { return gainFactor; }
-    void setGainFactor(float f) { gainFactor = f; }
+	float getGainFactor () { return gainFactor; }
+	void setGainFactor (float f) { gainFactor = f; }
 };
 
-TEST_CASE("Gain Class is tested", "[Gain]") {
-    constexpr int SAMPLE_RATE = 88200;
-    constexpr int NUM_CHANNELS = 1;
-    constexpr std::chrono::milliseconds DURATION_MS(300);
-    const int NUM_SAMPLES = (int)std::ceil((DURATION_MS.count() / 1000.0) * SAMPLE_RATE);
+TEST_CASE ("Gain Class is tested", "[Gain]") {
+	constexpr int SAMPLE_RATE = 88200;
+	constexpr int NUM_CHANNELS = 1;
+	constexpr std::chrono::milliseconds DURATION_MS (300);
+	const int NUM_SAMPLES = (int)std::ceil ((DURATION_MS.count () / 1000.0) * SAMPLE_RATE);
 
-    // Create Mixer object
-    reverb::AudioProcessor processor;
+	// Create Gain object
+	reverb::AudioProcessor processor;
 
-    processor.setPlayConfigDetails(NUM_CHANNELS, NUM_CHANNELS,
-                                   SAMPLE_RATE, NUM_SAMPLES);
+	processor.setPlayConfigDetails (NUM_CHANNELS, NUM_CHANNELS,
+		SAMPLE_RATE, NUM_SAMPLES);
 
-    REQUIRE(processor.getSampleRate() == SAMPLE_RATE);
+	REQUIRE (processor.getSampleRate () == SAMPLE_RATE);
 
-    GainMocked gain(&processor);
+	GainMocked gain (&processor);
 
-    SECTION("Apply gain to audio buffer") {
-        constexpr float GAIN = 2.0f;
 
-        // Create audio block
-        juce::AudioSampleBuffer audio(1, NUM_SAMPLES);
+	SECTION ("Apply gain to audio buffer") {
 
-        REQUIRE(audio.getNumChannels() == NUM_CHANNELS);
-        REQUIRE(audio.getNumSamples() == NUM_SAMPLES);
+		constexpr float MAX_AMPLITUDE = 10.0;
 
-        for (int i = 0; i < NUM_SAMPLES; i++)
-        {
-            audio.setSample(0, i, 1);
-        }
+		for(float j = 0.0; j < MAX_AMPLITUDE; ++j)
+		{
 
-        // Run gain
-        gain.setGainFactor(GAIN);
+			// Create audio block
+			juce::AudioSampleBuffer ir (1, NUM_SAMPLES);
 
-        REQUIRE(compareFloats(gain.getGainFactor(), GAIN));
+			REQUIRE (ir.getNumChannels () == NUM_CHANNELS);
+			REQUIRE (ir.getNumSamples () == NUM_SAMPLES);
 
-        gain.exec(audio);
+			for(int i = 0; i < NUM_SAMPLES; i++)
+			{
+				ir.setSample (0, i, 1);
+			}
 
-        CHECK(audio.getNumChannels() == NUM_CHANNELS);
-        CHECK(audio.getNumSamples() == NUM_SAMPLES);
+			// Run gain
+			gain.setGainFactor (j);
+			REQUIRE (compareFloats (gain.getGainFactor (), j));
 
-        // Since we started with audio(i) = 1 for all i < NUM_SAMPLES, we
-        // should now have audio(i) = GAIN for all i < NUM_SAMPLES.
-        for (int i = 0; i < NUM_SAMPLES; ++i)
-        {
-            CHECK(compareFloats(audio.getSample(0, i), GAIN));
-        }
-    }
+			gain.exec (ir);
 
-    SECTION("Performance_Testing") {
-        constexpr std::chrono::microseconds MAX_EXEC_TIME_US(2000);
-        constexpr float GAIN = 2.0f;
+			CHECK (ir.getNumChannels () == NUM_CHANNELS);
+			CHECK (ir.getNumSamples () == NUM_SAMPLES);
 
-        // Create audio block
-        juce::AudioSampleBuffer audio(1, NUM_SAMPLES);
+			// Since we started with audio(i) = 1 for all i < NUM_SAMPLES, we
+			// should now have ir(i) = TB_AMPLITUDE[j] for all i < NUM_SAMPLES.
+			for(int i = 0; i < NUM_SAMPLES; ++i)
+			{
+				CHECK (compareFloats (ir.getSample (0, i), j));
+			}
+		}
+	}
 
-        for (int i = 0; i < NUM_SAMPLES; i++)
-        {
-            audio.setSample(0, i, 1);
-        }
+	SECTION ("Performance_Testing") {
+		constexpr float MAX_AMPLITUDE = 10;
 
-        // Run gain
-        gain.setGainFactor(GAIN);
+		for(float j = 1.0; j <MAX_AMPLITUDE; ++j)
+		{
+			constexpr std::chrono::microseconds MAX_EXEC_TIME_US (2000);
 
-        // Measure exec time
-        auto start = std::chrono::high_resolution_clock::now();
-        gain.exec(audio);
-        auto end = std::chrono::high_resolution_clock::now();
+			// Create audio block
+			juce::AudioSampleBuffer ir (1, NUM_SAMPLES);
 
-        auto execTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+			for(int i = 0; i < NUM_SAMPLES; i++)
+			{
+				ir.setSample (0, i, 1);
+			}
 
-        CHECK(execTime.count() < MAX_EXEC_TIME_US.count());
-    }
+			// Run gain
+			gain.setGainFactor (j);
+
+			// Measure exec time
+			auto start = std::chrono::high_resolution_clock::now ();
+			gain.exec (ir);
+			auto end = std::chrono::high_resolution_clock::now ();
+
+			auto execTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+			CHECK (execTime.count () < MAX_EXEC_TIME_US.count ());
+		}
+	}
+
 }
