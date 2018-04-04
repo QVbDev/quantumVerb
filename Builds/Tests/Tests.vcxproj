@@ -208,6 +208,7 @@
     <ClCompile Include="..\..\Source\Test_PreDelay.cpp" />
     <ClCompile Include="..\..\Source\Test_TimeStretch.cpp" />
     <ClCompile Include="..\..\Source\Test_Util.cpp" />
+    <ClCompile Include="..\..\Source\Test_Volume.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

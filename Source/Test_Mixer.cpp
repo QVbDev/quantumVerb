@@ -44,45 +44,50 @@ TEST_CASE("Mixer class is tested", "[Mixer]")
     MixerMocked mixer(&processor);
 
     SECTION("Mix two audio buffers") {
-        constexpr float WET_RATIO = 0.5f;
+		float TB_WET_RATIO[] = { 0, 0.5, 1};
+		constexpr int TB_LENGTH = 3;
 
-        // Wet audio buffer: all ones
-        juce::AudioSampleBuffer wetAudio(1, NUM_SAMPLES);
+		for(int k = 0; k<TB_LENGTH; ++k)
 
-        REQUIRE(wetAudio.getNumChannels() == NUM_CHANNELS);
-        REQUIRE(wetAudio.getNumSamples() == NUM_SAMPLES);
+		{// Wet audio buffer: all ones
+			juce::AudioSampleBuffer wetAudio (1, NUM_SAMPLES);
 
-        for (int i = 0; i < NUM_SAMPLES; i++)
-        {
-            wetAudio.setSample(0, i, 1);
-        }
+			REQUIRE (wetAudio.getNumChannels () == NUM_CHANNELS);
+			REQUIRE (wetAudio.getNumSamples () == NUM_SAMPLES);
 
-        // Dry audio buffer: all zeros
-        juce::AudioSampleBuffer dryAudio(1, NUM_SAMPLES);
+			for(int i = 0; i < NUM_SAMPLES; i++)
+			{
+				wetAudio.setSample (0, i, 1);
+			}
 
-        REQUIRE(dryAudio.getNumChannels() == NUM_CHANNELS);
-        REQUIRE(dryAudio.getNumSamples() == NUM_SAMPLES);
+			// Dry audio buffer: all zeros
+			juce::AudioSampleBuffer dryAudio (1, NUM_SAMPLES);
 
-        for (int i = 0; i < NUM_SAMPLES; i++)
-        {
-            dryAudio.setSample(0, i, 0);
-        }
+			REQUIRE (dryAudio.getNumChannels () == NUM_CHANNELS);
+			REQUIRE (dryAudio.getNumSamples () == NUM_SAMPLES);
 
-        // Run mixer
-        mixer.setWetRatio(WET_RATIO);
-        mixer.loadDry(dryAudio);
+			for(int i = 0; i < NUM_SAMPLES; i++)
+			{
+				dryAudio.setSample (0, i, 0);
+			}
 
-        mixer.exec(wetAudio);
+			// Run mixer
+			mixer.setWetRatio (TB_WET_RATIO[k]);
+			mixer.loadDry (dryAudio);
 
-        CHECK(wetAudio.getNumChannels() == NUM_CHANNELS);
-        CHECK(wetAudio.getNumSamples() == NUM_SAMPLES);
+			mixer.exec (wetAudio);
 
-        // Since wet = 1 and dry = 0, all values in output buffer should
-        // be WET_RATIO
-        for (int i = 0; i < NUM_SAMPLES; i++)
-        {
-            CHECK( compareFloats(wetAudio.getSample(0, i), WET_RATIO) );
-        }
-    }
+			CHECK (wetAudio.getNumChannels () == NUM_CHANNELS);
+			CHECK (wetAudio.getNumSamples () == NUM_SAMPLES);
+
+			// Since wet = 1 and dry = 0, all values in output buffer should
+			// be TB_WET_RATIO[k]
+			for(int i = 0; i < NUM_SAMPLES; i++)
+			{
+				CHECK (compareFloats (wetAudio.getSample (0, i), TB_WET_RATIO[k]));
+			}
+		}
+		}
+        
 
 }
