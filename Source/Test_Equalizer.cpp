@@ -19,6 +19,8 @@ Test_Equalizer.cpp
 * https://github.com/catchorg/Catch2/blob/2bbba4f5444b7a90fcba92562426c14b11e87b76/docs/tutorial.md#writing-tests
 */
 
+#define compareFloats(a1, a2) std::abs(a2 - a1) <= 0.01
+
 namespace reverb {
     class EqualizerMocked : public Equalizer 
     
@@ -39,16 +41,20 @@ namespace reverb {
             filterSet[id]->Q = q;
         }
 
-        float getFrequency(float freq, int id) {
+        float getFrequency(int id) {
             return filterSet[id]->frequency;
         }
 
-        float getGain(float gain, int id) {
+        float getGain(int id) {
             return filterSet[id]->gainFactor;
         }
 
-        float getQ(float q, int id) {
+        float getQ(int id) {
             return filterSet[id]->Q;
+        }
+
+        float getEQGain(int id) {
+            return EQGains[id];
         }
     };
 }
@@ -139,9 +145,48 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
     }*/
 
-    SECTION("Testing equalizer")
+    SECTION("Testing equalizer functionality") {
+        reverb::EqualizerMocked EQ(&processor);
+        /*-----------------------------------------Functionality test--------------------------------------------*/
+        EQ.setFrequency(500, 0);
+        EQ.setGain(2, 0);
+        EQ.setQ(0.71, 0);
+
+        EQ.setFrequency(1500, 1);
+        EQ.setGain(0.5, 1);
+        EQ.setQ(1, 1);
+
+        EQ.setFrequency(2600, 2);
+        EQ.setGain(2, 2);
+        EQ.setQ(1, 2);
+
+        EQ.setFrequency(8000, 3);
+        EQ.setGain(3, 3);
+        EQ.setQ(0.71, 3);
+
+        EQ.calibrateFilters();
+
+        EQ.exec(sampleBuffer);
+
+        memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
+        forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+        //Testing gain at evaluation points
+
+        REQUIRE(compareFloats(EQ.getEQGain(0), fftBuffer[0]));
+
+        REQUIRE(compareFloats(EQ.getEQGain(1), fftBuffer[(int)(1500 / freqRes)]));
+
+        REQUIRE(compareFloats(EQ.getEQGain(2), fftBuffer[(int)(2600 / freqRes)]));
+
+        REQUIRE(compareFloats(EQ.getEQGain(3), fftBuffer[(int)(21000 / freqRes)]));
+
+    }
+
+    SECTION("Testing equalizer borderline cases")
     {
         reverb::EqualizerMocked EQ(&processor);
+
 
         /*-----------------------------------------Testing borderline case---------------------------------------*/
 
@@ -217,4 +262,5 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
     }
 
     delete[] fftBuffer;
+    delete[] dBPlot;
 }
