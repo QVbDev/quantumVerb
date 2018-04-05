@@ -150,18 +150,18 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
         /*-----------------------------------------Functionality test--------------------------------------------*/
         EQ.setFrequency(500, 0);
         EQ.setGain(2, 0);
-        EQ.setQ(0.71, 0);
+        EQ.setQ(0.5, 0);
 
         EQ.setFrequency(1500, 1);
         EQ.setGain(0.5, 1);
         EQ.setQ(1, 1);
 
         EQ.setFrequency(2600, 2);
-        EQ.setGain(2, 2);
-        EQ.setQ(1, 2);
+        EQ.setGain(4, 2);
+        EQ.setQ(2, 2);
 
         EQ.setFrequency(8000, 3);
-        EQ.setGain(3, 3);
+        EQ.setGain(5, 3);
         EQ.setQ(0.71, 3);
 
         EQ.calibrateFilters();
@@ -180,6 +180,12 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
         REQUIRE(compareFloats(EQ.getEQGain(2), fftBuffer[(int)(2600 / freqRes)]));
 
         REQUIRE(compareFloats(EQ.getEQGain(3), fftBuffer[(int)(21000 / freqRes)]));
+
+        //Comparing filter Q factors to the user-defined ones
+        REQUIRE(compareFloats(EQ.getQ(0), 0.5));
+        REQUIRE(compareFloats(EQ.getQ(1), 1));
+        REQUIRE(compareFloats(EQ.getQ(2), 2));
+        REQUIRE(compareFloats(EQ.getQ(3), 0.71));
 
     }
 
