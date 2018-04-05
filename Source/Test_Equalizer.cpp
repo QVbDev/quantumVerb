@@ -261,7 +261,7 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
         }
 
         //Check if margin is large enough
-        REQUIRE((2600.0f / (float)frequency) > 1.3);
+        REQUIRE((2600.0f - 1600)/((float)frequency - 1600) > 100);
 
 
 
