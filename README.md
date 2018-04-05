@@ -1,6 +1,7 @@
 # quantumVerb
 
-An open-source convolution reverb audio plugin developed for Quantum Music by 4th-year engineering students at Polytechnique Montréal.
+A free and open-source convolution reverb plugin developed for [Quantum Music](http://www.quantum-music.ca/) (and the rest of the world) by
+4th-year engineering students at [Polytechnique Montréal](http://www.polymtl.ca/en).
 
 ## Installing the plugin (tl;dr version)
 
