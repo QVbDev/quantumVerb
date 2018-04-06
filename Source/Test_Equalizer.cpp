@@ -198,22 +198,22 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
         //Set low-shelf filter at maximum frequency, maximum gain and minimum Q
         EQ.setFrequency(500, 0);
-        EQ.setGain(5.2, 0);
+        EQ.setGain(reverb::Filter::invdB(15), 0);
         EQ.setQ(0.71, 0);
 
         //Set first peak filter to minimum gain, minimum Q as close as can be to peak 2
         EQ.setFrequency(1500, 1);
-        EQ.setGain(0.06, 1);
+        EQ.setGain(reverb::Filter::invdB(-24), 1);
         EQ.setQ(0.71, 1);
 
         //Set second peak filter to maximum gain, minimum Q as close as can be to peak 1
         EQ.setFrequency(2600, 2);
-        EQ.setGain(5.2, 2);
+        EQ.setGain(reverb::Filter::invdB(15), 2);
         EQ.setQ(0.71, 2);
 
         //Set high-shelf filter at minimum frequency, minimum gain and minimum Q
         EQ.setFrequency(8000, 3);
-        EQ.setGain(0.06, 3);
+        EQ.setGain(reverb::Filter::invdB(-24), 3);
         EQ.setQ(0.71, 3);
 
         bool converged = true;
@@ -232,6 +232,11 @@ TEST_CASE("Equalizer class is tested", "[equalizer]")
 
         memcpy(fftBuffer, sampleBuffer.getReadPointer(0), sampleBuffer.getNumSamples() * sizeof(*sampleBuffer.getReadPointer(0)));
         forwardFFT.performFrequencyOnlyForwardTransform(fftBuffer);
+
+        for (int i = 0; i < forwardFFT.getSize(); i++) 
+        {
+            fftBuffer[i] = reverb::Filter::todB(fftBuffer[i]);
+        }
 
         //Set breakpoint here to observe FFT in fftBuffer
 
