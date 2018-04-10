@@ -1,5 +1,7 @@
 # QuantumReverb
 
+[![Build status](https://ci.appveyor.com/api/projects/status/79vsij3o2i341rde/branch/master?svg=true)](https://ci.appveyor.com/project/segwin/quantumverb/branch/master)
+
 An open-source convolution reverb audio plugin developed for Quantum Music by 4th-year engineering students at Polytechnique Montréal.
 
 # Getting started using Visual Studio 2017
@@ -21,4 +23,4 @@ An open-source convolution reverb audio plugin developed for Quantum Music by 4t
 
 # Style guide
 
-See the [**Style Guide** page](StyleGuide.md)
+See the [**Style Guide** page](CONTRIBUTING.md)
