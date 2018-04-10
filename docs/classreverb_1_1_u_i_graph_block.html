@@ -21,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen_extra.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -28,9 +29,12 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo_dial.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">quantumVERB
+   &#160;<span id="projectnumber">1.0.0</span>
    </div>
+   <div id="projectbrief">A FOSS convolution reverb plugin</div>
   </td>
  </tr>
  </tbody>
@@ -101,8 +105,6 @@ $(document).ready(function(){initNavTree('classreverb_1_1_u_i_graph_block.html',
 Inheritance diagram for reverb::UIGraphBlock:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreverb_1_1_u_i_graph_block__inherit__graph.png" border="0" usemap="#reverb_1_1_u_i_graph_block_inherit__map" alt="Inheritance graph"/></div>
-<map name="reverb_1_1_u_i_graph_block_inherit__map" id="reverb_1_1_u_i_graph_block_inherit__map">
-</map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for reverb::UIGraphBlock:</div>
@@ -198,7 +200,10 @@ static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRA
 static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRAPH_MAX_IR_VALUE</b> = 10.0f</td></tr>
 <tr class="separator:aed58bdd8ea05226f5b4d75b191e4a642"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="_u_i_graph_block_8h_source.html#l00020">20</a> of file <a class="el" href="_u_i_graph_block_8h_source.html">UIGraphBlock.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab301d9f4afc18515a22b278d703e5501"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab301d9f4afc18515a22b278d703e5501">&#9670;&nbsp;</a></span>UIGraphBlock()</h2>
 
@@ -217,6 +222,8 @@ static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRA
 
 <p>Constructs a <a class="el" href="classreverb_1_1_u_i_graph_block.html">UIGraphBlock</a> object. </p>
 <p>Creates a <a class="el" href="classreverb_1_1_u_i_graph_block.html">UIGraphBlock</a> and each of its components. Contains the IR graph which is updated periodically and on notify in a separate thread. </p>
+
+<p class="definition">Definition at line <a class="el" href="_u_i_graph_block_8cpp_source.html#l00022">22</a> of file <a class="el" href="_u_i_graph_block_8cpp_source.html">UIGraphBlock.cpp</a>.</p>
 
 </div>
 </div>
@@ -237,6 +244,8 @@ static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRA
 
 <p>Destroys a <a class="el" href="classreverb_1_1_u_i_graph_block.html">UIGraphBlock</a> object. </p>
 <p>Sends the stop signal to the graph thread </p>
+
+<p class="definition">Definition at line <a class="el" href="_u_i_graph_block_8cpp_source.html#l00034">34</a> of file <a class="el" href="_u_i_graph_block_8cpp_source.html">UIGraphBlock.cpp</a>.</p>
 
 </div>
 </div>
@@ -267,6 +276,8 @@ static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRA
 <p>Signals thread to update graph. </p>
 <p>Sends a notification to the worker thread through the mustUpdate condition variable. </p>
 
+<p class="definition">Definition at line <a class="el" href="_u_i_graph_block_8cpp_source.html#l00199">199</a> of file <a class="el" href="_u_i_graph_block_8cpp_source.html">UIGraphBlock.cpp</a>.</p>
+
 </div>
 </div>
 <a id="aa0759102ae1f8ac3200dfda71af54936"></a>
@@ -294,6 +305,8 @@ static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRA
 
 <p>Manages the layout of <a class="el" href="classreverb_1_1_u_i_graph_block.html">UIGraphBlock</a> when the block is resized. </p>
 <p>This function defines all the relative positioning of the various <a class="el" href="classreverb_1_1_u_i_graph_block.html">UIGraphBlock</a> elements. </p>
+
+<p class="definition">Definition at line <a class="el" href="_u_i_graph_block_8cpp_source.html#l00069">69</a> of file <a class="el" href="_u_i_graph_block_8cpp_source.html">UIGraphBlock.cpp</a>.</p>
 
 </div>
 </div>
@@ -330,11 +343,13 @@ static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRA
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="_u_i_graph_block_8cpp_source.html#l00146">146</a> of file <a class="el" href="_u_i_graph_block_8cpp_source.html">UIGraphBlock.cpp</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>Source/<a class="el" href="_u_i_graph_block_8h_source.html">UIGraphBlock.h</a></li>
-<li>Source/UIGraphBlock.cpp</li>
+<li>Source/<a class="el" href="_u_i_graph_block_8cpp_source.html">UIGraphBlock.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -342,7 +357,7 @@ static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>GRA
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>reverb</b></li><li class="navelem"><a class="el" href="classreverb_1_1_u_i_graph_block.html">UIGraphBlock</a></li>
-    <li class="footer">Generated by
+    <li class="footer">Generated on Tue Apr 10 2018 01:29:04 for quantumVERB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>
