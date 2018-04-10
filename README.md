@@ -1,5 +1,7 @@
 # quantumVerb
 
+[![Build status](https://ci.appveyor.com/api/projects/status/79vsij3o2i341rde/branch/master?svg=true)](https://ci.appveyor.com/project/segwin/quantumverb/branch/master)
+
 A free and open-source convolution reverb plugin developed for [Quantum Music](http://www.quantum-music.ca/) (and the rest of the world) by
 4th-year engineering students at [Polytechnique Montréal](http://www.polymtl.ca/en).
 
@@ -29,5 +31,5 @@ A free and open-source convolution reverb plugin developed for [Quantum Music](h
 ## Useful links
 
 * [Class documentation](https://qvbdev.github.io/quantumVerb/)
-* [Style guide](StyleGuide.md)
+* [Contribution guidelines](CONTRIBUTING.md)
 * [Known issues](https://github.com/QVbDev/quantumVerb/wiki/Known-bugs-&-limitations)
