@@ -426,6 +426,9 @@
     <ClCompile Include="..\..\Source\Convolution.cpp">
       <Filter>quantumVERB\source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Equalizer.cpp">
+      <Filter>quantumVERB\source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Filter.cpp">
       <Filter>quantumVERB\source</Filter>
     </ClCompile>
@@ -2298,12 +2301,12 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_video.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Equalizer.cpp">
-      <Filter>quantumVERB\source</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Convolution.h">
+      <Filter>quantumVERB\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Equalizer.h">
       <Filter>quantumVERB\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Filter.h">
@@ -4453,9 +4456,6 @@
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>JUCE Library Code</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Equalizer.h">
-      <Filter>quantumVERB\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
