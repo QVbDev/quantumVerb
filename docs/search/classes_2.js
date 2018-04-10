@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['filter',['Filter',['../classreverb_1_1_filter.html',1,'reverb']]]
+  ['equalizer',['Equalizer',['../classreverb_1_1_equalizer.html',1,'reverb']]]
 ];

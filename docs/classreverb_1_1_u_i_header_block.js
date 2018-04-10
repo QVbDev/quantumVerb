@@ -10,6 +10,8 @@ var classreverb_1_1_u_i_header_block =
     [ "isOn", "classreverb_1_1_u_i_header_block.html#acc3798225e7d388f1c9a812c745e2578", null ],
     [ "isOnAttachment", "classreverb_1_1_u_i_header_block.html#a0ee49931fba3501de4d5cdf5e7c0cee0", null ],
     [ "isOnLabel", "classreverb_1_1_u_i_header_block.html#acdcd322dc0d0d0bfd6ed383957ec0408", null ],
+    [ "parameters", "classreverb_1_1_u_i_header_block.html#a7fe905a8c34eb1ad44752c7ab08e30d8", null ],
+    [ "previousSelectedIRs", "classreverb_1_1_u_i_header_block.html#ab1223f79c9b24fdb586921007bd3d94c", null ],
     [ "sampleRate", "classreverb_1_1_u_i_header_block.html#ad894b9ec551a4b1af1674c5cd103f586", null ],
     [ "sampleRateLabel", "classreverb_1_1_u_i_header_block.html#a1155e261fbf72b912a1db8b76b7826c7", null ]
 ];

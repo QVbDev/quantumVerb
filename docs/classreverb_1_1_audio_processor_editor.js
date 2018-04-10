@@ -4,6 +4,7 @@ var classreverb_1_1_audio_processor_editor =
     [ "SliderAttachment", "classreverb_1_1_audio_processor_editor.html#acfca702e56769d35238750bcc3853705", null ],
     [ "AudioProcessorEditor", "classreverb_1_1_audio_processor_editor.html#ae4c290289f507b5ec0e6ecc7bac1d052", null ],
     [ "~AudioProcessorEditor", "classreverb_1_1_audio_processor_editor.html#aef33bf482844ff9b1c8afa69debb9f05", null ],
+    [ "buttonClicked", "classreverb_1_1_audio_processor_editor.html#a9855b2464415d2d65dfb721ab41c4f78", null ],
     [ "paint", "classreverb_1_1_audio_processor_editor.html#a6690b3a3cdcb2918ad1f3f3fc11ceff5", null ],
     [ "resized", "classreverb_1_1_audio_processor_editor.html#adffedf3a4bf190b568de0348a09247d7", null ],
     [ "filterBlockNames", "classreverb_1_1_audio_processor_editor.html#a0f2bf51caeafe909700553675cc4cfe9", null ],
