@@ -30,6 +30,6 @@ A free and open-source convolution reverb plugin developed for [Quantum Music](h
 
 ## Useful links
 
-* [Class documentation](https://qvbdev.github.io/quantumVerb/)
+* [Class documentation](https://qvbdev.github.io/quantumVerb/docs/)
 * [Contribution guidelines](CONTRIBUTING.md)
 * [Known issues](https://github.com/QVbDev/quantumVerb/wiki/Known-bugs-&-limitations)
