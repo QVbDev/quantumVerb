@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['highshelffilter',['HighShelfFilter',['../classreverb_1_1_high_shelf_filter.html',1,'reverb']]]
+  ['gain',['Gain',['../classreverb_1_1_gain.html',1,'reverb']]]
 ];

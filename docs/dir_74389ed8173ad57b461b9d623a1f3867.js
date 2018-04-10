@@ -1,6 +1,7 @@
 var dir_74389ed8173ad57b461b9d623a1f3867 =
 [
     [ "Convolution.h", "_convolution_8h_source.html", null ],
+    [ "Equalizer.h", "_equalizer_8h_source.html", null ],
     [ "Filter.h", "_filter_8h_source.html", null ],
     [ "Gain.h", "_gain_8h_source.html", null ],
     [ "IRBank.h", "_i_r_bank_8h_source.html", null ],

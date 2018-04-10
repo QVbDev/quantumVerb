@@ -101,7 +101,7 @@ Inheritance diagram for reverb::UIHeaderBlock:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreverb_1_1_u_i_header_block__inherit__graph.png" border="0" usemap="#reverb_1_1_u_i_header_block_inherit__map" alt="Inheritance graph"/></div>
 <map name="reverb_1_1_u_i_header_block_inherit__map" id="reverb_1_1_u_i_header_block_inherit__map">
-<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="26,80,135,107"/>
+<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="28,80,137,107"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -109,7 +109,7 @@ Collaboration diagram for reverb::UIHeaderBlock:</div>
 <div class="dyncontent">
 <div class="center"><img src="classreverb_1_1_u_i_header_block__coll__graph.png" border="0" usemap="#reverb_1_1_u_i_header_block_coll__map" alt="Collaboration graph"/></div>
 <map name="reverb_1_1_u_i_header_block_coll__map" id="reverb_1_1_u_i_header_block_coll__map">
-<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="11,81,120,108"/>
+<area shape="rect" id="node2" href="classreverb_1_1_u_i_block.html" title="reverb::UIBlock" alt="" coords="28,81,137,108"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -135,9 +135,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>paint</b> (juce::Grap
 <tr class="memdesc:aa6f832eae4f0ef6f9ba295146bdf5d09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages the layout of <a class="el" href="classreverb_1_1_u_i_header_block.html">UIHeaderBlock</a> when the block is resized.  <a href="#aa6f832eae4f0ef6f9ba295146bdf5d09">More...</a><br /></td></tr>
 <tr class="separator:aa6f832eae4f0ef6f9ba295146bdf5d09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreverb_1_1_u_i_block"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreverb_1_1_u_i_block')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreverb_1_1_u_i_block.html">reverb::UIBlock</a></td></tr>
-<tr class="memitem:a9a4d190acd4ba1897f5eedae533e9526 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memItemLeft" align="right" valign="top"><a id="a9a4d190acd4ba1897f5eedae533e9526"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UIBlock</b> (int numComponents, int numComponentsPerRow)</td></tr>
-<tr class="separator:a9a4d190acd4ba1897f5eedae533e9526 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a350b93934f72e8c8d351a96cd5cf849b inherit pub_methods_classreverb_1_1_u_i_block"><td class="memItemLeft" align="right" valign="top"><a id="a350b93934f72e8c8d351a96cd5cf849b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UIBlock</b> (int numComponents, int numComponentsPerRow, const juce::String &amp;componentName=juce::String(), const juce::String &amp;labelText=juce::String())</td></tr>
+<tr class="separator:a350b93934f72e8c8d351a96cd5cf849b inherit pub_methods_classreverb_1_1_u_i_block"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedd942ea80432af4aead9e4107392216 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memItemLeft" align="right" valign="top"><a id="aedd942ea80432af4aead9e4107392216"></a>
 std::vector&lt; juce::Rectangle&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getComponentCells</b> (juce::Rectangle&lt; int &gt; bounds)</td></tr>
 <tr class="separator:aedd942ea80432af4aead9e4107392216 inherit pub_methods_classreverb_1_1_u_i_block"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,6 +153,12 @@ juce::TextButton&#160;</td><td class="memItemRight" valign="bottom"><b>irChoice<
 <tr class="memitem:ad894b9ec551a4b1af1674c5cd103f586"><td class="memItemLeft" align="right" valign="top"><a id="ad894b9ec551a4b1af1674c5cd103f586"></a>
 juce::TextButton&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td></tr>
 <tr class="separator:ad894b9ec551a4b1af1674c5cd103f586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fe905a8c34eb1ad44752c7ab08e30d8"><td class="memItemLeft" align="right" valign="top"><a id="a7fe905a8c34eb1ad44752c7ab08e30d8"></a>
+juce::AudioProcessorValueTreeState &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>parameters</b></td></tr>
+<tr class="separator:a7fe905a8c34eb1ad44752c7ab08e30d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1223f79c9b24fdb586921007bd3d94c"><td class="memItemLeft" align="right" valign="top"><a id="ab1223f79c9b24fdb586921007bd3d94c"></a>
+juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><b>previousSelectedIRs</b></td></tr>
+<tr class="separator:ab1223f79c9b24fdb586921007bd3d94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
 Protected Types</h2></td></tr>

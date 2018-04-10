@@ -10,7 +10,7 @@ var classreverb_1_1_i_r_pipeline =
     [ "updateParams", "classreverb_1_1_i_r_pipeline.html#a89935bae1b914ea1ddfa9863a15463dc", null ],
     [ "updateSampleRate", "classreverb_1_1_i_r_pipeline.html#a896759909aff94d2ff29620d671dd631", null ],
     [ "channelIdx", "classreverb_1_1_i_r_pipeline.html#a88ca637ebc037bce9d343fc782919b1e", null ],
-    [ "filters", "classreverb_1_1_i_r_pipeline.html#af848b1872fead8790d11041a65a497fc", null ],
+    [ "equalizer", "classreverb_1_1_i_r_pipeline.html#a27b8c73506de889e07928a84380c0b1f", null ],
     [ "gain", "classreverb_1_1_i_r_pipeline.html#ac3b2cda2a9108b54d6ece6e79d6d0e64", null ],
     [ "ir", "classreverb_1_1_i_r_pipeline.html#a9d658963641b4fe13ea3653cebba6472", null ],
     [ "irNameOrFilePath", "classreverb_1_1_i_r_pipeline.html#acd33b2e3a2bed9d54509e5c54239966c", null ],

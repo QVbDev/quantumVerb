@@ -3,10 +3,13 @@ var annotated_dup =
     [ "reverb", null, [
       [ "AudioProcessor", "classreverb_1_1_audio_processor.html", "classreverb_1_1_audio_processor" ],
       [ "AudioProcessorEditor", "classreverb_1_1_audio_processor_editor.html", "classreverb_1_1_audio_processor_editor" ],
+      [ "ConvergenceException", "structreverb_1_1_convergence_exception.html", "structreverb_1_1_convergence_exception" ],
       [ "Convolution", "classreverb_1_1_convolution.html", "classreverb_1_1_convolution" ],
+      [ "Equalizer", "classreverb_1_1_equalizer.html", "classreverb_1_1_equalizer" ],
       [ "Filter", "classreverb_1_1_filter.html", "classreverb_1_1_filter" ],
       [ "Gain", "classreverb_1_1_gain.html", "classreverb_1_1_gain" ],
       [ "HighShelfFilter", "classreverb_1_1_high_shelf_filter.html", "classreverb_1_1_high_shelf_filter" ],
+      [ "InvalidFilterException", "structreverb_1_1_invalid_filter_exception.html", "structreverb_1_1_invalid_filter_exception" ],
       [ "IRBank", "classreverb_1_1_i_r_bank.html", "classreverb_1_1_i_r_bank" ],
       [ "IRPipeline", "classreverb_1_1_i_r_pipeline.html", "classreverb_1_1_i_r_pipeline" ],
       [ "Logger", "classreverb_1_1_logger.html", "classreverb_1_1_logger" ],

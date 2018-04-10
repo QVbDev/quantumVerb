@@ -1,0 +1,13 @@
+#projectlogo {
+	vertical-align: middle;
+}
+
+#projectlogo img {
+	max-height: 5em;
+}
+
+#titlearea {
+	padding-bottom: 0.5em;
+	background-color: #212121;
+	color: #f0f0f0;
+}
