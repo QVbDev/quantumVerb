@@ -1,6 +1,0 @@
-<map id="reverb::Filter" name="reverb::Filter">
-<area shape="rect" id="node4" href="$classreverb_1_1_high_shelf_filter.html" title="reverb::HighShelfFilter" alt="" coords="5,169,153,196"/>
-<area shape="rect" id="node5" href="$classreverb_1_1_low_shelf_filter.html" title="reverb::LowShelfFilter" alt="" coords="177,169,323,196"/>
-<area shape="rect" id="node6" href="$classreverb_1_1_peak_filter.html" title="reverb::PeakFilter" alt="" coords="347,169,470,196"/>
-<area shape="rect" id="node2" href="$classreverb_1_1_task.html" title="reverb::Task" alt="" coords="136,13,228,39"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="reverb::UIBlock" name="reverb::UIBlock">
-<area shape="rect" id="node3" href="$classreverb_1_1_u_i_filter_block.html" title="reverb::UIFilterBlock" alt="" coords="5,155,144,181"/>
-<area shape="rect" id="node4" href="$classreverb_1_1_u_i_header_block.html" title="reverb::UIHeaderBlock" alt="" coords="169,155,319,181"/>
-<area shape="rect" id="node5" href="$classreverb_1_1_u_i_reverb_block.html" title="reverb::UIReverbBlock" alt="" coords="343,155,491,181"/>
-</map>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['task',['Task',['../classreverb_1_1_task.html',1,'reverb']]],
-  ['timestretch',['TimeStretch',['../classreverb_1_1_time_stretch.html',1,'reverb']]]
+  ['task',['Task',['../a00675.html',1,'reverb']]],
+  ['timestretch',['TimeStretch',['../a00727.html',1,'reverb']]]
 ];

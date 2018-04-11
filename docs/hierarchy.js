@@ -1,57 +1,57 @@
 var hierarchy =
 [
     [ "AudioProcessor", null, [
-      [ "reverb::AudioProcessor", "classreverb_1_1_audio_processor.html", null ]
+      [ "reverb::AudioProcessor", "a00707.html", null ]
     ] ],
     [ "AudioProcessorEditor", null, [
-      [ "reverb::AudioProcessorEditor", "classreverb_1_1_audio_processor_editor.html", null ]
+      [ "reverb::AudioProcessorEditor", "a00747.html", null ]
     ] ],
     [ "Convolution", null, [
-      [ "reverb::Convolution", "classreverb_1_1_convolution.html", null ]
+      [ "reverb::Convolution", "a00671.html", null ]
     ] ],
     [ "std::exception", null, [
-      [ "reverb::ConvergenceException", "structreverb_1_1_convergence_exception.html", null ],
-      [ "reverb::InvalidFilterException", "structreverb_1_1_invalid_filter_exception.html", null ]
+      [ "reverb::ConvergenceException", "a00687.html", null ],
+      [ "reverb::InvalidFilterException", "a00683.html", null ]
     ] ],
     [ "Filter", null, [
-      [ "reverb::Filter", "classreverb_1_1_filter.html", [
-        [ "reverb::HighShelfFilter", "classreverb_1_1_high_shelf_filter.html", null ],
-        [ "reverb::LowShelfFilter", "classreverb_1_1_low_shelf_filter.html", null ],
-        [ "reverb::PeakFilter", "classreverb_1_1_peak_filter.html", null ]
+      [ "reverb::Filter", "a00691.html", [
+        [ "reverb::HighShelfFilter", "a00699.html", null ],
+        [ "reverb::LowShelfFilter", "a00695.html", null ],
+        [ "reverb::PeakFilter", "a00703.html", null ]
       ] ]
     ] ],
     [ "GroupComponent", null, [
-      [ "reverb::UIBlock", "classreverb_1_1_u_i_block.html", [
-        [ "reverb::UIFilterBlock", "classreverb_1_1_u_i_filter_block.html", null ],
-        [ "reverb::UIHeaderBlock", "classreverb_1_1_u_i_header_block.html", null ],
-        [ "reverb::UIReverbBlock", "classreverb_1_1_u_i_reverb_block.html", null ]
+      [ "reverb::UIBlock", "a00755.html", [
+        [ "reverb::UIFilterBlock", "a00751.html", null ],
+        [ "reverb::UIHeaderBlock", "a00763.html", null ],
+        [ "reverb::UIReverbBlock", "a00767.html", null ]
       ] ],
-      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
+      [ "reverb::UIGraphBlock", "a00759.html", null ]
     ] ],
-    [ "reverb::IRBank", "classreverb_1_1_i_r_bank.html", null ],
+    [ "reverb::IRBank", "a00711.html", null ],
     [ "Listener", null, [
-      [ "reverb::AudioProcessorEditor", "classreverb_1_1_audio_processor_editor.html", null ],
-      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
-    ] ],
-    [ "Listener", null, [
-      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
+      [ "reverb::AudioProcessorEditor", "a00747.html", null ],
+      [ "reverb::UIGraphBlock", "a00759.html", null ]
     ] ],
     [ "Listener", null, [
-      [ "reverb::UIGraphBlock", "classreverb_1_1_u_i_graph_block.html", null ]
+      [ "reverb::UIGraphBlock", "a00759.html", null ]
     ] ],
-    [ "reverb::Logger", "classreverb_1_1_logger.html", null ],
+    [ "Listener", null, [
+      [ "reverb::UIGraphBlock", "a00759.html", null ]
+    ] ],
+    [ "reverb::Logger", "a00739.html", null ],
     [ "LookAndFeel_V4", null, [
-      [ "reverb::LookAndFeel", "classreverb_1_1_look_and_feel.html", null ]
+      [ "reverb::LookAndFeel", "a00743.html", null ]
     ] ],
-    [ "reverb::Task", "classreverb_1_1_task.html", [
-      [ "reverb::Convolution", "classreverb_1_1_convolution.html", null ],
-      [ "reverb::Equalizer", "classreverb_1_1_equalizer.html", null ],
-      [ "reverb::Filter", "classreverb_1_1_filter.html", null ],
-      [ "reverb::Gain", "classreverb_1_1_gain.html", null ],
-      [ "reverb::IRPipeline", "classreverb_1_1_i_r_pipeline.html", null ],
-      [ "reverb::MainPipeline", "classreverb_1_1_main_pipeline.html", null ],
-      [ "reverb::Mixer", "classreverb_1_1_mixer.html", null ],
-      [ "reverb::PreDelay", "classreverb_1_1_pre_delay.html", null ],
-      [ "reverb::TimeStretch", "classreverb_1_1_time_stretch.html", null ]
+    [ "reverb::Task", "a00675.html", [
+      [ "reverb::Convolution", "a00671.html", null ],
+      [ "reverb::Equalizer", "a00679.html", null ],
+      [ "reverb::Filter", "a00691.html", null ],
+      [ "reverb::Gain", "a00719.html", null ],
+      [ "reverb::IRPipeline", "a00715.html", null ],
+      [ "reverb::MainPipeline", "a00731.html", null ],
+      [ "reverb::Mixer", "a00735.html", null ],
+      [ "reverb::PreDelay", "a00723.html", null ],
+      [ "reverb::TimeStretch", "a00727.html", null ]
     ] ]
 ];
